@@ -39,7 +39,7 @@
         {
           "id": "SuperOfficeViewsContainer",
           "title": "SuperOffice",
-          "icon": "$(log-in)"
+          "icon": "/resources/logo.svg"
         }
       ]
     },
