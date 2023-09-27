@@ -19,6 +19,16 @@ class SuperOfficeDataProvider {
     constructor() {
         this._onDidChangeTreeData = new vscode.EventEmitter();
         this.onDidChangeTreeData = this._onDidChangeTreeData.event;
+        this.isLoggedIn = false;
+    }
+    // Call this method to trigger a refresh of the tree view
+    refresh() {
+        this._onDidChangeTreeData.fire(undefined);
+    }
+    // This method is used to update the login status and refresh the tree
+    setLoggedIn(state) {
+        this.isLoggedIn = state;
+        this.refresh();
     }
     getTreeItem(element) {
         return element;
@@ -27,18 +37,28 @@ class SuperOfficeDataProvider {
         if (element) {
             return Promise.resolve(element.children || []);
         }
-        // Return root level nodes here
-        return Promise.resolve([
-            new Node("Sign in to SuperOffice..", [], new vscode.ThemeIcon('log-in'), {
-                command: 'vscode-superoffice.signIn',
-                title: '',
-                arguments: []
-            }),
-            new Node("Item 1", [
-                new Node("Child of Item 1", [], new vscode.ThemeIcon('book')),
-                new Node("Another Child of Item 1", [], new vscode.ThemeIcon('zap'))
-            ], new vscode.ThemeIcon('folder'))
-        ]);
+        // Check if user is logged in
+        if (this.isLoggedIn) {
+            // Replace with data fetching logic if required when user is logged in
+            return Promise.resolve([
+                new Node("Fetched Data Item 1", [], new vscode.ThemeIcon('book')),
+                new Node("Fetched Data Item 2", [], new vscode.ThemeIcon('zap'))
+            ]);
+        }
+        else {
+            // Default content when user is not logged in
+            return Promise.resolve([
+                new Node("Sign in to SuperOffice..", [], new vscode.ThemeIcon('log-in'), {
+                    command: 'vscode-superoffice.signIn',
+                    title: '',
+                    arguments: []
+                }),
+                new Node("Item 1", [
+                    new Node("Child of Item 1", [], new vscode.ThemeIcon('book')),
+                    new Node("Another Child of Item 1", [], new vscode.ThemeIcon('zap'))
+                ], new vscode.ThemeIcon('folder'))
+            ]);
+        }
     }
 }
 exports.SuperOfficeDataProvider = SuperOfficeDataProvider;
