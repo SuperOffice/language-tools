@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
-import { SuperOfficeDataProvider } from '../superOfficeDataProvider';
+import { OnlineTreeViewDataProvider } from '../TreeviewProvider/onlineTreeViewDataProvider';
 
-export const dataProvider = new SuperOfficeDataProvider();
+export const onlineTreeViewDataProvider = new OnlineTreeViewDataProvider();
 let currentTokenSet: any = null; // Store the token set here
 
 export const getTokenSet = () => {
@@ -10,10 +10,11 @@ export const getTokenSet = () => {
 
 export const storeTokenSet = (tokenSet: any) => {
     currentTokenSet = tokenSet;
-    
+
     // Set the context to indicate that the user is logged in
     vscode.commands.executeCommand('setContext', 'isLoggedIn', true);
-    dataProvider.setLoggedIn(true);
+    onlineTreeViewDataProvider.setLoggedIn(true);
+    onlineTreeViewDataProvider.refresh();
 };
 
 export const clearTokenSet = () => {
@@ -21,5 +22,6 @@ export const clearTokenSet = () => {
 
     // Clear the context to indicate that the user is not logged in
     vscode.commands.executeCommand('setContext', 'isLoggedIn', false);
-    dataProvider.setLoggedIn(false);
+    onlineTreeViewDataProvider.setLoggedIn(false);
+    onlineTreeViewDataProvider.refresh();
 };

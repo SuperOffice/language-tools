@@ -1,5 +1,33 @@
 import * as vscode from 'vscode';
 
+const jsonData = [
+    {
+        label: 'Root',
+        children: [
+            {
+                label: '1.1',
+                icon: new vscode.ThemeIcon('book'),
+            },
+            {
+                label: '1.2',
+                icon: new vscode.ThemeIcon('book'),
+            }
+        ],
+        icon: new vscode.ThemeIcon('folder')
+    },
+    {
+        label: 'Root 2',
+        icon: new vscode.ThemeIcon('folder'),
+    }
+];
+
+interface ApiItem {
+    label: string;
+    children?: ApiItem[];
+    icon?: vscode.ThemeIcon;
+    command?: vscode.Command;
+}
+
 export class Node implements vscode.TreeItem {
     constructor(
         public readonly label: string, 
@@ -13,7 +41,7 @@ export class Node implements vscode.TreeItem {
         vscode.TreeItemCollapsibleState.Collapsed : 
         vscode.TreeItemCollapsibleState.None;
 }
-export class SuperOfficeDataProvider implements vscode.TreeDataProvider<Node> {
+export class OnlineTreeViewDataProvider implements vscode.TreeDataProvider<Node> {
     private _onDidChangeTreeData: vscode.EventEmitter<Node | undefined> = new vscode.EventEmitter<Node | undefined>();
     readonly onDidChangeTreeData: vscode.Event<Node | undefined> = this._onDidChangeTreeData.event;
 
@@ -42,10 +70,13 @@ export class SuperOfficeDataProvider implements vscode.TreeDataProvider<Node> {
         // Check if user is logged in
         if (this.isLoggedIn) {
             // Replace with data fetching logic if required when user is logged in
-            return Promise.resolve([
-                new Node("Fetched Data Item 1", [], new vscode.ThemeIcon('book')),
-                new Node("Fetched Data Item 2", [], new vscode.ThemeIcon('zap'))
-            ]);
+            /*return Promise.resolve([
+                new Node("Root", [
+                    new Node("Child of Root", [], new vscode.ThemeIcon('book')),
+                    new Node("Another Child of Root", [], new vscode.ThemeIcon('zap'))
+                ], new vscode.ThemeIcon('folder'))
+            ]);*/
+            return Promise.resolve(this.jsonDataToNodes(jsonData));
         } else {
             // Default content when user is not logged in
             return Promise.resolve([
@@ -53,13 +84,16 @@ export class SuperOfficeDataProvider implements vscode.TreeDataProvider<Node> {
                     command: 'vscode-superoffice.signIn',
                     title: '',
                     arguments: []
-                }),
-                new Node("Item 1", [
-                    new Node("Child of Item 1", [], new vscode.ThemeIcon('book')),
-                    new Node("Another Child of Item 1", [], new vscode.ThemeIcon('zap'))
-                ], new vscode.ThemeIcon('folder'))
+                })
             ]);
         }
+    }
+
+    private jsonDataToNodes(data: ApiItem[]): Node[] {
+        return data.map(item => {
+            const children = item.children ? this.jsonDataToNodes(item.children) : undefined;
+            return new Node(item.label, children, item.icon, item.command);
+        });
     }
 }
 
