@@ -26,6 +26,10 @@
         "command": "vscode-superoffice.signOut",
         "title": "Sign Out",
         "icon": "$(log-out)"
+      },
+      {
+        "command": "vscode-superoffice.showScript",
+        "title": "ShowScript"
       }
     ],
     "viewsWelcome": [

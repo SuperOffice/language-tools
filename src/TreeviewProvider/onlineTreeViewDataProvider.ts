@@ -8,7 +8,7 @@ interface TreeDataItem {
 }
 
 function treeDataToNodes(data: TreeDataItem): Node {
-    return new Node(data.label, data.children.map(treeDataToNodes), data.script ? new vscode.ThemeIcon('file') : new vscode.ThemeIcon('folder'));
+    return new Node(data.label, data.children.map(treeDataToNodes), data.script ? new vscode.ThemeIcon('file') : new vscode.ThemeIcon('folder'), data.script ? { command: 'vscode-superoffice.showScript', title: 'Show Script', arguments: [data.script] } : undefined);
 }
 
 function findOrCreateChildNode(parentNode: TreeDataItem, part: string): TreeDataItem {

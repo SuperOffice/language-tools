@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
 import { authenticationContext } from "../Helpers/tokenHelper";
-import { findScriptByPrimaryKey } from "../Helpers/scriptHelper";
+import { findScriptByPrimaryKey } from "../Helpers/documentHelper";
 
 export interface ResponseData {
     "odata.metadata": string;
