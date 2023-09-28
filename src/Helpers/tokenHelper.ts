@@ -14,7 +14,6 @@ export const storeTokenSet = (tokenSet: any) => {
     // Set the context to indicate that the user is logged in
     vscode.commands.executeCommand('setContext', 'isLoggedIn', true);
     onlineTreeViewDataProvider.setLoggedIn(true);
-    onlineTreeViewDataProvider.refresh();
 };
 
 export const clearTokenSet = () => {
@@ -23,5 +22,4 @@ export const clearTokenSet = () => {
     // Clear the context to indicate that the user is not logged in
     vscode.commands.executeCommand('setContext', 'isLoggedIn', false);
     onlineTreeViewDataProvider.setLoggedIn(false);
-    onlineTreeViewDataProvider.refresh();
 };
