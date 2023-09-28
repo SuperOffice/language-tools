@@ -3,6 +3,7 @@ import { createServer, Server } from 'http';
 import { parse } from 'url';
 import { parse as parseQuery } from 'querystring';
 import { storeTokenSet } from '../Helpers/tokenHelper';
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const { Issuer, generators } = require('openid-client');
 
 // Configuration variables
