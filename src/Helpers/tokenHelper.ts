@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import { OnlineTreeViewDataProvider } from '../TreeviewProvider/onlineTreeViewDataProvider';
-import { fetchFromWebApi } from '../Api/getScripts';
 
 interface AuthenticationContext {
     accessToken: string;
@@ -28,7 +27,6 @@ export const storeTokenSet = (tokenSet: any) => {
         idToken: tokenSet.id_token,
         webapiUrl: tokenSet.claims()['http://schemes.superoffice.net/identity/webapi_url']
     };
-    fetchFromWebApi();
     // Set the context to indicate that the user is logged in
     vscode.commands.executeCommand('setContext', 'isLoggedIn', true);
     onlineTreeViewDataProvider.setLoggedIn(true);

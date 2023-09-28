@@ -1,31 +1,29 @@
 import * as vscode from 'vscode';
+import { ScriptEntity, fetchFromWebApi } from '../Api/getScripts';
 
-const jsonData = [
-    {
-        label: 'Root',
-        children: [
-            {
-                label: '1.1',
-                icon: new vscode.ThemeIcon('book'),
-            },
-            {
-                label: '1.2',
-                icon: new vscode.ThemeIcon('book'),
-            }
-        ],
-        icon: new vscode.ThemeIcon('folder')
-    },
-    {
-        label: 'Root 2',
-        icon: new vscode.ThemeIcon('folder'),
-    }
-];
-
-interface ApiItem {
+interface TreeDataItem {
     label: string;
-    children?: ApiItem[];
-    icon?: vscode.ThemeIcon;
-    command?: vscode.Command;
+    children: TreeDataItem[];
+    script?: ScriptEntity;
+}
+
+function treeDataToNodes(data: TreeDataItem): Node {
+    return new Node(data.label, data.children.map(treeDataToNodes), data.script ? new vscode.ThemeIcon('file') : new vscode.ThemeIcon('folder'));
+}
+
+function findOrCreateChildNode(parentNode: TreeDataItem, part: string): TreeDataItem {
+    let childNode = parentNode.children.find(node => node.label === part);
+    if (!childNode) {
+        childNode = { label: part, children: [] };
+        parentNode.children.push(childNode);
+    }
+    return childNode;
+}
+
+function addToTreeData(root: TreeDataItem, scriptPath: string, script: ScriptEntity) {
+    const parts = scriptPath.split('/').filter(Boolean);
+    let currentNode = parts.reduce(findOrCreateChildNode, root);
+    currentNode.children.push({ label: script.name, children: [], script });
 }
 
 export class Node implements vscode.TreeItem {
@@ -66,34 +64,22 @@ export class OnlineTreeViewDataProvider implements vscode.TreeDataProvider<Node>
         if (element) {
             return Promise.resolve(element.children || []);
         }
-        
         // Check if user is logged in
         if (this.isLoggedIn) {
-            // Replace with data fetching logic if required when user is logged in
-            /*return Promise.resolve([
-                new Node("Root", [
-                    new Node("Child of Root", [], new vscode.ThemeIcon('book')),
-                    new Node("Another Child of Root", [], new vscode.ThemeIcon('zap'))
-                ], new vscode.ThemeIcon('folder'))
-            ]);*/
-            return Promise.resolve(this.jsonDataToNodes(jsonData));
-        } else {
-            // Default content when user is not logged in
-            return Promise.resolve([
-                new Node("Sign in to SuperOffice..", [], new vscode.ThemeIcon('log-in'), {
-                    command: 'vscode-superoffice.signIn',
-                    title: '',
-                    arguments: []
-                })
-            ]);
+            return fetchFromWebApi().then(data => {
+                const root: TreeDataItem = { label: 'Root', children: [] };
+                data.value.forEach(script => addToTreeData(root, script.path, script));
+                return root.children.map(treeDataToNodes);
+            });
         }
-    }
-
-    private jsonDataToNodes(data: ApiItem[]): Node[] {
-        return data.map(item => {
-            const children = item.children ? this.jsonDataToNodes(item.children) : undefined;
-            return new Node(item.label, children, item.icon, item.command);
-        });
+        
+        return Promise.resolve([
+            new Node("Sign in to SuperOffice..", [], new vscode.ThemeIcon('log-in'), {
+                command: 'vscode-superoffice.signIn',
+                title: '',
+                arguments: []
+            })
+        ]);
     }
 }
 
