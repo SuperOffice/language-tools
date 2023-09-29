@@ -1,10 +1,12 @@
 import * as vscode from 'vscode';
 import { superofficeLogin } from './Authentication/login';
-import { clearTokenSet, onlineTreeViewDataProvider } from './Helpers/tokenHelper';
+import { clearTokenSet, onlineTreeViewDataProvider, setDebugAuthenticationContext } from './Helpers/tokenHelper';
 import { MyTreeDataProvider } from './TreeviewProvider/TestProvider';
 import { ScriptEntity } from './Api/getScripts';
+import { readDataFromFile } from './Helpers/documentHelper';
 
 const openedScripts: Map<string, vscode.TextDocument> = new Map();
+export const debug:boolean = false;
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "vscode-superoffice" is now active!');
@@ -16,7 +18,13 @@ export function activate(context: vscode.ExtensionContext) {
     //treeDataProvider.fetchData();
 
     const signInCommand = vscode.commands.registerCommand('vscode-superoffice.signIn', async () => {
-        await superofficeLogin();
+        if(debug){
+            const tokenSet = await readDataFromFile('debug.json');
+            await setDebugAuthenticationContext(tokenSet);
+        }
+        else{
+            await superofficeLogin();
+        }
         vscode.window.showInformationMessage('Signed Inn!');
     });
 

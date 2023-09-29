@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import fetch, { Response } from "node-fetch";
 import { authenticationContext } from "../Helpers/tokenHelper";
 import { findScriptByPrimaryKey } from "../Helpers/documentHelper";
 
@@ -60,4 +60,37 @@ export async function fetchFromWebApi(): Promise<ResponseData> {
     const data: ResponseData = await response.json();
     //await findScriptByPrimaryKey(data, "353");
     return data;
+}
+
+export async function fetchRequest(endpoint: string, headers: Map<string, string>): Promise<Response> {
+    if (!authenticationContext) {
+        throw new Error("authenticationContext not set!");
+    }
+
+    const webapiUrl = authenticationContext.webapiUrl;
+    if (!webapiUrl) {
+        throw new Error("webapiUrl is not set in the authenticationContext!");
+    }
+
+     // Convert the headers Map into an object
+    const headersObject: { [key: string]: string } = {};
+    headers.forEach((value, key) => {
+        headersObject[key] = value;
+    });
+
+    // Merge the headersObject with the default headers
+    const finalHeaders = {
+        Authorization: `Bearer ${authenticationContext.accessToken}`,
+        ...headersObject
+    };
+
+    const response = await fetch(`${webapiUrl}${endpoint}`, {
+        method: 'GET',
+        headers: finalHeaders
+    });
+
+    if (!response.ok) {
+        throw new Error(`Failed to fetch from Web API: ${response.statusText}`);
+    }
+    return response;
 }

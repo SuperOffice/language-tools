@@ -3,27 +3,80 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { ResponseData, ScriptEntity } from '../Api/getScripts';
 
-export async function saveScriptDataLocally(script: ScriptEntity) {
-    // Sanitize the path (for example, remove the '#' at the beginning)
-    let sanitizedPath = script.path.replace(/^#/, '');
+/*export async function saveScriptDataLocally(script: ScriptEntity) {
+    if (vscode.workspace.workspaceFolders !== undefined) {
+        // Sanitize the path (for example, remove the '#' at the beginning)
+        let sanitizedPath = script.path.replace(/^#/, '');
 
-    // Use the path module to join the paths and make sure they're valid for the OS
-    const fullPath = path.join(vscode.workspace.rootPath || '', sanitizedPath);
+        // Use the path module to join the paths and make sure they're valid for the OS
+        const fullPath = path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, sanitizedPath);
+        //const fullPath = path.join(vscode.workspace.rootPath || '', sanitizedPath);
 
-    // Check if directory exists, if not create it
-    if (!fs.existsSync(path.dirname(fullPath))) {
-        fs.mkdirSync(path.dirname(fullPath), { recursive: true });
+        // Check if directory exists, if not create it
+        if (!fs.existsSync(path.dirname(fullPath))) {
+            fs.mkdirSync(path.dirname(fullPath), { recursive: true });
+        }
+
+        // Now, write your script data to this directory
+        fs.writeFileSync(fullPath, JSON.stringify(script, null, 2));  // This will save the script data as a formatted JSON file
     }
-
-    // Now, write your script data to this directory
-    fs.writeFileSync(fullPath, JSON.stringify(script, null, 2));  // This will save the script data as a formatted JSON file
-}
+    else {
+        vscode.window.showErrorMessage("VSCODE-SUPEROFFICE: Working folder not found, open a folder an try again");
+    }
+}*/
 
 export async function findScriptByPrimaryKey(data: ResponseData, primaryKey: string) {
-     const script = data.value.find(script => script.PrimaryKey === primaryKey);
-     if (script) {
-        await saveScriptDataLocally(script);
-     } else {
-         console.log('Script with PrimaryKey $primaryKey not found');
-     }
+    const script = data.value.find(script => script.PrimaryKey === primaryKey);
+    if (script) {
+        await saveDataLocally(script, script.path);
+    } else {
+        console.log('Script with PrimaryKey $primaryKey not found');
+    }
+}
+
+export async function saveDataLocally(data: any, dataPath: string) {
+    if (vscode.workspace.workspaceFolders !== undefined) {
+        // Use the path module to join the paths and make sure they're valid for the OS
+        const fullPath = path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, dataPath);
+
+        // Check if directory exists, if not create it
+        if (!fs.existsSync(path.dirname(fullPath))) {
+            fs.mkdirSync(path.dirname(fullPath), { recursive: true });
+        }
+
+        // Now, write your data to this directory
+        fs.writeFileSync(fullPath, JSON.stringify(data, null, 2));  // This will save the data as a formatted JSON file
+    }
+    else {
+        vscode.window.showErrorMessage("VSCODE-SUPEROFFICE: Working folder not found, open a folder an try again");
+    }
+}
+
+export async function readDataFromFile(dataPath: string): Promise<any> {
+    if (vscode.workspace.workspaceFolders !== undefined) {
+        // Use the path module to join the paths and make sure they're valid for the OS
+        const fullPath = path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, dataPath);
+
+        // Check if the file exists
+        if (!fs.existsSync(fullPath)) {
+            vscode.window.showErrorMessage(`VSCODE-SUPEROFFICE: File at path ${fullPath} does not exist.`);
+            return null;
+        }
+
+        // Read the file content
+        const fileContent = fs.readFileSync(fullPath, 'utf-8');
+
+        // Parse the JSON content
+        try {
+            const jsonData = JSON.parse(fileContent);
+            return jsonData;
+        } catch (err) {
+            vscode.window.showErrorMessage(`VSCODE-SUPEROFFICE: Error parsing JSON from file: ${err}`);
+            return null;
+        }
+    }
+    else {
+        vscode.window.showErrorMessage("VSCODE-SUPEROFFICE: Working folder not found, open a folder and try again");
+        return null;
+    }
 }

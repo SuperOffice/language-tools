@@ -3,6 +3,7 @@ import { createServer, Server } from 'http';
 import { parse } from 'url';
 import { parse as parseQuery } from 'querystring';
 import { storeTokenSet } from '../Helpers/tokenHelper';
+import { saveDataLocally } from '../Helpers/documentHelper';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const { Issuer, generators } = require('openid-client');
 
@@ -112,10 +113,9 @@ async function generateAuthorizeUrl(environment: string): Promise<string> {
 
 async function getToken(authorizationCode: string): Promise<void> {
     const client = new superOfficeIssuer.Client(clientMetadata);
-
     try {
         const tokenSet = await client.callback(redirectUri, { code: authorizationCode }, { code_verifier: codeVerifier });
-        storeTokenSet(tokenSet);
+        await storeTokenSet(tokenSet);
     } catch (error) {
         console.error("Error obtaining token:", error);
     }
