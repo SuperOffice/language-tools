@@ -18,10 +18,6 @@ const setContext = async (tokenSet: TokenSet | null) => {
     }
 };
 
-export const getTokenSet = (): TokenSet | null => {
-    return authenticationContext;
-};
-
 export const storeTokenSet = async (tokenSet: TokenSet) => {
     await setContext(tokenSet);
 };
