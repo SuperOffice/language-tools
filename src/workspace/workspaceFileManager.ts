@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
-import { ResponseData, ScriptEntity } from '../Api/getScripts';
+import { ScriptResponseData } from '../services/types';
 
 /*export async function saveScriptDataLocally(script: ScriptEntity) {
     if (vscode.workspace.workspaceFolders !== undefined) {
@@ -25,7 +25,7 @@ import { ResponseData, ScriptEntity } from '../Api/getScripts';
     }
 }*/
 
-export async function findScriptByPrimaryKey(data: ResponseData, primaryKey: string) {
+export async function findScriptByPrimaryKey(data: ScriptResponseData, primaryKey: string) {
     const script = data.value.find(script => script.PrimaryKey === primaryKey);
     if (script) {
         await saveDataLocally(script, script.path);

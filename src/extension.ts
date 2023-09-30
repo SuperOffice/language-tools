@@ -1,12 +1,13 @@
 import * as vscode from 'vscode';
-import { superofficeLogin } from './Authentication/login';
-import { clearTokenSet, onlineTreeViewDataProvider, setDebugAuthenticationContext } from './Helpers/tokenHelper';
+import { superofficeLogin } from './services/authService';
+import { clearTokenSet } from './services/tokenService';
 import { MyTreeDataProvider } from './TreeviewProvider/TestProvider';
-import { ScriptEntity } from './Api/getScripts';
-import { readDataFromFile } from './Helpers/documentHelper';
+import { ScriptInfo } from './services/types';
+import { Node, OnlineTreeViewDataProvider } from './providers/onlineTreeViewDataProvider';
+import { getScriptEntity } from './services/scriptService';
 
 const openedScripts: Map<string, vscode.TextDocument> = new Map();
-export const debug:boolean = false;
+export const onlineTreeViewDataProvider = new OnlineTreeViewDataProvider();
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "vscode-superoffice" is now active!');
@@ -15,16 +16,9 @@ export function activate(context: vscode.ExtensionContext) {
     
     const treeDataProvider = new MyTreeDataProvider();
     context.subscriptions.push(vscode.window.registerTreeDataProvider('SuperOfficeView', treeDataProvider));
-    //treeDataProvider.fetchData();
 
     const signInCommand = vscode.commands.registerCommand('vscode-superoffice.signIn', async () => {
-        if(debug){
-            const tokenSet = await readDataFromFile('debug.json');
-            await setDebugAuthenticationContext(tokenSet);
-        }
-        else{
-            await superofficeLogin();
-        }
+        await superofficeLogin();
         vscode.window.showInformationMessage('Signed Inn!');
     });
 
@@ -33,7 +27,7 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.window.showInformationMessage('Signed Out!');
     });
 
-    const previewScriptCommand = vscode.commands.registerCommand('vscode-superoffice.showScript', async (script: ScriptEntity) => {
+    const showScriptInfo = vscode.commands.registerCommand('vscode-superoffice.showScriptInfo', async (script: ScriptInfo) => {
         if (openedScripts.has(script.PrimaryKey)) {
             // Script is already open, switch to its tab
             const doc = openedScripts.get(script.PrimaryKey);
@@ -42,18 +36,31 @@ export function activate(context: vscode.ExtensionContext) {
                 return;  // Early exit as we don't need to open it again
             }
         }
-
         const jsonString = JSON.stringify(script, null, 2);  // Pretty print JSON
         const document = await vscode.workspace.openTextDocument({ content: jsonString, language: 'json' });
         vscode.window.showTextDocument(document);
         openedScripts.set(script.PrimaryKey, document);
     });
+    
+    const previewScript = vscode.commands.registerCommand('vscode-superoffice.previewScript', async (node: Node) => {
+        // 'node' here is the clicked item
+        if (node && node.scriptInfo) {
+            const scriptInfo: ScriptInfo = node.scriptInfo;
+            try {
+                const scriptEntity = await getScriptEntity(scriptInfo.PrimaryKey);
+                const document = await vscode.workspace.openTextDocument({ content: scriptEntity, language: 'txt' });
+                vscode.window.showTextDocument(document);
+            } catch (err) {
+                vscode.window.showErrorMessage(`Failed to preview script: ${err}`);
+            }
+        }
+    });
 
-    const helloWorldCommand = vscode.commands.registerCommand('vscode-superoffice.helloWorld', () => {
+   const helloWorldCommand = vscode.commands.registerCommand('vscode-superoffice.helloWorld', () => {
         vscode.window.showInformationMessage('Hello World from vscode-superoffice!');
     });
 
-    context.subscriptions.push(signInCommand, signOutCommand, helloWorldCommand, previewScriptCommand);
+    context.subscriptions.push(signInCommand, signOutCommand, helloWorldCommand, showScriptInfo, previewScript);
 }
 
 export function deactivate() {}

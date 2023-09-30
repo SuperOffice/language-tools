@@ -28,14 +28,18 @@
         "icon": "$(log-out)"
       },
       {
-        "command": "vscode-superoffice.showScript",
-        "title": "ShowScript"
-      }
+        "command": "vscode-superoffice.showScriptInfo",
+        "title": "ShowScriptInfo"
+      },
+      {
+        "command": "vscode-superoffice.previewScript",
+        "title": "Preview"
+    }
     ],
     "viewsWelcome": [
       {
         "view": "SuperOfficeView",
-        "contents": "No node dependencies found [learn more](https://www.npmjs.com/).\n[Add Dependency](command:nodeDependencies.addEntry)"
+        "contents": "You are not logged in to SuperOffice [learn more](https://www.npmjs.com/).\n[Login](command:vscode-superoffice.signIn)"
       }
     ],
     "viewsContainers": {
@@ -51,11 +55,11 @@
       "SuperOfficeViewsContainer": [
         {
           "id": "SuperOfficeView",
-          "name": "TENANTS"
+          "name": "Option1"
         },
         {
           "id": "OnlineTreeView",
-          "name": "Outline"
+          "name": "Option2"
         }
       ]
     },
@@ -72,6 +76,13 @@
           "when": "view == OnlineTreeView && isLoggedIn",
           "group": "navigation",
           "icon": "$(log-out)"
+        }
+      ],
+      "view/item/context": [
+        {
+            "command": "vscode-superoffice.previewScript",
+            "group": "0_script",
+            "when": "view == OnlineTreeView && viewItem == script"
         }
       ]
     }
