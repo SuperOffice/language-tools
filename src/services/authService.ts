@@ -6,7 +6,7 @@ import { setTokenSetFromFile, storeTokenSet } from './tokenService';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 import { Issuer, TokenSet, generators } from 'openid-client';
 
-export const debug:boolean = true;
+export const debug:boolean = false;
 
 // Configuration variables
 const redirectUri = process.env.REDIRECT_URI || 'http://127.0.0.1:8000';
