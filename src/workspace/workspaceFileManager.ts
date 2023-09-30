@@ -3,38 +3,16 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { ScriptResponseData } from '../services/types';
 
-/*export async function saveScriptDataLocally(script: ScriptEntity) {
-    if (vscode.workspace.workspaceFolders !== undefined) {
-        // Sanitize the path (for example, remove the '#' at the beginning)
-        let sanitizedPath = script.path.replace(/^#/, '');
-
-        // Use the path module to join the paths and make sure they're valid for the OS
-        const fullPath = path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, sanitizedPath);
-        //const fullPath = path.join(vscode.workspace.rootPath || '', sanitizedPath);
-
-        // Check if directory exists, if not create it
-        if (!fs.existsSync(path.dirname(fullPath))) {
-            fs.mkdirSync(path.dirname(fullPath), { recursive: true });
-        }
-
-        // Now, write your script data to this directory
-        fs.writeFileSync(fullPath, JSON.stringify(script, null, 2));  // This will save the script data as a formatted JSON file
-    }
-    else {
-        vscode.window.showErrorMessage("VSCODE-SUPEROFFICE: Working folder not found, open a folder an try again");
-    }
-}*/
-
 export async function findScriptByPrimaryKey(data: ScriptResponseData, primaryKey: string) {
     const script = data.value.find(script => script.PrimaryKey === primaryKey);
     if (script) {
-        await saveDataLocally(script, script.path);
+        await writeDataToFile(script, script.path);
     } else {
         console.log('Script with PrimaryKey $primaryKey not found');
     }
 }
 
-export async function saveDataLocally(data: any, dataPath: string) {
+export async function writeDataToFile(data: any, dataPath: string) {
     if (vscode.workspace.workspaceFolders !== undefined) {
         // Use the path module to join the paths and make sure they're valid for the OS
         const fullPath = path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, dataPath);

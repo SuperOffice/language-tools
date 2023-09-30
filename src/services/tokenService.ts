@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { saveDataLocally } from '../workspace/workspaceFileManager';
+import { writeDataToFile } from '../workspace/workspaceFileManager';
 import { TokenSet } from 'openid-client';
 import { onlineTreeViewDataProvider } from '../extension';
 
@@ -25,7 +25,7 @@ export const clearTokenSet = () => {
 
 export async function setAuthenticationContext(tokenSet: TokenSet) {
     authenticationContext = tokenSet;
-    await saveDataLocally(authenticationContext, 'debug.json');
+    await writeDataToFile(authenticationContext, 'debug.json');
 }
 
 export async function setDebugAuthenticationContext(context: TokenSet) {
