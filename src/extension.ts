@@ -1,24 +1,20 @@
 import * as vscode from 'vscode';
-import { superofficeLogin } from './services/authService';
+import { superOfficeAuthenticationFlow } from './services/authService';
 import { clearTokenSet } from './services/tokenService';
-import { MyTreeDataProvider } from './TreeviewProvider/TestProvider';
 import { ScriptInfo } from './services/types';
-import { Node, OnlineTreeViewDataProvider } from './providers/onlineTreeViewDataProvider';
+import { Node, ScriptsTreeViewDataProvider } from './providers/scriptsTreeViewDataProvider';
 import { getScriptEntity } from './services/scriptService';
 
 const openedScripts: Map<string, vscode.TextDocument> = new Map();
-export const onlineTreeViewDataProvider = new OnlineTreeViewDataProvider();
+export const scriptsTreeViewDataProvider = new ScriptsTreeViewDataProvider();
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "vscode-superoffice" is now active!');
 
-    context.subscriptions.push(vscode.window.registerTreeDataProvider('OnlineTreeView', onlineTreeViewDataProvider));
-    
-    const treeDataProvider = new MyTreeDataProvider();
-    context.subscriptions.push(vscode.window.registerTreeDataProvider('SuperOfficeView', treeDataProvider));
+    context.subscriptions.push(vscode.window.registerTreeDataProvider('scriptsTreeView', scriptsTreeViewDataProvider));
 
     const signInCommand = vscode.commands.registerCommand('vscode-superoffice.signIn', async () => {
-        await superofficeLogin();
+        await superOfficeAuthenticationFlow();
         vscode.window.showInformationMessage('Signed Inn!');
     });
 
@@ -56,11 +52,7 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
 
-   const helloWorldCommand = vscode.commands.registerCommand('vscode-superoffice.helloWorld', () => {
-        vscode.window.showInformationMessage('Hello World from vscode-superoffice!');
-    });
-
-    context.subscriptions.push(signInCommand, signOutCommand, helloWorldCommand, showScriptInfo, previewScript);
+    context.subscriptions.push(signInCommand, signOutCommand, showScriptInfo, previewScript);
 }
 
 export function deactivate() {}

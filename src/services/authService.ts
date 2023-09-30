@@ -2,11 +2,9 @@ import * as vscode from 'vscode';
 import { createServer, Server } from 'http';
 import { parse } from 'url';
 import { parse as parseQuery } from 'querystring';
-import { setAuthenticationContext, setDebugAuthenticationContext, storeTokenSet } from './tokenService';
+import { setTokenSetFromFile, storeTokenSet } from './tokenService';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 import { Issuer, TokenSet, generators } from 'openid-client';
-import { readDataFromFile } from '../workspace/workspaceFileManager';
-import { error } from 'console';
 
 export const debug:boolean = true;
 
@@ -32,10 +30,9 @@ function getOpenIdConfigUrl(environment: string): string {
     return `https://${environment}.superoffice.com/login/.well-known/openid-configuration`;
 }
 
-export const superofficeLogin = async (): Promise<void> => {
+export const superOfficeAuthenticationFlow = async (): Promise<void> => {
     if(debug){
-        const tokenSet = new TokenSet(await readDataFromFile('debug.json'));
-        await setDebugAuthenticationContext(tokenSet);
+        await setTokenSetFromFile();
     }
     else{
         const environment = await vscode.window.showQuickPick(['sod', 'online'], {
@@ -146,7 +143,7 @@ export async function exchangeRefreshToken(authenticationContext: TokenSet): Pro
     const client = new superOfficeIssuer.Client(clientMetadata);
     try {
         const tokenSet = await client.refresh(authenticationContext.refresh_token);
-        await setAuthenticationContext(tokenSet);
+        await storeTokenSet(tokenSet);
     } catch (err) {
         if (err instanceof Error) {
             throw new Error("Error refreshing token: " + err.message);

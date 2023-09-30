@@ -1,35 +1,36 @@
 import * as vscode from 'vscode';
-import { writeDataToFile } from '../workspace/workspaceFileManager';
+import { readDataFromFile, writeDataToFile } from '../workspace/workspaceFileManager';
 import { TokenSet } from 'openid-client';
-import { onlineTreeViewDataProvider } from '../extension';
+import { scriptsTreeViewDataProvider } from '../extension';
 
 export let authenticationContext: TokenSet | null = null;
 
-export const getTokenSet = () => {
+// Private function to update the authentication context and VS Code context state
+const setContext = async (tokenSet: TokenSet | null) => {
+    authenticationContext = tokenSet;
+
+    const isLoggedIn = tokenSet !== null;
+    vscode.commands.executeCommand('setContext', 'isLoggedIn', isLoggedIn);
+    scriptsTreeViewDataProvider.setLoggedIn(isLoggedIn);
+
+    if (tokenSet) {
+        await writeDataToFile(tokenSet, 'debug.json');
+    }
+};
+
+export const getTokenSet = (): TokenSet | null => {
     return authenticationContext;
 };
 
 export const storeTokenSet = async (tokenSet: TokenSet) => {
-    setAuthenticationContext(tokenSet);
-    // Set the context to indicate that the user is logged in
-    vscode.commands.executeCommand('setContext', 'isLoggedIn', true);
-    onlineTreeViewDataProvider.setLoggedIn(true);
+    await setContext(tokenSet);
 };
 
-export const clearTokenSet = () => {
-    authenticationContext = null;
-    // Clear the context to indicate that the user is not logged in
-    vscode.commands.executeCommand('setContext', 'isLoggedIn', false);
-    onlineTreeViewDataProvider.setLoggedIn(false);
+export const clearTokenSet = async () => {
+    await setContext(null);
 };
 
-export async function setAuthenticationContext(tokenSet: TokenSet) {
-    authenticationContext = tokenSet;
-    await writeDataToFile(authenticationContext, 'debug.json');
-}
+export const setTokenSetFromFile = async () => {
+    await setContext(new TokenSet(await readDataFromFile('debug.json')));
+};
 
-export async function setDebugAuthenticationContext(context: TokenSet) {
-    authenticationContext = context;
-    vscode.commands.executeCommand('setContext', 'isLoggedIn', true);
-    onlineTreeViewDataProvider.setLoggedIn(true);
-}

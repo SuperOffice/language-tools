@@ -1,10 +1,6 @@
 import * as vscode from 'vscode';
-import { fetchRequest } from '../services/requestService';
-import { ScriptInfo, ScriptResponseData } from '../services/types';
+import { ScriptInfo } from '../services/types';
 import { getAllScriptInfo } from '../services/scriptService';
-
-const SCRIPT_ENDPOINT_URI: string = 'v1/Script/';
-const MIME_TYPE_JSON = 'application/json';
 
 interface TreeDataItem {
     label: string;
@@ -64,7 +60,7 @@ function addToTreeData(root: TreeDataItem, scriptPath: string, scriptInfo: Scrip
     currentNode.children.push({ label: scriptInfo.name, children: [], scriptInfo });
 }
 
-export class OnlineTreeViewDataProvider implements vscode.TreeDataProvider<Node> {
+export class ScriptsTreeViewDataProvider implements vscode.TreeDataProvider<Node> {
     private _onDidChangeTreeData: vscode.EventEmitter<Node | undefined> = new vscode.EventEmitter<Node | undefined>();
     readonly onDidChangeTreeData: vscode.Event<Node | undefined> = this._onDidChangeTreeData.event;
 
@@ -105,13 +101,14 @@ export class OnlineTreeViewDataProvider implements vscode.TreeDataProvider<Node>
                 }
             }
         }
-    
+    /*
         return [
             new Node("Sign in to SuperOffice...", [], new vscode.ThemeIcon('log-in'), {
                 command: 'vscode-superoffice.signIn',
                 title: '',
                 arguments: []
             })
-        ];
+        ];*/
+        return [];
     }
 };
