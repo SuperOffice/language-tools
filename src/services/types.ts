@@ -30,6 +30,21 @@ export interface ScriptInfo {
     enabled: boolean;
 }
 
+export interface ScriptEntity {
+    UniqueIdentifier: string;
+    Name: string;
+    Description: string;
+    IncludeId: string;
+    Source: string;
+    Registered: string;
+    RegisteredBy: string;
+    Updated: string;
+    UpdatedBy: string;
+    Path: string;
+    TableRight: null;
+    FieldProperties: Record<string, unknown>;
+}
+
 export interface ScriptResponseData extends ApiResponseData {
     value: ScriptInfo[];
 }

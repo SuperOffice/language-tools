@@ -4,6 +4,9 @@ import { clearTokenSet } from './services/tokenService';
 import { ScriptInfo } from './services/types';
 import { getScriptEntity } from './services/scriptService';
 import { Node } from './providers/scriptsTreeViewDataProvider';
+import { vfsProvider } from './extension';
+import { writeDataToFile } from './workspace/workspaceFileManager';
+import path = require('path');
 
 const openedScripts: Map<string, vscode.TextDocument> = new Map();
 
@@ -12,6 +15,8 @@ const CMD_SIGN_IN = 'vscode-superoffice.signIn';
 const CMD_SIGN_OUT = 'vscode-superoffice.signOut';
 const CMD_SHOW_SCRIPT_INFO = 'vscode-superoffice.showScriptInfo';
 const CMD_PREVIEW_SCRIPT = 'vscode-superoffice.previewScript';
+const CMD_DOWNLOAD_SCRIPT = 'vscode-superoffice.downloadScript';
+export const VFS_SCHEME = 'vfs';
 
 // Register Command for Sign-In
 export const signInCommand = vscode.commands.registerCommand(CMD_SIGN_IN, async () => {
@@ -41,13 +46,60 @@ export const showScriptInfoCommand = vscode.commands.registerCommand(CMD_SHOW_SC
 });
 
 // Register Command to Preview Script
+/*export const previewScriptCommand = vscode.commands.registerCommand(CMD_PREVIEW_SCRIPT, async (node: Node) => {
+    if (node?.scriptInfo) {
+        const scriptInfo: ScriptInfo = node.scriptInfo;
+        try {
+            const scriptEntity = await getScriptEntity(scriptInfo.uniqueIdentifier);
+            const document = await vscode.workspace.openTextDocument({ content: scriptEntity.Source, language: 'javascript' });
+            vscode.window.showTextDocument(document);
+        } catch (err) {
+            vscode.window.showErrorMessage(`Failed to preview script: ${err}`);
+        }
+    }
+});*/
+
+// Register Command to Preview Script. This version uses the Virtual File System Provider
 export const previewScriptCommand = vscode.commands.registerCommand(CMD_PREVIEW_SCRIPT, async (node: Node) => {
     if (node?.scriptInfo) {
         const scriptInfo: ScriptInfo = node.scriptInfo;
         try {
-            const scriptEntity = await getScriptEntity(scriptInfo.PrimaryKey);
-            const document = await vscode.workspace.openTextDocument({ content: scriptEntity, language: 'txt' });
+            const scriptEntity = await getScriptEntity(scriptInfo.uniqueIdentifier);
+
+            // Create a virtual URI for the file based on the desired filename
+            const filename = `${scriptInfo.name}.js`;
+            const virtualUri = vscode.Uri.parse(`${VFS_SCHEME}:/scripts/${filename}`);
+
+            // "Write" the content to the virtual file
+            vfsProvider.writeFile(virtualUri, Buffer.from(scriptEntity.Source, 'utf8'), { create: true, overwrite: true });
+
+            // Open the virtual file in VSCode
+            const document = await vscode.workspace.openTextDocument(virtualUri);
             vscode.window.showTextDocument(document);
+        } catch (err) {
+            vscode.window.showErrorMessage(`Failed to preview script: ${err}`);
+        }
+    }
+});
+
+// Register command to download the script and store it into workspace
+export const downloadScriptCommand = vscode.commands.registerCommand(CMD_DOWNLOAD_SCRIPT, async (node: Node) => {
+    if (node?.scriptInfo) {
+        const scriptInfo: ScriptInfo = node.scriptInfo;
+        try {
+            const scriptEntity = await getScriptEntity(scriptInfo.uniqueIdentifier);
+            const pathToFile = path.join(scriptEntity.Path, scriptEntity.Name + ".js");
+            if (vscode.workspace.workspaceFolders !== undefined) {
+                const fullPath = path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, pathToFile);
+
+                await writeDataToFile(scriptEntity.Source, fullPath);
+    
+                const document = await vscode.workspace.openTextDocument(vscode.Uri.file(fullPath));
+                vscode.window.showTextDocument(document);
+            }
+            else {
+                vscode.window.showErrorMessage("VSCODE-SUPEROFFICE: Working folder not found, open a folder an try again");
+            }
         } catch (err) {
             vscode.window.showErrorMessage(`Failed to preview script: ${err}`);
         }

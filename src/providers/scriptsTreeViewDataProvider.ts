@@ -101,14 +101,6 @@ export class ScriptsTreeViewDataProvider implements vscode.TreeDataProvider<Node
                 }
             }
         }
-    /*
-        return [
-            new Node("Sign in to SuperOffice...", [], new vscode.ThemeIcon('log-in'), {
-                command: 'vscode-superoffice.signIn',
-                title: '',
-                arguments: []
-            })
-        ];*/
         return [];
     }
 };

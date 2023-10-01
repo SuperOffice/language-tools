@@ -30,7 +30,11 @@
       {
         "command": "vscode-superoffice.previewScript",
         "title": "PreviewScript"
-    }
+      },
+      {
+        "command": "vscode-superoffice.downloadScript",
+        "title": "DownloadScript"
+      }
     ],
     "viewsContainers": {
       "activitybar": [
@@ -69,7 +73,12 @@
             "command": "vscode-superoffice.previewScript",
             "group": "0_script",
             "when": "view == scriptsTreeView && viewItem == script"
-        }
+        },
+        {
+          "command": "vscode-superoffice.downloadScript",
+          "group": "0_script",
+          "when": "view == scriptsTreeView && viewItem == script"
+      }
       ]
     }
   },

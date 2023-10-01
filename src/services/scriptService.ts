@@ -1,5 +1,5 @@
 import { fetchRequest } from "./requestService";
-import { ScriptResponseData } from "./types";
+import { ScriptEntity, ScriptResponseData } from "./types";
 
 const SCRIPT_ENDPOINT_URI: string = 'v1/Script/';
 const MIME_TYPE_JSON = 'application/json';
@@ -14,11 +14,11 @@ export async function getAllScriptInfo(): Promise<ScriptResponseData> {
     if (!response.ok) {
         throw new Error(`Failed to fetch all scripts from Web API: ${response.statusText}`);
     }
-    const scriptResponseData: ScriptResponseData = await response.json();
-    return scriptResponseData;
+    const responseData: ScriptResponseData = await response.json();
+    return responseData;
 }
 
-export async function getScriptEntity(uniqueIdentifier: string): Promise<string> {
+export async function getScriptEntity(uniqueIdentifier: string): Promise<ScriptEntity> {
     const response = await fetchRequest(`${SCRIPT_ENDPOINT_URI}${uniqueIdentifier}`, {
         method: 'GET',
         // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -28,5 +28,6 @@ export async function getScriptEntity(uniqueIdentifier: string): Promise<string>
     if (!response.ok) {
         throw new Error(`Failed to fetch all scripts from Web API: ${response.statusText}`);
     }
-    return await response.text();
+    const responseData: ScriptEntity = await response.json();
+    return responseData;
 }
