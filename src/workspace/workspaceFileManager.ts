@@ -88,9 +88,9 @@ export async function checkAndValidateSuoFile(rootPath: string): Promise<boolean
         return false;
     }
 
-    await setTokenSetFromFile(new TokenSet(result.data));
     // Here, suoFileContent is inferred to be of type TokenSet
     // You can process it further if needed
+    await setTokenSetFromFile(new TokenSet(result.data));
 
     return true; // Return true since it's a successful validation
 }
