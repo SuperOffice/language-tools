@@ -102,6 +102,19 @@
         "id": "superoffice.submenu",
         "label": "SuperOffice"
       }
+    ],
+    "languages": [
+      {
+        "id": "superoffice",
+        "aliases": [ "SuperOfficeLang" ],
+        "extensions": [
+          ".suo"
+        ],
+        "icon": {
+          "light": "/resources/logo.svg",
+          "dark": "/resources/logo.svg"
+        }
+      }
     ]
   },
   "scripts": {

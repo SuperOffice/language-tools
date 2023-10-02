@@ -23,8 +23,9 @@ export const VFS_SCHEME = 'vfs';
 // Register Command for Sign-In
 export const signInCommand = vscode.commands.registerCommand(CMD_SIGN_IN, async () => {
     try {
-        await superOfficeAuthenticationFlow();
-        vscode.window.showInformationMessage('Signed In!');
+        if(await superOfficeAuthenticationFlow()) {
+            vscode.window.showInformationMessage('Signed In!');
+        }
     } catch (err) {
         vscode.window.showErrorMessage(`Failed to sign in: ${err}`);
     }

@@ -2,11 +2,10 @@ import * as vscode from 'vscode';
 import { createServer, Server } from 'http';
 import { parse } from 'url';
 import { parse as parseQuery } from 'querystring';
-import { setTokenSetFromFile, storeTokenSet } from './tokenService';
+import { storeTokenSet } from './tokenService';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 import { Issuer, TokenSet, generators } from 'openid-client';
-
-export const debug:boolean = true;
+import { checkAndValidateSuoFile } from '../workspace/workspaceFileManager';
 
 // Configuration variables
 const redirectUri = process.env.REDIRECT_URI || 'http://127.0.0.1:8000';
@@ -30,26 +29,37 @@ function getOpenIdConfigUrl(environment: string): string {
     return `https://${environment}.superoffice.com/login/.well-known/openid-configuration`;
 }
 
-export const superOfficeAuthenticationFlow = async (): Promise<void> => {
-    if(debug){
-        await setTokenSetFromFile();
+export const superOfficeAuthenticationFlow = async (): Promise<boolean> => {
+    const rootPath = vscode.workspace.workspaceFolders?.[0]?.uri?.fsPath;
+    
+    if (!rootPath) {
+        vscode.window.showErrorMessage("VSCODE-SUPEROFFICE: Working folder not found, open a folder and try again");
+        return false; // Exit early since a workspace is mandatory.
     }
-    else{
-        const environment = await vscode.window.showQuickPick(['sod', 'online'], {
-            placeHolder: 'Select an environment',
-        });
-    
-        if (!environment) {
-            vscode.window.showInformationMessage('SuperOffice login cancelled');
-            return;
-        }
-    
-        try {
+
+    try {
+        if (await checkAndValidateSuoFile(rootPath)) {
+            return true;
+        } else {
+            const environment = await vscode.window.showQuickPick(['sod', 'online'], {
+                placeHolder: 'Select an environment',
+            });
+
+            if (!environment) {
+                vscode.window.showInformationMessage('SuperOffice login cancelled');
+                return false;
+            }
+
             await authorizeRequest(environment);
-        } catch (err) {
-            console.error(err);
-            vscode.window.showErrorMessage('An error occurred while trying to login to SuperOffice');
+            return true;  // Assuming authorizeRequest signifies a successful auth attempt when it doesn't throw an error.
         }
+    } catch (error) {
+        if (error instanceof Error) {
+            vscode.window.showErrorMessage(error.message);
+        } else {
+            vscode.window.showErrorMessage("An unknown error occurred.");
+        }
+        return false;
     }
 };
 
@@ -152,5 +162,3 @@ export async function exchangeRefreshToken(authenticationContext: TokenSet): Pro
         }
     }
 }
-
-

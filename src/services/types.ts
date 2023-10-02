@@ -48,3 +48,9 @@ export interface ScriptEntity {
 export interface ScriptResponseData extends ApiResponseData {
     value: ScriptInfo[];
 }
+
+export type FileReadResult<T> = {
+    data?: T;
+    error?: string;
+};
+
