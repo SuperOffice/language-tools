@@ -34,6 +34,10 @@
       {
         "command": "vscode-superoffice.downloadScript",
         "title": "DownloadScript"
+      },
+      {
+        "command": "vscode-superoffice.executeScript",
+        "title": "ExecuteScript"
       }
     ],
     "viewsContainers": {
@@ -79,8 +83,26 @@
           "group": "0_script",
           "when": "view == scriptsTreeView && viewItem == script"
       }
+      ],
+      "explorer/context": [
+        {
+          "submenu": "superoffice.submenu",
+          "group": "superoffice",
+          "when": "isLoggedIn"
+        }
+      ],
+      "superoffice.submenu": [
+        {
+          "command": "vscode-superoffice.executeScript"
+        }
       ]
-    }
+    },
+    "submenus": [
+      {
+        "id": "superoffice.submenu",
+        "label": "SuperOffice"
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

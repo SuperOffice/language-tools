@@ -14,7 +14,7 @@ const setContext = async (tokenSet: TokenSet | null) => {
     scriptsTreeViewDataProvider.setLoggedIn(isLoggedIn);
 
     if (tokenSet) {
-        await writeDataToFile(tokenSet, 'debug.json');
+        await writeDataToFile(JSON.stringify(tokenSet), 'debug.json');
     }
 };
 

@@ -16,6 +16,8 @@ const CMD_SIGN_OUT = 'vscode-superoffice.signOut';
 const CMD_SHOW_SCRIPT_INFO = 'vscode-superoffice.showScriptInfo';
 const CMD_PREVIEW_SCRIPT = 'vscode-superoffice.previewScript';
 const CMD_DOWNLOAD_SCRIPT = 'vscode-superoffice.downloadScript';
+const CMD_EXECUTE_SCRIPT = 'vscode-superoffice.executeScript';
+
 export const VFS_SCHEME = 'vfs';
 
 // Register Command for Sign-In
@@ -88,20 +90,18 @@ export const downloadScriptCommand = vscode.commands.registerCommand(CMD_DOWNLOA
         const scriptInfo: ScriptInfo = node.scriptInfo;
         try {
             const scriptEntity = await getScriptEntity(scriptInfo.uniqueIdentifier);
-            const pathToFile = path.join(scriptEntity.Path, scriptEntity.Name + ".js");
-            if (vscode.workspace.workspaceFolders !== undefined) {
-                const fullPath = path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, pathToFile);
+            const filePath = path.join(scriptEntity.Path, scriptEntity.Name + ".js");
 
-                await writeDataToFile(scriptEntity.Source, fullPath);
-    
-                const document = await vscode.workspace.openTextDocument(vscode.Uri.file(fullPath));
-                vscode.window.showTextDocument(document);
-            }
-            else {
-                vscode.window.showErrorMessage("VSCODE-SUPEROFFICE: Working folder not found, open a folder an try again");
-            }
+            const uriPath = await writeDataToFile(scriptEntity.Source, filePath);
+
+            const document = await vscode.workspace.openTextDocument(vscode.Uri.file(uriPath));
+            vscode.window.showTextDocument(document);
         } catch (err) {
             vscode.window.showErrorMessage(`Failed to preview script: ${err}`);
         }
     }
+});
+
+export const executeScriptCommand = vscode.commands.registerCommand(CMD_EXECUTE_SCRIPT, async (node: Node) => {
+    vscode.window.showInformationMessage('Not implemented yet!');
 });

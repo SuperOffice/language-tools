@@ -12,18 +12,28 @@ import { ScriptResponseData } from '../services/types';
     }
 }*/
 
-export async function writeDataToFile(data: any, dataPath: string) {
-        // Check if directory exists, if not create it
-        if (!fs.existsSync(path.dirname(dataPath))) {
-            fs.mkdirSync(path.dirname(dataPath), { recursive: true });
+export async function writeDataToFile(data: any, dataPath: string): Promise<string> {
+    if (vscode.workspace.workspaceFolders !== undefined) {
+        const fullPathToFile = path.join(vscode.workspace.workspaceFolders[0].uri.fsPath, dataPath);
+
+         // Check if directory exists, if not create it
+         if (!fs.existsSync(path.dirname(fullPathToFile))) {
+            fs.mkdirSync(path.dirname(fullPathToFile), { recursive: true });
         }
         // Now, write your data to this directory
         try {
-            fs.writeFileSync(dataPath, data);
-            console.log(`Written to file at: ${dataPath}`);
+            fs.writeFileSync(fullPathToFile, data);
+            console.log(`Written to file at: ${fullPathToFile}`);
+            return fullPathToFile;
         } catch (err) {
             console.error(`Error writing to file: ${err}`);
+            return "";
         }
+    }
+    else {
+        vscode.window.showErrorMessage("VSCODE-SUPEROFFICE: Working folder not found, open a folder an try again");
+        return "";
+    }
 }
 
 export async function readDataFromFile(dataPath: string): Promise<any> {
