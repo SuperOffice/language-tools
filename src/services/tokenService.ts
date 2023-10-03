@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
-import { writeDataToFile } from '../workspace/workspaceFileManager';
 import { TokenSet } from 'openid-client';
 import { scriptsTreeViewDataProvider } from '../extension';
+import { writeFileAsync } from '../workspace/workspaceFileManager';
+import { CONFIG } from '../config';
 
 export let authenticationContext: TokenSet | null = null;
-const suoFile: string = ".suo";
 
 // Private function to update the authentication context and VS Code context state
 const setContext = async (fromFile: boolean, tokenSet: TokenSet | null) => {
@@ -16,7 +16,7 @@ const setContext = async (fromFile: boolean, tokenSet: TokenSet | null) => {
 
     //check if tokenSet is null and check if it was already read from file
     if (tokenSet && !fromFile) {
-        await writeDataToFile(JSON.stringify(tokenSet), suoFile);
+        await writeFileAsync(CONFIG.SUO_FILE_NAME, JSON.stringify(tokenSet));
     }
 };
 

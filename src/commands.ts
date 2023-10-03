@@ -2,11 +2,11 @@ import * as vscode from 'vscode';
 import { superOfficeAuthenticationFlow } from './services/authService';
 import { clearTokenSet } from './services/tokenService';
 import { ScriptInfo } from './services/types';
-import { getScriptEntity } from './services/scriptService';
+import { executeScript, getScriptEntity } from './services/scriptService';
 import { Node } from './providers/scriptsTreeViewDataProvider';
 import { vfsProvider } from './extension';
-import { writeDataToFile } from './workspace/workspaceFileManager';
 import path = require('path');
+import { writeFileAsync } from './workspace/workspaceFileManager';
 
 const openedScripts: Map<string, vscode.TextDocument> = new Map();
 
@@ -23,7 +23,7 @@ export const VFS_SCHEME = 'vfs';
 // Register Command for Sign-In
 export const signInCommand = vscode.commands.registerCommand(CMD_SIGN_IN, async () => {
     try {
-        if(await superOfficeAuthenticationFlow()) {
+        if (await superOfficeAuthenticationFlow()) {
             vscode.window.showInformationMessage('Signed In!');
         }
     } catch (err) {
@@ -47,20 +47,6 @@ export const showScriptInfoCommand = vscode.commands.registerCommand(CMD_SHOW_SC
         openedScripts.set(script.PrimaryKey, document);
     })();
 });
-
-// Register Command to Preview Script
-/*export const previewScriptCommand = vscode.commands.registerCommand(CMD_PREVIEW_SCRIPT, async (node: Node) => {
-    if (node?.scriptInfo) {
-        const scriptInfo: ScriptInfo = node.scriptInfo;
-        try {
-            const scriptEntity = await getScriptEntity(scriptInfo.uniqueIdentifier);
-            const document = await vscode.workspace.openTextDocument({ content: scriptEntity.Source, language: 'javascript' });
-            vscode.window.showTextDocument(document);
-        } catch (err) {
-            vscode.window.showErrorMessage(`Failed to preview script: ${err}`);
-        }
-    }
-});*/
 
 // Register Command to Preview Script. This version uses the Virtual File System Provider
 export const previewScriptCommand = vscode.commands.registerCommand(CMD_PREVIEW_SCRIPT, async (node: Node) => {
@@ -89,20 +75,43 @@ export const previewScriptCommand = vscode.commands.registerCommand(CMD_PREVIEW_
 export const downloadScriptCommand = vscode.commands.registerCommand(CMD_DOWNLOAD_SCRIPT, async (node: Node) => {
     if (node?.scriptInfo) {
         const scriptInfo: ScriptInfo = node.scriptInfo;
-        try {
-            const scriptEntity = await getScriptEntity(scriptInfo.uniqueIdentifier);
-            const filePath = path.join(scriptEntity.Path, scriptEntity.Name + ".js");
+        if (vscode.workspace.workspaceFolders !== undefined) {
+            try {
+                const scriptEntity = await getScriptEntity(scriptInfo.uniqueIdentifier);
+                const filePath = path.join(scriptEntity.Path, scriptEntity.Name + ".js");
 
-            const uriPath = await writeDataToFile(scriptEntity.Source, filePath);
+                const fullPath = await writeFileAsync(filePath, scriptEntity.Source);
 
-            const document = await vscode.workspace.openTextDocument(vscode.Uri.file(uriPath));
-            vscode.window.showTextDocument(document);
-        } catch (err) {
-            vscode.window.showErrorMessage(`Failed to preview script: ${err}`);
+                const document = await vscode.workspace.openTextDocument(vscode.Uri.file(fullPath));
+                vscode.window.showTextDocument(document);
+            } catch (err) {
+                throw new Error(`Failed to download script: ${err}`);
+            }
+        }
+        else {
+            vscode.window.showErrorMessage("VSCODE-SUPEROFFICE: Working folder not found, open a folder an try again");
         }
     }
 });
-
+/*
 export const executeScriptCommand = vscode.commands.registerCommand(CMD_EXECUTE_SCRIPT, async (node: Node) => {
     vscode.window.showInformationMessage('Not implemented yet!');
+});*/
+
+export const executeScriptCommand2 = vscode.commands.registerCommand(CMD_EXECUTE_SCRIPT, async (fileUri: vscode.Uri) => {
+    if (fileUri && fileUri.fsPath) {
+        try {
+            const fileContent = await vscode.workspace.fs.readFile(fileUri);
+            const decodedContent = new TextDecoder().decode(fileContent);
+
+            // Send the script content to the server for execution
+            const result = await executeScript(decodedContent);
+            vscode.window.showInformationMessage(result.Output);
+        } catch (err) {
+            vscode.window.showErrorMessage(`Failed to execute script: ${err}`);
+            //throw new Error(`Failed to download script: ${err}`);
+        }
+    } else {
+        vscode.window.showInformationMessage('No file selected!');
+    }
 });

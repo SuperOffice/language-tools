@@ -16,12 +16,14 @@
       {
         "command": "vscode-superoffice.signIn",
         "title": "Sign In",
-        "icon": "$(log-in)"
+        "icon": "$(log-in)",
+        "category": "SuperOffice"
       },
       {
         "command": "vscode-superoffice.signOut",
         "title": "Sign Out",
-        "icon": "$(log-out)"
+        "icon": "$(log-out)",
+        "category": "SuperOffice"
       },
       {
         "command": "vscode-superoffice.showScriptInfo",
@@ -37,7 +39,9 @@
       },
       {
         "command": "vscode-superoffice.executeScript",
-        "title": "ExecuteScript"
+        "title": "ExecuteScript",
+        "category": "SuperOffice",
+        "enablement": "resourceScheme == file"
       }
     ],
     "viewsContainers": {

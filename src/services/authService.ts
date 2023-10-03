@@ -5,7 +5,7 @@ import { parse as parseQuery } from 'querystring';
 import { storeTokenSet } from './tokenService';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 import { Issuer, TokenSet, generators } from 'openid-client';
-import { checkAndValidateSuoFile } from '../workspace/workspaceFileManager';
+import { getSuoFile } from '../workspace/workspaceFileManager';
 
 // Configuration variables
 const redirectUri = process.env.REDIRECT_URI || 'http://127.0.0.1:8000';
@@ -30,15 +30,8 @@ function getOpenIdConfigUrl(environment: string): string {
 }
 
 export const superOfficeAuthenticationFlow = async (): Promise<boolean> => {
-    const rootPath = vscode.workspace.workspaceFolders?.[0]?.uri?.fsPath;
-    
-    if (!rootPath) {
-        vscode.window.showErrorMessage("VSCODE-SUPEROFFICE: Working folder not found, open a folder and try again");
-        return false; // Exit early since a workspace is mandatory.
-    }
-
     try {
-        if (await checkAndValidateSuoFile(rootPath)) {
+        if (await getSuoFile()) {
             return true;
         } else {
             const environment = await vscode.window.showQuickPick(['sod', 'online'], {

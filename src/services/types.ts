@@ -49,8 +49,37 @@ export interface ScriptResponseData extends ApiResponseData {
     value: ScriptInfo[];
 }
 
-export type FileReadResult<T> = {
-    data?: T;
-    error?: string;
-};
+export interface RequestParams {
+    endpoint: string;
+    headers: { [key: string]: string };
+    method: 'GET' | 'POST';
+    body?: RequestBody;
+}
 
+interface RequestBody {
+    Script: string;
+    Parameters?: {
+        Parameters1: string;
+    };
+    EventData?: null;
+}
+
+export interface ExecuteScriptResponse {
+    Output: string;
+    Parameters: {
+        Parameters1: string;
+        Parameters2: string;
+    };
+    Trace: string;
+    Eventdata: null; // If Eventdata can be of other types, replace 'null' with the appropriate type or types
+    Success: boolean;
+    ErrorInformation: null | string; // I'm assuming ErrorInformation can be a string, adjust as needed
+    TableRight: null | string; // Adjust type based on the possible values of 'TableRight'
+    FieldProperties: {
+        [key: string]: {
+            FieldRight: null | string; // Adjust type based on the possible values of 'FieldRight'
+            FieldType: string;
+            FieldLength: number;
+        }
+    };
+}
