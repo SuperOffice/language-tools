@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { TokenSet } from 'openid-client';
 import { scriptsTreeViewDataProvider } from '../extension';
 import { writeFileAsync } from '../workspace/workspaceFileManager';
-import { CONFIG } from '../config';
+import { CONFIG_TOKENSERVICE } from '../config';
 
 export let authenticationContext: TokenSet | null = null;
 
@@ -16,7 +16,7 @@ const setContext = async (fromFile: boolean, tokenSet: TokenSet | null) => {
 
     //check if tokenSet is null and check if it was already read from file
     if (tokenSet && !fromFile) {
-        await writeFileAsync(CONFIG.SUO_FILE_NAME, JSON.stringify(tokenSet));
+        await writeFileAsync(CONFIG_TOKENSERVICE.SUO_FILE_NAME, JSON.stringify(tokenSet));
     }
 };
 

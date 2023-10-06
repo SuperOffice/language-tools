@@ -45,10 +45,12 @@ export async function executeScript(script: string): Promise<ExecuteScriptRespon
         },
         method: 'POST',
         body: {
+            /* eslint-disable @typescript-eslint/naming-convention */
             Script: script,
             Parameters: {
                 "Parameters1": "mandatory"
             }
+            /* eslint-enable @typescript-eslint/naming-convention */
         }
     };
     const response = await fetchRequest(request);

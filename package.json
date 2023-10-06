@@ -1,6 +1,6 @@
 {
-  "name": "vscode-superoffice",
-  "displayName": "vscode-superoffice",
+  "name": "superoffice-vscode",
+  "displayName": "superoffice-vscode",
   "description": "",
   "version": "0.0.1",
   "engines": {
@@ -14,31 +14,31 @@
   "contributes": {
     "commands": [
       {
-        "command": "vscode-superoffice.signIn",
+        "command": "superoffice-vscode.signIn",
         "title": "Sign In",
         "icon": "$(log-in)",
         "category": "SuperOffice"
       },
       {
-        "command": "vscode-superoffice.signOut",
+        "command": "superoffice-vscode.signOut",
         "title": "Sign Out",
         "icon": "$(log-out)",
         "category": "SuperOffice"
       },
       {
-        "command": "vscode-superoffice.showScriptInfo",
+        "command": "superoffice-vscode.showScriptInfo",
         "title": "ShowScriptInfo"
       },
       {
-        "command": "vscode-superoffice.previewScript",
+        "command": "superoffice-vscode.previewScript",
         "title": "PreviewScript"
       },
       {
-        "command": "vscode-superoffice.downloadScript",
+        "command": "superoffice-vscode.downloadScript",
         "title": "DownloadScript"
       },
       {
-        "command": "vscode-superoffice.executeScript",
+        "command": "superoffice-vscode.executeScript",
         "title": "ExecuteScript",
         "category": "SuperOffice",
         "enablement": "resourceScheme == file"
@@ -64,13 +64,13 @@
     "viewsWelcome": [
       {
         "view": "scriptsTreeView",
-        "contents": "You are not logged in to SuperOffice [learn more](https://docs.superoffice.com/).\n[Login](command:vscode-superoffice.signIn)"
+        "contents": "You are not logged in to SuperOffice [learn more](https://docs.superoffice.com/).\n[Login](command:superoffice-vscode.signIn)"
       }
     ],
     "menus": {
       "view/title": [
         {
-          "command": "vscode-superoffice.signOut",
+          "command": "superoffice-vscode.signOut",
           "when": "view == scriptsTreeView && isLoggedIn",
           "group": "navigation",
           "icon": "$(log-out)"
@@ -78,12 +78,12 @@
       ],
       "view/item/context": [
         {
-            "command": "vscode-superoffice.previewScript",
+            "command": "superoffice-vscode.previewScript",
             "group": "0_script",
             "when": "view == scriptsTreeView && viewItem == script"
         },
         {
-          "command": "vscode-superoffice.downloadScript",
+          "command": "superoffice-vscode.downloadScript",
           "group": "0_script",
           "when": "view == scriptsTreeView && viewItem == script"
       }
@@ -97,7 +97,7 @@
       ],
       "superoffice.submenu": [
         {
-          "command": "vscode-superoffice.executeScript"
+          "command": "superoffice-vscode.executeScript"
         }
       ]
     },

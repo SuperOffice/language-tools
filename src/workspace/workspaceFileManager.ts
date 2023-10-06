@@ -3,7 +3,7 @@ import { mkdir, readFile, writeFile } from 'fs/promises';
 import * as path from 'path';
 import { TokenSet } from 'openid-client';
 import { setTokenSetFromFile } from '../services/tokenService';
-import { CONFIG } from '../config';
+import { CONFIG_TOKENSERVICE} from '../config';
 
 async function getRootPath(): Promise<string> {
     const rootPath = vscode.workspace.workspaceFolders?.[0]?.uri?.fsPath;
@@ -44,7 +44,7 @@ export async function readFileAsync(relativePath: string): Promise<string> {
 
 export async function getSuoFile(): Promise<boolean> {
     try {
-        const resultString = await readFileAsync(CONFIG.SUO_FILE_NAME);
+        const resultString = await readFileAsync(CONFIG_TOKENSERVICE.SUO_FILE_NAME);
 
         if (!resultString.trim()) {
             console.log('SUO file is empty.');
