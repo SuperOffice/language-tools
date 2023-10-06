@@ -29,7 +29,7 @@ function convertTreeDataToNode(data: TreeDataItem): Node {
     return new Node(data.label, 
                     data.children.map(convertTreeDataToNode), 
                     data.scriptInfo ? new vscode.ThemeIcon('file') : new vscode.ThemeIcon('folder'), 
-                    data.scriptInfo ? { command: 'vscode-superoffice.showScriptInfo', title: 'Show Script Info', arguments: [data.scriptInfo] } : undefined,
+                    data.scriptInfo ? { command: 'superoffice-vscode.showScriptInfo', title: 'Show Script Info', arguments: [data.scriptInfo] } : undefined,
                     data.scriptInfo
                     );
 }

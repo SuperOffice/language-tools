@@ -1,16 +1,17 @@
 import * as vscode from 'vscode';
 import { ScriptsTreeViewDataProvider } from './providers/scriptsTreeViewDataProvider';
-import { VFS_SCHEME, downloadScriptCommand, previewScriptCommand, showScriptInfoCommand, signInCommand, signOutCommand } from './commands';
+import { downloadScriptCommand, previewScriptCommand, showScriptInfoCommand, signInCommand, signOutCommand } from './commands';
 import { VirtualFileSystemProvider } from './workspace/virtualWorkspaceFileManager';
+import { CONFIG_COMMANDS } from './config';
 
 export const scriptsTreeViewDataProvider = new ScriptsTreeViewDataProvider();
 export const vfsProvider = new VirtualFileSystemProvider();
 
 export function activate(context: vscode.ExtensionContext) {
-    console.log('"vscode-superoffice" extension is now active.');
+    console.log('"superoffice-vscode" extension is now active.');
 
     // Register Virtual File System Provider
-    const vfsProviderRegistration = vscode.workspace.registerFileSystemProvider(VFS_SCHEME, vfsProvider, { isCaseSensitive: true });
+    const vfsProviderRegistration = vscode.workspace.registerFileSystemProvider(CONFIG_COMMANDS.VFS_SCHEME, vfsProvider, { isCaseSensitive: true });
     // Register Tree View Data Provider
     const scriptsProvider = vscode.window.registerTreeDataProvider('scriptsTreeView', scriptsTreeViewDataProvider);
 

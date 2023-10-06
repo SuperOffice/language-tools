@@ -6,11 +6,12 @@ import { storeTokenSet } from './tokenService';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 import { Issuer, TokenSet, generators } from 'openid-client';
 import { getSuoFile } from '../workspace/workspaceFileManager';
+import { CONFIG_AUTHSERVICE } from '../config';
 
 // Configuration variables
-const redirectUri = process.env.REDIRECT_URI || 'http://127.0.0.1:8000';
+const redirectUri = process.env.REDIRECT_URI || CONFIG_AUTHSERVICE.REDIRECT_URI;
 const parsedUri = new URL(redirectUri);
-const clientId = process.env.CLIENT_ID || '1a5764a8090f136cc9d30f381626d5fa';
+const clientId = process.env.CLIENT_ID || CONFIG_AUTHSERVICE.CLIENT_ID;
 
 /* eslint-disable @typescript-eslint/naming-convention */
 const clientMetadata = {
