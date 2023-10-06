@@ -1,19 +1,14 @@
-# vscode-superoffice README
+# superoffice-vscode README
 
-Test after moving the project to new repo and adding origin
-new test to check pull wors
-
-This is the README for your extension "vscode-superoffice". After writing up a brief description, we recommend including the following sections.
+This extension is created to help working with crmscript v2 in superoffice.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
-
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+1. Authentication towards SuperOffice - Native App Flow with PKCE
+2. TreeView of scripts in the tenant
+3. Option to preview the script (creates a file in virtual storage)
+4. Option to download the script (creates a file in local workspace, in the correct folder)
+5. Option to execute the script (from local workspace), this utilizes the ExecuteScriptFromString-endpoint 
 
 ## Requirements
 
