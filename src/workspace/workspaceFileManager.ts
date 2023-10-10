@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import { mkdir, readFile, writeFile } from 'fs/promises';
 import * as path from 'path';
 import { TokenSet } from 'openid-client';
-import { setTokenSetFromFile } from '../services/tokenService';
 import { CONFIG_TOKENSERVICE} from '../config';
 
 async function getRootPath(): Promise<string> {
@@ -61,7 +60,7 @@ export async function getSuoFile(): Promise<boolean> {
             throw new Error("Suo file is invalid. Please login again.");
         }
 
-        await setTokenSetFromFile(new TokenSet(result));
+        //await setTokenSetFromFile(new TokenSet(result));
         return true;
     } catch (err) {
         throw handleError(err);

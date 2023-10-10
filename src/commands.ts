@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
-import { superOfficeAuthenticationFlow } from './services/authService';
-import { clearTokenSet } from './services/tokenService';
-import { ScriptInfo } from './services/types';
+//import { superOfficeAuthenticationFlow } from './services/authService';
+//import { clearTokenSet } from './services/tokenService';
+import { ScriptInfo } from './types/types';
 import { executeScript, getScriptEntity } from './services/scriptService';
 import { Node } from './providers/scriptsTreeViewDataProvider';
-import { vfsProvider } from './extension';
+import { superofficeAuthenticationProvider, vfsProvider } from './extension';
 import path = require('path');
 import { writeFileAsync } from './workspace/workspaceFileManager';
 import {CONFIG_COMMANDS } from './config';
@@ -14,7 +14,7 @@ const openedScripts: Map<string, vscode.TextDocument> = new Map();
 // Register Command for Sign-In
 export const signInCommand = vscode.commands.registerCommand(CONFIG_COMMANDS.CMD_SIGN_IN, async () => {
     try {
-        if (await superOfficeAuthenticationFlow()) {
+        if (await superofficeAuthenticationProvider.createSession([])) {
             vscode.window.showInformationMessage('Signed In!');
         }
     } catch (err) {
@@ -24,7 +24,7 @@ export const signInCommand = vscode.commands.registerCommand(CONFIG_COMMANDS.CMD
 
 // Register Command for Sign-Out
 export const signOutCommand = vscode.commands.registerCommand(CONFIG_COMMANDS.CMD_SIGN_OUT, async () => {
-    await clearTokenSet();
+    await superofficeAuthenticationProvider.removeSession();
     vscode.window.showInformationMessage('Signed Out!');
 });
 
@@ -84,12 +84,8 @@ export const downloadScriptCommand = vscode.commands.registerCommand(CONFIG_COMM
         }
     }
 });
-/*
-export const executeScriptCommand = vscode.commands.registerCommand(CMD_EXECUTE_SCRIPT, async (node: Node) => {
-    vscode.window.showInformationMessage('Not implemented yet!');
-});*/
 
-export const executeScriptCommand2 = vscode.commands.registerCommand(CONFIG_COMMANDS.CMD_EXECUTE_SCRIPT, async (fileUri: vscode.Uri) => {
+export const executeScriptCommand = vscode.commands.registerCommand(CONFIG_COMMANDS.CMD_EXECUTE_SCRIPT, async (fileUri: vscode.Uri) => {
     if (fileUri && fileUri.fsPath) {
         try {
             const fileContent = await vscode.workspace.fs.readFile(fileUri);
