@@ -10,7 +10,7 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": ["onView:scriptsTreeView"],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
