@@ -4,10 +4,12 @@ import { downloadScriptCommand, executeScriptCommand, previewScriptCommand, show
 import { VirtualFileSystemProvider } from './workspace/virtualWorkspaceFileManager';
 import { CONFIG_COMMANDS } from './config';
 import { SuperofficeAuthenticationProvider } from './providers/authenticationProvider';
+import { WebviewViewProvider } from './dev/webviewViewProvider';
 
 export const scriptsTreeViewDataProvider = new ScriptsTreeViewDataProvider();
 export const vfsProvider = new VirtualFileSystemProvider();
 export const superofficeAuthenticationProvider = new SuperofficeAuthenticationProvider();
+const webviewViewProvider = new WebviewViewProvider();
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('"superoffice-vscode" extension is now active.');
@@ -19,8 +21,11 @@ export function activate(context: vscode.ExtensionContext) {
     // Register Authentication Provider
     const authentcationProvider = vscode.authentication.registerAuthenticationProvider('superofficeAuthentication', 'superofficeAuthenticationProvider', superofficeAuthenticationProvider);
 
+    //DEV
+    const webviewProvider = vscode.window.registerWebviewViewProvider('scriptsWebview', webviewViewProvider);
+
     // Add to the extension context's subscriptions
-    context.subscriptions.push(scriptsProvider, signInCommand, signOutCommand, showScriptInfoCommand, previewScriptCommand, downloadScriptCommand, executeScriptCommand, vfsProviderRegistration, authentcationProvider);
+    context.subscriptions.push(scriptsProvider, signInCommand, signOutCommand, showScriptInfoCommand, previewScriptCommand, downloadScriptCommand, executeScriptCommand, vfsProviderRegistration, authentcationProvider, webviewProvider);
 }
 
 export function deactivate() {}

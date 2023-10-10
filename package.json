@@ -55,6 +55,11 @@
           "id": "superofficeViewContainer",
           "title": "SuperOffice",
           "icon": "/resources/logo.svg"
+        },
+        {
+          "id": "superofficeWebviewContainer",
+          "title": "SuperOffice Webview",
+          "icon": "$(tools)"
         }
       ]
     },
@@ -63,6 +68,13 @@
         {
           "id": "scriptsTreeView",
           "name": "Scripts"
+        }
+      ],
+      "superofficeWebviewContainer": [
+        {
+          "id": "scriptsWebview",
+          "name": "Webview Scripts",
+          "type": "webview"
         }
       ]
     },
