@@ -14,6 +14,10 @@
   "contributes": {
     "commands": [
       {
+        "command": "superoffice-vscode.authenticate",
+        "title": "Authenticate with SuperOffice"
+      },
+      {
         "command": "superoffice-vscode.signIn",
         "title": "Sign In",
         "icon": "$(log-in)",
