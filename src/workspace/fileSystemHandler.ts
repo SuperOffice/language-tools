@@ -1,5 +1,9 @@
 import * as vscode from 'vscode';
 
+export function joinPaths(part1: string, part2: string): string {
+    return `${part1.replace(/\/$/, '')}/${part2.replace(/^\//, '')}`;
+}
+
 /**
  * Get the full URI for a file located within the current workspace.
  * 
@@ -7,7 +11,7 @@ import * as vscode from 'vscode';
  * @returns The full URI pointing to the file in the current workspace.
  * @throws {Error} If there's no workspace currently opened in VSCode.
  */
-function getFileUriInWorkspace(relativePath: string): vscode.Uri {
+export function getFileUriInWorkspace(relativePath: string): vscode.Uri {
     const workspaceFolder = vscode.workspace.workspaceFolders?.[0];
 
     if (!workspaceFolder) {
@@ -15,6 +19,21 @@ function getFileUriInWorkspace(relativePath: string): vscode.Uri {
     }
 
     return vscode.Uri.joinPath(workspaceFolder.uri, relativePath);
+}
+
+// Ensure directory exists
+async function ensureDirectoryExists(uri: vscode.Uri): Promise<void> {
+    try {
+        await vscode.workspace.fs.stat(uri);
+    } catch (error) {
+        if (error instanceof vscode.FileSystemError && error.code === 'FileNotFound') {
+            const parentUri = vscode.Uri.joinPath(uri, '..');
+            await ensureDirectoryExists(parentUri);
+            await vscode.workspace.fs.createDirectory(uri);
+        } else {
+            throw error;
+        }
+    }
 }
 
 // Read file from relativePath
@@ -31,10 +50,17 @@ export async function readFile(relativePath: string): Promise<string> {
 }
 
 // Write file to relativePath
-export async function writeFile(relativePath: string, content: string): Promise<void> {
+export async function writeFile(relativePath: string, content: string): Promise<vscode.Uri> {
+    const fileUri = getFileUriInWorkspace(relativePath);
+    const dirUri = fileUri.with({ path: fileUri.path.replace(/\/[^/]+$/, '') }); // remove the last segment of the path to get the directory
+
+    // Ensure directory structure exists
+    await ensureDirectoryExists(dirUri);
+
     try {
         const data = Buffer.from(content);
-        await vscode.workspace.fs.writeFile(getFileUriInWorkspace(relativePath), data);
+        await vscode.workspace.fs.writeFile(fileUri, data);
+        return fileUri;
     } catch (error) {
         if (error instanceof vscode.FileSystemError) {
             throw new Error(`Failed to write to file: ${relativePath}. Reason: ${error.message}`);

@@ -1,5 +1,6 @@
 {
   "name": "superoffice-vscode",
+  "publisher": "superoffice",
   "displayName": "superoffice-vscode",
   "description": "",
   "version": "0.0.1",

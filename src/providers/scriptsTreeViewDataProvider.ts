@@ -2,6 +2,11 @@ import * as vscode from 'vscode';
 import { ScriptInfo } from '../types/types';
 import { getAllScriptInfo } from '../services/scriptService';
 
+const logoUri = vscode.Uri.joinPath(vscode.extensions.getExtension('superoffice.superoffice-vscode')!.extensionUri, 'resources', 'logo.svg');
+const iconPath = {
+    light: logoUri,
+    dark: logoUri
+};
 interface TreeDataItem {
     label: string;
     children: TreeDataItem[];
@@ -26,12 +31,13 @@ export class Node implements vscode.TreeItem {
 }
 
 function convertTreeDataToNode(data: TreeDataItem): Node {
-    return new Node(data.label, 
-                    data.children.map(convertTreeDataToNode), 
-                    data.scriptInfo ? new vscode.ThemeIcon('file') : new vscode.ThemeIcon('folder'), 
-                    data.scriptInfo ? { command: 'superoffice-vscode.showScriptInfo', title: 'Show Script Info', arguments: [data.scriptInfo] } : undefined,
-                    data.scriptInfo
-                    );
+    return new Node(
+        data.label, 
+        data.children.map(convertTreeDataToNode), 
+        data.scriptInfo ? iconPath : new vscode.ThemeIcon('folder'), 
+        data.scriptInfo ? { command: 'superoffice-vscode.showScriptInfo', title: 'Show Script Info', arguments: [data.scriptInfo] } : undefined,
+        data.scriptInfo
+        );
 }
 
 function getOrAddChildNode(parentNode: TreeDataItem, part: string): TreeDataItem {

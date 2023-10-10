@@ -1,13 +1,10 @@
 import * as vscode from 'vscode';
-//import { superOfficeAuthenticationFlow } from './services/authService';
-//import { clearTokenSet } from './services/tokenService';
 import { ScriptInfo } from './types/types';
 import { executeScript, getScriptEntity } from './services/scriptService';
 import { Node } from './providers/scriptsTreeViewDataProvider';
 import { superofficeAuthenticationProvider, vfsProvider } from './extension';
-import path = require('path');
-import { writeFileAsync } from './workspace/workspaceFileManager';
 import {CONFIG_COMMANDS } from './config';
+import { joinPaths, writeFile } from './workspace/fileSystemHandler';
 
 const openedScripts: Map<string, vscode.TextDocument> = new Map();
 
@@ -69,11 +66,9 @@ export const downloadScriptCommand = vscode.commands.registerCommand(CONFIG_COMM
         if (vscode.workspace.workspaceFolders !== undefined) {
             try {
                 const scriptEntity = await getScriptEntity(scriptInfo.uniqueIdentifier);
-                const filePath = path.join(scriptEntity.Path, scriptEntity.Name + ".js");
-
-                const fullPath = await writeFileAsync(filePath, scriptEntity.Source);
-
-                const document = await vscode.workspace.openTextDocument(vscode.Uri.file(fullPath));
+                const filePath = joinPaths(scriptEntity.Path, scriptEntity.Name + ".js");
+                const fullPath = await writeFile(filePath, scriptEntity.Source);
+                const document = await vscode.workspace.openTextDocument(fullPath);
                 vscode.window.showTextDocument(document);
             } catch (err) {
                 throw new Error(`Failed to download script: ${err}`);
