@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+export const ENVIRONMENTS = ['sod', 'online'];
+
 type TokenService = {
     SUO_FILE_NAME: string;
 };
@@ -48,4 +50,12 @@ export const CONFIG_AUTHSERVICE: AuthService = {
     REDIRECT_URI: 'http://127.0.0.1:8000',
     CLIENT_ID: '1a5764a8090f136cc9d30f381626d5fa'
 };
-    
+
+type SystemService = {
+    STATE_URI_TEMPLATE: (environment: string, contextIdentifier: string) => string;
+};
+
+export const CONFIG_SYSTEMSERVICE: SystemService = {
+    STATE_URI_TEMPLATE: (environment, contextIdentifier) => 
+        `https://${environment}.superoffice.com/api/state/${contextIdentifier}`
+};

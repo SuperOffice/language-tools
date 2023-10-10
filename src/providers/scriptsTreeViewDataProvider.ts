@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { ScriptInfo } from '../services/types';
+import { ScriptInfo } from '../types/types';
 import { getAllScriptInfo } from '../services/scriptService';
 
 interface TreeDataItem {
