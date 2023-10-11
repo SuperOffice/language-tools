@@ -70,6 +70,8 @@ export class ScriptsTreeViewDataProvider implements vscode.TreeDataProvider<Node
     private _onDidChangeTreeData: vscode.EventEmitter<Node | undefined> = new vscode.EventEmitter<Node | undefined>();
     readonly onDidChangeTreeData: vscode.Event<Node | undefined> = this._onDidChangeTreeData.event;
 
+    public static readonly viewId = 'scriptsTreeView';
+
     private isLoggedIn: boolean = false;
 
     // Call this method to trigger a refresh of the tree view

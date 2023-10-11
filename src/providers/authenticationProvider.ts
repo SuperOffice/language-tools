@@ -14,6 +14,8 @@ export class SuperofficeAuthenticationProvider implements vscode.AuthenticationP
     private _onDidChangeSessions: vscode.EventEmitter<vscode.AuthenticationProviderAuthenticationSessionsChangeEvent> = new vscode.EventEmitter<vscode.AuthenticationProviderAuthenticationSessionsChangeEvent>();
     readonly onDidChangeSessions: vscode.Event<vscode.AuthenticationProviderAuthenticationSessionsChangeEvent> = this._onDidChangeSessions.event;
 
+    public static readonly authenticationProviderId = 'superofficeAuthentication';
+    
     async getSessions(): Promise<vscode.AuthenticationSession[]> {
         return this._sessions;
     }
