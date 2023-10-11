@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { ScriptInfo } from '../../types/types';
 import { getAllScriptInfo } from '../../services/scriptService';
+import { superofficeAuthenticationProvider } from '../../extension';
 
 const logoUri = vscode.Uri.joinPath(vscode.extensions.getExtension('superoffice.superoffice-vscode')!.extensionUri, 'resources', 'logo.svg');
 const iconPath = {
@@ -72,17 +73,9 @@ export class TreeViewDataProvider implements vscode.TreeDataProvider<Node> {
 
     public static readonly viewId = 'superoffice.views.treeview';
 
-    private isLoggedIn: boolean = false;
-
     // Call this method to trigger a refresh of the tree view
     public refresh(): void {
         this._onDidChangeTreeData.fire(undefined);
-    }
-
-    // This method is used to update the login status and refresh the tree
-    public setLoggedIn(state: boolean): void {
-        this.isLoggedIn = state;
-        this.refresh();
     }
 
     getTreeItem(element: Node): vscode.TreeItem {
@@ -95,7 +88,7 @@ export class TreeViewDataProvider implements vscode.TreeDataProvider<Node> {
         }
     
         // Check if user is logged in
-        if (this.isLoggedIn) {
+        if (superofficeAuthenticationProvider.authenticated) {
             try {
                 const scriptResponseData = await getAllScriptInfo();
                 const root: TreeDataItem = { label: 'Root', children: [] };

@@ -85,7 +85,7 @@
       "view/title": [
         {
           "command": "superoffice-vscode.signOut",
-          "when": "view == superoffice.views.treeview && isLoggedIn",
+          "when": "view == superoffice.views.treeview && authenticated",
           "group": "navigation",
           "icon": "$(log-out)"
         }
@@ -106,7 +106,7 @@
         {
           "submenu": "superoffice.submenu",
           "group": "superoffice",
-          "when": "isLoggedIn"
+          "when": "authenticated"
         }
       ],
       "superoffice.submenu": [

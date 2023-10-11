@@ -15,7 +15,9 @@ export class SuperofficeAuthenticationProvider implements vscode.AuthenticationP
     readonly onDidChangeSessions: vscode.Event<vscode.AuthenticationProviderAuthenticationSessionsChangeEvent> = this._onDidChangeSessions.event;
 
     public static readonly authenticationProviderId = 'superofficeAuthentication';
-    
+
+    public authenticated: boolean = false;
+
     async getSessions(): Promise<vscode.AuthenticationSession[]> {
         return this._sessions;
     }
@@ -57,8 +59,7 @@ export class SuperofficeAuthenticationProvider implements vscode.AuthenticationP
             });
             
             //Update treeview
-            vscode.commands.executeCommand('setContext', 'isLoggedIn', true);
-            treeViewDataProvider.setLoggedIn(true);
+            this.setLoggedIn(true);
 
             return newSession;
         } catch (error) {
@@ -77,6 +78,8 @@ export class SuperofficeAuthenticationProvider implements vscode.AuthenticationP
                 changed: []
             });
         }
+        //Update treeview
+        this.setLoggedIn(false);
     }
 
     async getSessionById(sessionId: string | null): Promise<CustomAuthenticationSession | null> {
@@ -139,5 +142,17 @@ export class SuperofficeAuthenticationProvider implements vscode.AuthenticationP
         }
 
         // ... any other validation you might want to add in the future ...
+    }
+
+    // This method is used to update the login status and refresh the tree
+    public setLoggedIn(state: boolean): void {
+        this.authenticated = state;
+        //Needed to help the package.json figure out if you are logged inn or not
+        vscode.commands.executeCommand('setContext', 'authenticated', state);
+        treeViewDataProvider.refresh();
+    }
+
+    public get isLoggedIn(): boolean {
+        return this.authenticated;
     }
 }

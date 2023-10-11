@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 
 import * as tsclientWebapi from "@superoffice/tsclient.webapi";
 import { ContactEntity, PersonEntity, SaleEntity, ProjectEntity, TicketEntity } from "@superoffice/tsclient.webapi/dist/Carriers";
