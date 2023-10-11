@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 
 export class WebviewViewProvider implements vscode.WebviewViewProvider {
     private _view?: vscode.WebviewView;
-    public static readonly viewId = 'scriptsWebview';
+    public static readonly viewId = 'superoffice.views.webview';
 
     constructor(
 		private readonly _extensionUri: vscode.Uri,

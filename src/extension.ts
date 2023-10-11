@@ -4,7 +4,7 @@ import { downloadScriptCommand, executeScriptCommand, previewScriptCommand, show
 import { VirtualFileSystemProvider } from './workspace/virtualWorkspaceFileManager';
 import { CONFIG_COMMANDS } from './config';
 import { SuperofficeAuthenticationProvider } from './providers/authenticationProvider';
-import { WebviewViewProvider } from './dev/webviewViewProvider';
+import { WebviewViewProvider } from './providers/webviewViewProvider';
 
 export const scriptsTreeViewDataProvider = new ScriptsTreeViewDataProvider();
 export const vfsProvider = new VirtualFileSystemProvider();

@@ -70,7 +70,7 @@ export class ScriptsTreeViewDataProvider implements vscode.TreeDataProvider<Node
     private _onDidChangeTreeData: vscode.EventEmitter<Node | undefined> = new vscode.EventEmitter<Node | undefined>();
     readonly onDidChangeTreeData: vscode.Event<Node | undefined> = this._onDidChangeTreeData.event;
 
-    public static readonly viewId = 'scriptsTreeView';
+    public static readonly viewId = 'superoffice.views.treeview';
 
     private isLoggedIn: boolean = false;
 
