@@ -4,7 +4,7 @@ import { TokenSet } from 'openid-client';
 import { CustomAuthenticationSession, UserClaims } from '../types/types';
 import { getTenantState } from '../services/systemService';
 import { ENVIRONMENTS } from '../config';
-import { scriptsTreeViewDataProvider } from '../extension';
+import { treeViewDataProvider } from '../extension';
 
 let contextIdentifier: string | null = null;
 export let webapiUrl: string | null = null;
@@ -58,7 +58,7 @@ export class SuperofficeAuthenticationProvider implements vscode.AuthenticationP
             
             //Update treeview
             vscode.commands.executeCommand('setContext', 'isLoggedIn', true);
-            scriptsTreeViewDataProvider.setLoggedIn(true);
+            treeViewDataProvider.setLoggedIn(true);
 
             return newSession;
         } catch (error) {

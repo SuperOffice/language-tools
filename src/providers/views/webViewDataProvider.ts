@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-export class WebviewViewProvider implements vscode.WebviewViewProvider {
+export class WebViewDataProvider implements vscode.WebviewViewProvider {
     private _view?: vscode.WebviewView;
     public static readonly viewId = 'superoffice.views.webview';
 

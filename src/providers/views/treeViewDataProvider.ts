@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { ScriptInfo } from '../types/types';
-import { getAllScriptInfo } from '../services/scriptService';
+import { ScriptInfo } from '../../types/types';
+import { getAllScriptInfo } from '../../services/scriptService';
 
 const logoUri = vscode.Uri.joinPath(vscode.extensions.getExtension('superoffice.superoffice-vscode')!.extensionUri, 'resources', 'logo.svg');
 const iconPath = {
@@ -66,7 +66,7 @@ function addToTreeData(root: TreeDataItem, scriptPath: string, scriptInfo: Scrip
     currentNode.children.push({ label: scriptInfo.name, children: [], scriptInfo });
 }
 
-export class ScriptsTreeViewDataProvider implements vscode.TreeDataProvider<Node> {
+export class TreeViewDataProvider implements vscode.TreeDataProvider<Node> {
     private _onDidChangeTreeData: vscode.EventEmitter<Node | undefined> = new vscode.EventEmitter<Node | undefined>();
     readonly onDidChangeTreeData: vscode.Event<Node | undefined> = this._onDidChangeTreeData.event;
 

@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { ScriptInfo } from './types/types';
 import { executeScript, getScriptEntity } from './services/scriptService';
-import { Node } from './providers/scriptsTreeViewDataProvider';
+import { Node } from './providers/views/treeViewDataProvider';
 import { superofficeAuthenticationProvider, vfsProvider } from './extension';
 import {CONFIG_COMMANDS } from './config';
 import { joinPaths, writeFile } from './workspace/fileSystemHandler';
