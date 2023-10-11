@@ -4,6 +4,7 @@
   "displayName": "superoffice-vscode",
   "description": "",
   "version": "0.0.1",
+  "repository": "https://github.com/SuperOffice/superoffice-vscode.git",
   "engines": {
     "vscode": "^1.82.0"
   },
