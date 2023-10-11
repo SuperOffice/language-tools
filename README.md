@@ -29,7 +29,7 @@ Input credentials in new browser-tab and close after completion
 ### Option to preview the script (creates a file in virtual storage)
 ### Option to download the script (creates a file in local workspace, in the correct folder)
 
-![Alt text](assets/downloadScript.png?raw=true "downloadScript")
+![Alt text](assets/downloadScriptOption.png?raw=true "downloadScriptOption")
 
 ![Alt text](assets/scriptCreatedInWorkspace.png?raw=true "scriptCreatedInWorkspace")
 
@@ -38,7 +38,7 @@ Input credentials in new browser-tab and close after completion
 
 Execute the script from right-click
 
-![Alt text](assets/executeScript.png?raw=true "executeScript")
+![Alt text](assets/executeScriptOption.png?raw=true "executeScriptOption")
 
 ExampleScript
 
