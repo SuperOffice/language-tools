@@ -11,9 +11,16 @@ const openedScripts: Map<string, vscode.TextDocument> = new Map();
 // Register Command for Sign-In
 export const signInCommand = vscode.commands.registerCommand(CONFIG_COMMANDS.CMD_SIGN_IN, async () => {
     try {
-        if (await superofficeAuthenticationProvider.createSession([])) {
-            vscode.window.showInformationMessage('Signed In!');
-        }
+        await vscode.window.withProgress({
+            location: vscode.ProgressLocation.Notification,
+            title: "Signing In to SuperOffice...",
+            cancellable: false
+        }, async () => {
+            // Perform the session creation and data fetching here
+            if (await superofficeAuthenticationProvider.createSession([])) {
+                vscode.window.showInformationMessage('Signed In!');
+            }
+        });
     } catch (err) {
         vscode.window.showErrorMessage(`Failed to sign in: ${err}`);
     }

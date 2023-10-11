@@ -73,6 +73,7 @@ function startServer(): Promise<TokenSet> {
 
             // Check for favicon.ico and do nothing.
             if (req.url.includes('/favicon.ico')) {
+                // eslint-disable-next-line @typescript-eslint/naming-convention
                 res.writeHead(200, {'Content-Type': 'image/x-icon'});
                 res.end();
                 return;
@@ -98,6 +99,7 @@ function startServer(): Promise<TokenSet> {
             } catch (error) {
                 reject(error);
             }
+            return;
         });
 
         server.on('error', err => {
@@ -106,7 +108,9 @@ function startServer(): Promise<TokenSet> {
         });
 
         // Start server
-        server.listen(parseInt(parsedUri.port, 10), parsedUri.hostname);
+        server.listen(parseInt(parsedUri.port, 10), parsedUri.hostname, () => {
+            // Server is now listening
+        });
 
         // Optionally add a timeout to reject the promise if it takes too long
         setTimeout(() => {
