@@ -1,14 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 export const ENVIRONMENTS = ['sod', 'online'];
 
-type TokenService = {
-    SUO_FILE_NAME: string;
-};
-
-export const CONFIG_TOKENSERVICE: TokenService = { 
-    SUO_FILE_NAME: '.suo' 
-};
-
 type ScriptService = {
     SCRIPT_ENDPOINT_URI: string;
     MIME_TYPE_JSON: string;
@@ -16,9 +8,9 @@ type ScriptService = {
 };
 
 export const CONFIG_SCRIPTSERVICE: ScriptService = {
-    SCRIPT_ENDPOINT_URI: 'v1/Script/',
+    SCRIPT_ENDPOINT_URI: '/v1/Script/',
     MIME_TYPE_JSON: 'application/json',
-    EXECUTESCRIPT_ENDPOINT_URI: 'v1/Agents/CRMScript/ExecuteScriptByString'
+    EXECUTESCRIPT_ENDPOINT_URI: '/v1/Agents/CRMScript/ExecuteScriptByString'
 };
 
 type Commands = {
@@ -27,6 +19,7 @@ type Commands = {
     CMD_SHOW_SCRIPT_INFO: string;
     CMD_PREVIEW_SCRIPT: string;
     CMD_DOWNLOAD_SCRIPT: string;
+    CMD_DOWNLOAD_SCRIPTFOLDER: string;
     CMD_EXECUTE_SCRIPT: string;
     VFS_SCHEME: string;
 };
@@ -37,6 +30,7 @@ export const CONFIG_COMMANDS: Commands = {
     CMD_SHOW_SCRIPT_INFO: 'superoffice-vscode.showScriptInfo',
     CMD_PREVIEW_SCRIPT: 'superoffice-vscode.previewScript',
     CMD_DOWNLOAD_SCRIPT: 'superoffice-vscode.downloadScript',
+    CMD_DOWNLOAD_SCRIPTFOLDER: 'superoffice-vscode.downloadScriptFolder',
     CMD_EXECUTE_SCRIPT: 'superoffice-vscode.executeScript',
     VFS_SCHEME: 'vfs'
 };
@@ -59,3 +53,12 @@ export const CONFIG_SYSTEMSERVICE: SystemService = {
     STATE_URI_TEMPLATE: (environment, contextIdentifier) => 
         `https://${environment}.superoffice.com/api/state/${contextIdentifier}`
 };
+
+type FileSystemhandler = {
+    SUOFILE_PATH: string,
+};
+
+export const CONFIG_FILESYSTEMHANDLER: FileSystemhandler = {
+    SUOFILE_PATH: `./.superoffice/.suo`,
+};
+

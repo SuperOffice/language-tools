@@ -4,7 +4,7 @@ import { createServer, Server } from 'http';
 import { parse } from 'url';
 import { parse as parseQuery } from 'querystring';
 import * as vscode from 'vscode';
-import { CustomAuthenticationSession } from "../types/types";
+import { SuperOfficeAuthenticationSession } from "../types/types";
 
 // Configuration variables
 const redirectUri = process.env.REDIRECT_URI || CONFIG_AUTHSERVICE.REDIRECT_URI;
@@ -140,7 +140,7 @@ async function exchangeAuthorizationCode(authorizationCode: string): Promise<Tok
     }
 }
 
-export async function exchangeRefreshToken(session: CustomAuthenticationSession): Promise<TokenSet> {
+export async function exchangeRefreshToken(session: SuperOfficeAuthenticationSession): Promise<TokenSet> {
     const url = new URL(`${session.claims?.['http://schemes.superoffice.net/identity/webapi_url']}`);
 
     if(!superOfficeIssuer){

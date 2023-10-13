@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { IdTokenClaims } from "openid-client";
-import { AuthenticationSession } from "vscode";
+import { AuthenticationSession, AuthenticationSessionAccountInformation } from "vscode";
 
 export interface HttpRequestResponse<T = any> {
     status: number;
@@ -82,14 +82,20 @@ export interface StateResponse {
     ValidUntil: Date;
     Api: string;
 }
-
 export interface UserClaims extends IdTokenClaims {
     "http://schemes.superoffice.net/identity/ctx": string;
     "http://schemes.superoffice.net/identity/netserver_url": string;
     "http://schemes.superoffice.net/identity/webapi_url": string;
 }
 
-export interface CustomAuthenticationSession extends AuthenticationSession {
+export interface SuperOfficeAuthenticationSession extends AuthenticationSession {
+    contextIdentifier: string;
     refreshToken?: string;
-    claims?: UserClaims;
+    webApiUri: string;
+    claims: UserClaims;
+    expiresAt?: number;
+};
+
+export type SuoFile = {
+    contextIdentifier: string;
 };

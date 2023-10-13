@@ -19,19 +19,9 @@
   "contributes": {
     "commands": [
       {
-        "command": "superoffice-vscode.authenticate",
-        "title": "Authenticate with SuperOffice"
-      },
-      {
         "command": "superoffice-vscode.signIn",
         "title": "Sign In",
         "icon": "$(log-in)",
-        "category": "SuperOffice"
-      },
-      {
-        "command": "superoffice-vscode.signOut",
-        "title": "Sign Out",
-        "icon": "$(log-out)",
         "category": "SuperOffice"
       },
       {
@@ -45,6 +35,10 @@
       {
         "command": "superoffice-vscode.downloadScript",
         "title": "DownloadScript"
+      },
+      {
+        "command": "superoffice-vscode.downloadScriptFolder",
+        "title": "DownloadScriptFolder"
       },
       {
         "command": "superoffice-vscode.executeScript",
@@ -82,25 +76,23 @@
       }
     ],
     "menus": {
-      "view/title": [
-        {
-          "command": "superoffice-vscode.signOut",
-          "when": "view == superoffice.views.treeview && authenticated",
-          "group": "navigation",
-          "icon": "$(log-out)"
-        }
-      ],
+      "view/title": [],
       "view/item/context": [
         {
-            "command": "superoffice-vscode.previewScript",
-            "group": "0_script",
-            "when": "view == superoffice.views.treeview && viewItem == script"
+          "command": "superoffice-vscode.previewScript",
+          "group": "0_script",
+          "when": "view == superoffice.views.treeview && viewItem == script"
         },
         {
           "command": "superoffice-vscode.downloadScript",
           "group": "0_script",
           "when": "view == superoffice.views.treeview && viewItem == script"
-      }
+        },
+        {
+          "command": "superoffice-vscode.downloadScriptFolder",
+          "group": "0_script",
+          "when": "view == superoffice.views.treeview && viewItem == folder"
+        }
       ],
       "explorer/context": [
         {
@@ -124,7 +116,9 @@
     "languages": [
       {
         "id": "superoffice",
-        "aliases": [ "SuperOfficeLang" ],
+        "aliases": [
+          "SuperOfficeLang"
+        ],
         "extensions": [
           ".suo"
         ],
@@ -146,6 +140,7 @@
   "devDependencies": {
     "@types/mocha": "^10.0.1",
     "@types/node": "16.x",
+    "@types/uuid": "^9.0.5",
     "@types/vscode": "^1.82.0",
     "@typescript-eslint/eslint-plugin": "^6.4.1",
     "@typescript-eslint/parser": "^6.4.1",
@@ -154,7 +149,8 @@
     "glob": "^10.3.3",
     "mocha": "^10.2.0",
     "node-fetch": "^2.7.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "uuid": "^9.0.1"
   },
   "dependencies": {
     "openid-client": "^5.5.0"

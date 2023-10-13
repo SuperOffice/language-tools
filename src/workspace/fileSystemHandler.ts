@@ -1,4 +1,6 @@
 import * as vscode from 'vscode';
+import { SuoFile } from '../types/types';
+import { CONFIG_FILESYSTEMHANDLER } from '../config';
 
 export function joinPaths(part1: string, part2: string): string {
     return `${part1.replace(/\/$/, '')}/${part2.replace(/^\//, '')}`;
@@ -67,4 +69,18 @@ export async function writeFile(relativePath: string, content: string): Promise<
         }
         throw new Error(`An unexpected error occurred while writing to file: ${relativePath}`);
     }
+}
+
+export async function getSuoFile() : Promise<SuoFile> {
+    try {
+        const suoFile = await readFile(CONFIG_FILESYSTEMHANDLER.SUOFILE_PATH);
+        return JSON.parse(suoFile);
+    }
+    catch(error){
+        throw new Error('No suo file found: ' + error);
+    }
+}
+
+export async function writeSuoFile(content: string) : Promise<vscode.Uri> {
+    return await writeFile(CONFIG_FILESYSTEMHANDLER.SUOFILE_PATH, content);
 }

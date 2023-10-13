@@ -1,0 +1,32 @@
+{
+    "name": "Custom HTML+JS",
+    "scopeName": "text.html.custom",
+    "injectionSelector": "L:source",
+    "patterns": [
+      {
+        "begin": "<%",
+        "end": "%>",
+        "beginCaptures": {
+          "0": { "name": "punctuation.section.embedded.js.begin.custom" }
+        },
+        "endCaptures": {
+          "0": { "name": "punctuation.section.embedded.js.end.custom" }
+        },
+        "contentName": "source.js",
+        "patterns": [
+          { "include": "source.js" }
+        ]
+      },
+      {
+        "include": "text.html.basic"
+      }
+    ],
+    "injections": {
+      "text.html.basic": {
+        "patterns": [
+          { "include": "text.html.custom" }
+        ]
+      }
+    }
+  }
+  

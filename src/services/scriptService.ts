@@ -1,31 +1,61 @@
-import { httpAuthenticatedRequest } from "./httpService";
+import { httpAuthenticatedRequestAsync } from "./httpService";
 import { ExecuteScriptResponse, ScriptEntity, ScriptInfoArray } from "../types/types";
 import { CONFIG_SCRIPTSERVICE } from '../config';
 import * as https from 'https';
+import { joinPaths, writeFile } from "../workspace/fileSystemHandler";
+import { Uri } from "vscode";
+import { Node } from "../providers/views/treeViewDataProvider";
 
 // Helper function for error checking and response extraction
-const fetchAndCheck = async <T>(endpoint: string, method: https.RequestOptions["method"], errorMessagePrefix: string, body?: object): Promise<T> => {
-    const response = await httpAuthenticatedRequest<T>(endpoint, method, body);
+const fetchAndCheckAsync = async <T>(endpoint: string, method: https.RequestOptions["method"], errorMessagePrefix: string, body?: object): Promise<T> => {
+    const response = await httpAuthenticatedRequestAsync<T>(endpoint, method, body);
     if (!response.ok) {
         throw new Error(`${errorMessagePrefix}: ${response.statusText}`);
     }
     return response.body;
 };
 
-export const getAllScriptInfo = async (): Promise<ScriptInfoArray> => {
-    return fetchAndCheck<ScriptInfoArray>(CONFIG_SCRIPTSERVICE.SCRIPT_ENDPOINT_URI, 'GET', 'Failed to get script info');
+export const getAllScriptInfoAsync = async (): Promise<ScriptInfoArray> => {
+    return fetchAndCheckAsync<ScriptInfoArray>(CONFIG_SCRIPTSERVICE.SCRIPT_ENDPOINT_URI, 'GET', 'Failed to get script info');
 };
 
-export const getScriptEntity = async (uniqueIdentifier: string): Promise<ScriptEntity> => {
-    return fetchAndCheck<ScriptEntity>(`${CONFIG_SCRIPTSERVICE.SCRIPT_ENDPOINT_URI}${uniqueIdentifier}`, 'GET', 'Failed to get script entity');
+export const getScriptEntityAsync = async (uniqueIdentifier: string): Promise<ScriptEntity> => {
+    return fetchAndCheckAsync<ScriptEntity>(`${CONFIG_SCRIPTSERVICE.SCRIPT_ENDPOINT_URI}${uniqueIdentifier}`, 'GET', 'Failed to get script entity');
 };
 
-export const executeScript = async (script: string): Promise<ExecuteScriptResponse> => {
+export const executeScriptAsync = async (script: string): Promise<ExecuteScriptResponse> => {
     const payload = {
         script: script,
         parameters: {
             "parameters1": "mandatory"
         }
     };
-    return fetchAndCheck<ExecuteScriptResponse>(CONFIG_SCRIPTSERVICE.EXECUTESCRIPT_ENDPOINT_URI, 'POST', 'Failed to execute script', payload);
+    return fetchAndCheckAsync<ExecuteScriptResponse>(CONFIG_SCRIPTSERVICE.EXECUTESCRIPT_ENDPOINT_URI, 'POST', 'Failed to execute script', payload);
+};
+
+export const downloadScriptAsync = async (uniqueIdentifier: string): Promise<Uri> => {
+    const scriptEntity = await getScriptEntityAsync(uniqueIdentifier);
+    const filePath = joinPaths(scriptEntity.Path, scriptEntity.Name + ".js");
+    return await writeFile(filePath, scriptEntity.Source);
+};
+
+export const downloadScriptFolderAsync = async (folder: Node): Promise<void> => {
+    try{
+        folder.children?.forEach(async (childNode) => {
+            if(childNode.contextValue === 'folder') {
+                await downloadScriptFolderAsync(childNode);
+            }
+            else if(childNode.contextValue === 'script') {
+                if(childNode.scriptInfo === undefined) {
+                    console.log(`superoffice-vscode: Could not find scriptInfo for ${childNode.label}`);
+                    return;
+                }
+                await downloadScriptAsync(childNode.scriptInfo.uniqueIdentifier);
+                console.log(`superoffice-vscode: Downloaded script: ${childNode.scriptInfo.name}`);
+            }
+        });
+    }
+    catch (err) {
+        throw new Error(`Failed to download scriptFolder: ${err}`);
+    }
 };

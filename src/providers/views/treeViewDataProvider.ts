@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { ScriptInfo } from '../../types/types';
-import { getAllScriptInfo } from '../../services/scriptService';
-import { superofficeAuthenticationProvider } from '../../extension';
+import { getAllScriptInfoAsync } from '../../services/scriptService';
+import { currentSession } from '../authentication/authenticationProvider';
 
 const logoUri = vscode.Uri.joinPath(vscode.extensions.getExtension('superoffice.superoffice-vscode')!.extensionUri, 'resources', 'logo.svg');
 const iconPath = {
@@ -24,7 +24,7 @@ export class Node implements vscode.TreeItem {
         public readonly command?: vscode.Command,
         public readonly scriptInfo?: ScriptInfo
     ) {
-        this.contextValue = scriptInfo ? 'script' : 'node';
+        this.contextValue = scriptInfo ? 'script' : 'folder';
         this.collapsibleState = (this.children?.length ?? 0) > 0 
         ? vscode.TreeItemCollapsibleState.Collapsed 
         : vscode.TreeItemCollapsibleState.None;
@@ -87,10 +87,10 @@ export class TreeViewDataProvider implements vscode.TreeDataProvider<Node> {
             return element.children || [];
         }
     
-        // Check if user is logged in
-        if (superofficeAuthenticationProvider.authenticated) {
+        //Check if user is logged in
+        if (currentSession) {
             try {
-                const scriptResponseData = await getAllScriptInfo();
+                const scriptResponseData = await getAllScriptInfoAsync();
                 const root: TreeDataItem = { label: 'Root', children: [] };
                 scriptResponseData.value.forEach(script => addToTreeData(root, script.path, script));
                 return root.children.map(convertTreeDataToNode);

@@ -1,14 +1,13 @@
 import { HttpRequestResponse } from "../types/types";
 import * as https from 'https';
-import { superofficeAuthenticationProvider } from "../extension";
+import { currentSession as session } from "../providers/authentication/authenticationProvider";
 
-export async function httpAuthenticatedRequest<T>(path: string, method: https.RequestOptions["method"], body?: object): Promise<HttpRequestResponse<T>> {
-    let session = await superofficeAuthenticationProvider.getCurrentSession();
+export async function httpAuthenticatedRequestAsync<T>(path: string, method: https.RequestOptions["method"], body?: object): Promise<HttpRequestResponse<T>> {
     if(!session){
         throw new Error("No session found");
     }
 
-    const url = new URL(`${session.claims?.["http://schemes.superoffice.net/identity/webapi_url"]}${path}`);
+    const url = new URL(`${session.webApiUri}${path}`);
 
     let headers: {[key: string]: string} = {
         accept: 'application/json',
@@ -31,31 +30,31 @@ export async function httpAuthenticatedRequest<T>(path: string, method: https.Re
     let requestBody = body ? JSON.stringify(body) : undefined; // Stringify only once
 
     try {
-        let response = await executeRequest<T>(options, requestBody) as HttpRequestResponse<T>;
+        let response = await executeRequestAsync<T>(options, requestBody) as HttpRequestResponse<T>;
 
         // Check if the response indicates an expired token
-        if (response.status === 401) {
-            const oldToken = session.accessToken;
-            session = await superofficeAuthenticationProvider.refreshAccessToken(session);
+        // if (response.status === 401) {
+        //     const oldToken = session.accessToken;
+        //     session = await superofficeAuthenticationProvider.refreshAccessToken(session);
 
-            if (oldToken === session.accessToken) {
-                throw new Error("Failed to update access token.");
-            }
+        //     if (oldToken === session.accessToken) {
+        //         throw new Error("Failed to update access token.");
+        //     }
 
-            options = {
-                ...options,
-                headers: {
-                   ...options.headers,
-                   authorization: `Bearer ${session.accessToken}`
-                }
-             };
+        //     options = {
+        //         ...options,
+        //         headers: {
+        //            ...options.headers,
+        //            authorization: `Bearer ${session.accessToken}`
+        //         }
+        //      };
              
-            response = await executeRequest(options, requestBody) as HttpRequestResponse<T>;
+        //     response = await executeRequest(options, requestBody) as HttpRequestResponse<T>;
 
-            if (response.status === 401) {
-                throw new Error("Access denied: After refreshing the accessToken you are still unauthorized. You might not have the required permissions to access this endpoint.");
-            }
-        }
+        //     if (response.status === 401) {
+        //         throw new Error("Access denied: After refreshing the accessToken you are still unauthorized. You might not have the required permissions to access this endpoint.");
+        //     }
+        // }
 
         return response;
 
@@ -73,7 +72,7 @@ export async function httpAuthenticatedRequest<T>(path: string, method: https.Re
     }
 }
 
-export async function httpPublicRequest<T>(method: https.RequestOptions["method"], urlString: string, body?: object){
+export async function httpPublicRequestAsync<T>(method: https.RequestOptions["method"], urlString: string, body?: object){
     const url = new URL(urlString);
 
     let requestOptions: https.RequestOptions = {
@@ -90,7 +89,7 @@ export async function httpPublicRequest<T>(method: https.RequestOptions["method"
     let requestBody = body ? JSON.stringify(body) : undefined; 
 
     try {
-        return await executeRequest<T>(requestOptions, requestBody) as HttpRequestResponse<T>;
+        return await executeRequestAsync<T>(requestOptions, requestBody) as HttpRequestResponse<T>;
     }
     catch (error) 
 {
@@ -103,7 +102,7 @@ export async function httpPublicRequest<T>(method: https.RequestOptions["method"
 
 }
 
-export async function executeRequest<T>(options: https.RequestOptions, body?: string): Promise<HttpRequestResponse<T>> {
+async function executeRequestAsync<T>(options: https.RequestOptions, body?: string): Promise<HttpRequestResponse<T>> {
     return new Promise((resolve, reject) => {
         const req = https.request(options, (res) => {
             let data = '';
