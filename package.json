@@ -115,12 +115,14 @@
     ],
     "languages": [
       {
-        "id": "superoffice",
+        "id": "crmscript",
         "aliases": [
-          "SuperOfficeLang"
+          "crmscript",
+          "CRMScript"
         ],
         "extensions": [
-          ".suo"
+          ".suo",
+          ".crmscript"
         ],
         "icon": {
           "light": "/resources/logo.svg",

@@ -33,6 +33,7 @@ Input credentials in new browser-tab and close after completion
 
 ![Alt text](assets/scriptCreatedInWorkspace.png?raw=true "scriptCreatedInWorkspace")
 
+### Option to download folder of scripts (creates all the folders and files in the local workspace)
 
 ### Option to execute the script (from local workspace), this utilizes the ExecuteScriptFromString-endpoint 
 
@@ -53,7 +54,6 @@ Result is presented as informationmessage (down right)
 2. Upload script back to the tenant
 3. execute script in the tenant
 4. Versioncontrol/view for files that are edited compared to what is stored inside SuperOffice
-5. Download all scripts from a folder
 
 If you have any requirements or dependencies, add a section describing those and how to install and configure them.
 

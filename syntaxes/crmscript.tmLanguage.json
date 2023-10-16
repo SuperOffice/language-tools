@@ -1,0 +1,20 @@
+{
+  "fileTypes": ["crmscript"],
+  "name": "CRMScript",
+  "patterns": [
+    {
+      "begin": "<%",
+      "end": "%>",
+      "patterns": [
+        {
+          "include": "source.js"
+        }
+      ]
+    },
+    {
+      "match": "[^<%]+",
+      "name": "text.html.basic"
+    }
+  ],
+  "scopeName": "source.crmscript"
+}
