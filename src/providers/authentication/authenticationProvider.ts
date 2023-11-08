@@ -1,5 +1,5 @@
-import * as vscode from 'vscode';
-import { authentication, AuthenticationProvider, AuthenticationProviderAuthenticationSessionsChangeEvent, AuthenticationSession, Disposable, env, EventEmitter, ExtensionContext, ProgressLocation, Uri, UriHandler, window } from "vscode";
+//import * as vscode from 'vscode';
+import { commands, authentication, AuthenticationProvider, AuthenticationProviderAuthenticationSessionsChangeEvent, AuthenticationSession, Disposable, env, EventEmitter, ExtensionContext, ProgressLocation, Uri, UriHandler, window } from "vscode";
 import { v4 as uuid } from 'uuid';
 import { authenticate } from '../../services/authenticationService';
 import { TokenSet } from 'openid-client';
@@ -141,7 +141,7 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
     }
 
     async selectEnvironment(): Promise<string> {
-        const environment = await vscode.window.showQuickPick(['sod', 'online'], {
+        const environment = await window.showQuickPick(['sod', 'online'], {
             placeHolder: 'Select an environment',
             canPickMany: false
         });
@@ -157,7 +157,7 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
     public setLoggedIn(session: SuperOfficeAuthenticationSession): void {
         currentSession = session;
         //Needed to help the package.json figure out if you are logged inn or not
-        vscode.commands.executeCommand('setContext', 'authenticated', currentSession ?? false);
+        commands.executeCommand('setContext', 'authenticated', currentSession ?? false);
         treeViewDataProvider.refresh();
     }
 
@@ -165,7 +165,7 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
     public setLoggedOut(): void {
         currentSession = null;
         //Needed to help the package.json figure out if you are logged inn or not
-        vscode.commands.executeCommand('setContext', 'authenticated', false);
+        commands.executeCommand('setContext', 'authenticated', false);
         treeViewDataProvider.refresh();
     }
 
