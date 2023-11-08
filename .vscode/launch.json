@@ -12,7 +12,10 @@
 			"skipFiles": [
 				"<node_internals>/**"
 			],
-			"type": "node"
+			"type": "node",
+			"resolveSourceMapLocations": [
+				"${workspaceFolder}/node/**"
+			],
 		},
 		{
 			"name": "Run Extension",
