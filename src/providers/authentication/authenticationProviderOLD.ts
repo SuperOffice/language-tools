@@ -1,10 +1,10 @@
 // import * as vscode from 'vscode';
-// import { authenticate, exchangeRefreshToken } from '../services/authenticationService';
+// import { authenticate, exchangeRefreshToken } from '../../services/authenticationService';
 // import { TokenSet } from 'openid-client';
-// import { SuperOfficeAuthenticationSession, UserClaims } from '../types/types';
-// import { getTenantState } from '../services/systemService';
-// import { ENVIRONMENTS } from '../config';
-// import { treeViewDataProvider } from '../extension';
+// import { SuperOfficeAuthenticationSession, UserClaims } from '../../types/types';
+// import { getTenantStateAsync } from '../../services/systemService';
+// import { ENVIRONMENTS } from '../../config';
+// import { treeViewDataProvider } from '../../extension';
 
 // let contextIdentifier: string | null = null;
 // export let webapiUrl: string | null = null;
