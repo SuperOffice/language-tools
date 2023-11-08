@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { ScriptInfo } from './types/types';
-import { downloadScriptAsync, downloadScriptFolderAsync, executeScriptAsync, getScriptEntityAsync } from './services/scriptService';
+import { downloadScriptAsync, downloadScriptFolderAsync, executeScriptAsync, executeScriptLocallyAsync, getScriptEntityAsync } from './services/scriptService';
 import { Node } from './providers/views/treeViewDataProvider';
 import { vfsProvider } from './extension';
 import { CONFIG_COMMANDS } from './config';
@@ -86,6 +86,24 @@ export async function registerCommands(context: vscode.ExtensionContext) {
                 // Send the script content to the server for execution
                 const result = await executeScriptAsync(decodedContent);
                 vscode.window.showInformationMessage(result.Output);
+            } catch (err) {
+                vscode.window.showErrorMessage(`Failed to execute script: ${err}`);
+                //throw new Error(`Failed to download script: ${err}`);
+            }
+        } else {
+            vscode.window.showInformationMessage('No file selected!');
+        }
+    });
+
+    const executeScriptLocallyCommand = vscode.commands.registerCommand(CONFIG_COMMANDS.CMD_EXECUTE_SCRIPT_LOCALLY, async (fileUri: vscode.Uri) => {
+        if (fileUri && fileUri.fsPath) {
+            try {
+                const fileContent = await vscode.workspace.fs.readFile(fileUri);
+                const decodedContent = new TextDecoder().decode(fileContent);
+
+                // Send the script content to the server for execution
+                const result = await executeScriptLocallyAsync(decodedContent);
+                vscode.window.showInformationMessage(result);
             } catch (err) {
                 vscode.window.showErrorMessage(`Failed to execute script: ${err}`);
                 //throw new Error(`Failed to download script: ${err}`);

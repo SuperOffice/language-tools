@@ -102,6 +102,44 @@ export async function httpPublicRequestAsync<T>(method: https.RequestOptions["me
 
 }
 
+export async function httpLocalRequestAsync<T>(method: https.RequestOptions["method"], urlString: string, body?: object){
+    const url = new URL("http://localhost:8080/script");
+
+    if(!session){
+        throw new Error("No session found");
+    }
+
+    let headers: {[key: string]: string} = {
+        accept: 'application/json',
+        'x-apiendpoint': session.webApiUri,
+        'x-accesstoken': `Bearer ${session.accessToken}`
+    };
+
+    let requestOptions: https.RequestOptions = {
+        headers: headers,
+        hostname: url.hostname,
+        port: url.port ? parseInt(url.port) : 443,
+        protocol: url.protocol,
+        path: url.pathname,
+        method: method,
+    };
+
+    let requestBody = body ? JSON.stringify(body) : undefined; 
+
+    try {
+        return await executeRequestAsync<T>(requestOptions, requestBody) as HttpRequestResponse<T>;
+    }
+    catch (error) 
+{
+    if (error instanceof Error) {
+        throw error;
+    } else {
+        throw new Error(`${error}`);
+    }
+}
+
+}
+
 async function executeRequestAsync<T>(options: https.RequestOptions, body?: string): Promise<HttpRequestResponse<T>> {
     return new Promise((resolve, reject) => {
         const req = https.request(options, (res) => {

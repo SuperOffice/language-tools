@@ -22,6 +22,7 @@ type Commands = {
     CMD_DOWNLOAD_SCRIPTFOLDER: string;
     CMD_EXECUTE_SCRIPT: string;
     VFS_SCHEME: string;
+    CMD_EXECUTE_SCRIPT_LOCALLY: string;
 };
 
 export const CONFIG_COMMANDS: Commands = {
@@ -32,7 +33,8 @@ export const CONFIG_COMMANDS: Commands = {
     CMD_DOWNLOAD_SCRIPT: 'superoffice-vscode.downloadScript',
     CMD_DOWNLOAD_SCRIPTFOLDER: 'superoffice-vscode.downloadScriptFolder',
     CMD_EXECUTE_SCRIPT: 'superoffice-vscode.executeScript',
-    VFS_SCHEME: 'vfs'
+    VFS_SCHEME: 'vfs',
+    CMD_EXECUTE_SCRIPT_LOCALLY: 'superoffice-vscode.executeScriptLocally'
 };
 
 type AuthService = {
