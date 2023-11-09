@@ -99,3 +99,9 @@ export interface SuperOfficeAuthenticationSession extends AuthenticationSession 
 export type SuoFile = {
     contextIdentifier: string;
 };
+
+export type NodeRequest = {
+    scriptbody: string;
+    parameters: string;
+    eventData: string;
+};

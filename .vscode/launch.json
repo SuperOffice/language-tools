@@ -7,14 +7,14 @@
 	"configurations": [
 		{
 			"name": "Launch Node",
-			"program": "${workspaceFolder}/node/mainworker.cjs",
+			"program": "${workspaceFolder}/client/node_app/mainworker.cjs",
 			"request": "launch",
 			"skipFiles": [
 				"<node_internals>/**"
 			],
 			"type": "node",
 			"resolveSourceMapLocations": [
-				"${workspaceFolder}/node/**"
+				"${workspaceFolder}/client/node/**"
 			],
 		},
 		{
@@ -22,13 +22,14 @@
 			"type": "extensionHost",
 			"request": "launch",
 			"args": [
-				"--extensionDevelopmentPath=${workspaceFolder}",
+				"--extensionDevelopmentPath=${workspaceFolder}/client",
 				"--disable-extensions"
 			],
 			"outFiles": [
 				"${workspaceFolder}/client/out/**/*.js"
 			],
-			"preLaunchTask": "${defaultBuildTask}"
+			"preLaunchTask": "${defaultBuildTask}",
+			"autoAttachChildProcesses": true,
 		},
 		{
 			"name": "Extension Tests",

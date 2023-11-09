@@ -8,6 +8,7 @@ const { RTL, CS_RTL, _internal } = require(path.format({dir: __bundleDir, base: 
 const port = 8080;
 
 const server = http.createServer(async (req, res) => {
+  // @ts-ignore
   const requestPath = req.url.split("/");
   const requestUrl = req.url;
   let operation = "";
@@ -40,7 +41,8 @@ const server = http.createServer(async (req, res) => {
     var out = {};
 
     try {
-      const script = new vm.Script("(async () => {" + dataAsJson.scriptbody + "\n})()");
+      //debugger;
+      const script = new vm.Script("(async () => { debugger; " + dataAsJson.scriptbody + "\n})()");
 
       out.success = true;
       out.validationInfo = {

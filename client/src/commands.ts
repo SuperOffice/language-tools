@@ -1,9 +1,10 @@
 import * as vscode from 'vscode';
 import { ScriptInfo } from './types/types';
-import { downloadScriptAsync, downloadScriptFolderAsync, executeScriptAsync, executeScriptLocallyAsync, getScriptEntityAsync } from './services/scriptService';
+import { downloadScriptAsync, downloadScriptFolderAsync, executeScriptAsync, getScriptEntityAsync } from './services/scriptService';
 import { Node } from './providers/views/treeViewDataProvider';
 import { vfsProvider } from './extension';
 import { CONFIG_COMMANDS } from './config';
+import { executeScriptLocallyAsync } from './services/nodeService';
 
 const openedScripts: Map<string, vscode.TextDocument> = new Map();
 
@@ -103,7 +104,7 @@ export async function registerCommands(context: vscode.ExtensionContext) {
 
                 // Send the script content to the server for execution
                 const result = await executeScriptLocallyAsync(decodedContent);
-                vscode.window.showInformationMessage(result);
+                vscode.window.showInformationMessage(JSON.stringify(result));
             } catch (err) {
                 vscode.window.showErrorMessage(`Failed to execute script: ${err}`);
                 //throw new Error(`Failed to download script: ${err}`);
@@ -113,5 +114,5 @@ export async function registerCommands(context: vscode.ExtensionContext) {
         }
     });
 
-    context.subscriptions.push(signInCommand, showScriptInfoCommand, previewScriptCommand, downloadScriptCommand, downloadScriptFolderCommand, executeScriptCommand);
+    context.subscriptions.push(signInCommand, showScriptInfoCommand, previewScriptCommand, downloadScriptCommand, downloadScriptFolderCommand, executeScriptCommand, executeScriptLocallyCommand);
 }

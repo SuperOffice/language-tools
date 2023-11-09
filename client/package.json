@@ -41,6 +41,12 @@
         "title": "DownloadScriptFolder"
       },
       {
+        "command": "superoffice-vscode.executeScriptLocally",
+        "title": "ExecuteScriptLocally",
+        "category": "SuperOffice",
+        "enablement": "resourceScheme == file"
+      },
+      {
         "command": "superoffice-vscode.executeScript",
         "title": "ExecuteScript",
         "category": "SuperOffice",
@@ -103,6 +109,9 @@
       ],
       "superoffice.submenu": [
         {
+          "command": "superoffice-vscode.executeScriptLocally"
+        },
+        {
           "command": "superoffice-vscode.executeScript"
         }
       ]
@@ -150,7 +159,6 @@
     "eslint": "^8.47.0",
     "glob": "^10.3.3",
     "mocha": "^10.2.0",
-    "node-fetch": "^2.7.0",
     "typescript": "^5.1.6",
     "uuid": "^9.0.1"
   },
