@@ -13,7 +13,7 @@ export async function executeScriptLocallyAsync(script: string): Promise<unknown
         stdio: ['pipe', 'pipe', 'pipe'],
     };
 
-    const args = ['--inspect-brk=127.0.0.1:9234', './node_app/mainworker.cjs'];
+    const args = ['--inspect-brk=127.0.0.1:9234', '../node_app/mainworker.cjs'];
     //const dummyArgs = ['--inspect-brk=127.0.0.1:9234', './out/child.js',];
     
     console.log('Starting child process');
@@ -52,7 +52,7 @@ function startDebugging() {
 		address: "127.0.0.1",
         port: 9234, // Ensure this matches the port used in the --inspect-brk flag
         skipFiles: ['<node_internals>/**'],
-        outFiles: ['${workspaceFolder}/node_app/mainworker.js'],
+        outFiles: ['${workspaceFolder}../node_app/mainworker.js'],
     };
 
 	// Start the debugging session with the specified configuration
