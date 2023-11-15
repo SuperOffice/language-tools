@@ -2,6 +2,20 @@
 
 The vscode extension was created to support consultants and developers create and maintain CRMScripts created in SuperOffice. With the CRMScript v2-project ongoing it felt like a suitable time to add support for creating scripts outside of SuperOffice/Codemirror. This will enhance the developer experience, and open new possibilities for how you work with and debug your scripts.  
 
+## How-to
+
+1. Clone this repo
+2. Run/Debug root folder (F5)
+    Note: Launch.json defines that it is run/debugged with '--disable-extensions', which disables all other extension in vscode. If you want to run this extension WITH all other extensions activate you have to remove this line.
+3. Open a local workspace (e.g. a working directory)
+4. Click on the SuperOffice Icon on the right navigation bar
+5. Click 'Login' to start the authenticationflow
+6. After authentication the tab will be populated with the scripts belonging to your tenant.
+    Note: Depending if your tenant is 'cold' it could take a little while for it to be read to execute the API request that fetches all scripts.
+7. When right-clicking on a script, in the treeView, it will give you options to preview or download.
+8. When you have downloaded a script you can go back to your workspace and see the script has been created. If you right-click this script you will se a new menu-item, 'SuperOffice', which contains 2 execution-options: Execute and ExecuteLocally.
+Note: ExecuteLocally will launch Node and automatically attach to the process, and will start debugging the execution. 
+
 ## Background
 
 There are already 3 different tools created to download and upload scripts and screens to/from SuperOffice. The original/first example can be found here: [Kodesentralen ExpanderSync][1]
@@ -146,7 +160,7 @@ Request forwarding
 
 At this point a Language Service sounds most probably the solution, as it can handle state.
 
-[//] Reference links
+<!-- Reference links -->
 
 [1]: https://community.superoffice.com/en/technical/forums/general-forums/announcements/kodesentralen-releases-expandersync-a-tool-to-get-customizations-into-a-local-file-structure/
 [2]: https://marketplace.visualstudio.com/items?itemName=salesforce.salesforcedx-vscode
