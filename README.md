@@ -10,8 +10,6 @@ The vscode extension was created to support consultants and developers create an
 - Download single or folders of scripts
 - Execute single script either through the API (ExecuteScriptByString) or through a local Node service
 
-![Alt text](assets/test.gif?raw=true "Test")
-
 ## How-to
 
 1. Clone this repo
@@ -105,17 +103,7 @@ It has also been theorized, but not created, that you can feature-toggle this al
 
 ### Authentication flow for Native App with PKCE
 
-Select environment
-
-![Alt text](assets/selectEnvironment.png?raw=true "SelectEnvironment")
-
-Start Authentication
-
-![Alt text](assets/startAuthentication.png?raw=true "startAuthentication")
-
-Input credentials in new browser-tab and close after completion
-
-![Alt text](assets/closeAuthenticationWindow.png?raw=true "startAuthentication")
+![Alt text](assets/authFlow.gif?raw=true "Test")
 
 ### TreeView of scripts in the tenant
 
