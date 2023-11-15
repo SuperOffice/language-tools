@@ -1,22 +1,32 @@
 # SuperOffice Extension for vscode
 
+## Motivation
+
 The vscode extension was created to support consultants and developers create and maintain CRMScripts created in SuperOffice. With the CRMScript v2-project ongoing it felt like a suitable time to add support for creating scripts outside of SuperOffice/Codemirror. This will enhance the developer experience, and open new possibilities for how you work with and debug your scripts.  
+
+## Features
+
+- View all scripts in an online tenant
+- Download single or folders of scripts
+- Execute single script either through the API (ExecuteScriptByString) or through a local Node service
 
 ## How-to
 
 1. Clone this repo
-2. Run/Debug root folder (F5)
+2. npm install
+3. Run/Debug root folder (F5)
     Note: Launch.json defines that it is run/debugged with '--disable-extensions', which disables all other extension in vscode. If you want to run this extension WITH all other extensions activate you have to remove this line.
-3. Open a local workspace (e.g. a working directory)
-4. Click on the SuperOffice Icon on the right navigation bar
-5. Click 'Login' to start the authenticationflow
-6. After authentication the tab will be populated with the scripts belonging to your tenant.
+4. Open a local workspace (e.g. a working directory)
+5. Click on the SuperOffice Icon on the right navigation bar
+6. Click 'Login' to start the authenticationflow
+    Note: This will start the Native App Flow, and you will have to follow the steps described [here](#authentication-flow-for-native-app-with-pkce)
+7. After authentication the tab will be populated with the scripts belonging to your tenant.
     Note: Depending if your tenant is 'cold' it could take a little while for it to be read to execute the API request that fetches all scripts.
-7. When right-clicking on a script, in the treeView, it will give you options to preview or download.
-8. When you have downloaded a script you can go back to your workspace and see the script has been created. If you right-click this script you will se a new menu-item, 'SuperOffice', which contains 2 execution-options: Execute and ExecuteLocally.
+8. When right-clicking on a script, in the treeView, it will give you options to preview or download.
+9. When you have downloaded a script you can go back to your workspace and see the script has been created. If you right-click this script you will se a new menu-item, 'SuperOffice', which contains 2 execution-options: Execute and ExecuteLocally.
 Note: ExecuteLocally will launch Node and automatically attach to the process, and will start debugging the execution.
 
-Images/preview of the functionality can be found [here](https://github.com/SuperOffice/superoffice-vscode#features-with-images)
+Images/details of the functionality can be found [here](#feature-details)
 
 ## Background
 
@@ -85,7 +95,7 @@ Local debugging is dependent on this Node and needs to be either bundled with th
 
 It has also been theorized, but not created, that you can feature-toggle this also online, and have online pass values from the cloud down to your local environment. For this to work you will also need the node running locally, and we need ngrok or like handle the forward.  
 
-## Features with images
+## Feature details
 
 ### viewContainer for SuperOffice
 
