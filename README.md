@@ -14,7 +14,9 @@ The vscode extension was created to support consultants and developers create an
     Note: Depending if your tenant is 'cold' it could take a little while for it to be read to execute the API request that fetches all scripts.
 7. When right-clicking on a script, in the treeView, it will give you options to preview or download.
 8. When you have downloaded a script you can go back to your workspace and see the script has been created. If you right-click this script you will se a new menu-item, 'SuperOffice', which contains 2 execution-options: Execute and ExecuteLocally.
-Note: ExecuteLocally will launch Node and automatically attach to the process, and will start debugging the execution. 
+Note: ExecuteLocally will launch Node and automatically attach to the process, and will start debugging the execution.
+
+Images/preview of the functionality can be found [here](https://github.com/SuperOffice/superoffice-vscode#features-with-images)
 
 ## Background
 
