@@ -10,6 +10,8 @@ The vscode extension was created to support consultants and developers create an
 - Download single or folders of scripts
 - Execute single script either through the API (ExecuteScriptByString) or through a local Node service
 
+![Alt text](assets/test.gif?raw=true "Test")
+
 ## How-to
 
 1. Clone this repo
@@ -171,6 +173,10 @@ Language Service
 Request forwarding
 
 At this point a Language Service sounds most probably the solution, as it can handle state.
+
+### Provide intellisense with the extension
+
+Today the user of the extension also needs to add the [NPM package(https://www.npmjs.com/package/@superoffice/webapi)] to get proper intellisense. The optimal solution would be that this is not required if you have this extension installed, but it will also require us to create a new fileExtension that can provide this intellisense.  
 
 <!-- Reference links -->
 
