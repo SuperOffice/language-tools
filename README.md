@@ -119,7 +119,7 @@ Result is presented as informationmessage (down right)
 
 **Enjoy!**
 
-[1]: [https://community.superoffice.com/en/technical/forums/general-forums/announcements/kodesentralen-releases-expandersync-a-tool-to-get-customizations-into-a-local-file-structure/]
+[1]: https://community.superoffice.com/en/technical/forums/general-forums/announcements/kodesentralen-releases-expandersync-a-tool-to-get-customizations-into-a-local-file-structure/
 [2]: [https://marketplace.visualstudio.com/items?itemName=salesforce.salesforcedx-vscode]
 [3]: [https://docs.superoffice.com/en/authentication/online/sign-in-user/auth-code-flow.html]
 [viewContainerDoc]: [https://code.visualstudio.com/api/ux-guidelines/views#view-containers]
