@@ -120,14 +120,14 @@ Result is presented as informationmessage (down right)
 **Enjoy!**
 
 [1]: https://community.superoffice.com/en/technical/forums/general-forums/announcements/kodesentralen-releases-expandersync-a-tool-to-get-customizations-into-a-local-file-structure/
-[2]: [https://marketplace.visualstudio.com/items?itemName=salesforce.salesforcedx-vscode]
-[3]: [https://docs.superoffice.com/en/authentication/online/sign-in-user/auth-code-flow.html]
-[viewContainerDoc]: [https://code.visualstudio.com/api/ux-guidelines/views#view-containers]
-[viewsDoc]: [https://code.visualstudio.com/api/ux-guidelines/views]
-[treeViewDoc]: [https://code.visualstudio.com/api/ux-guidelines/views#tree-views]
-[getAllScriptsDoc]: [https://docs.superoffice.com/en/api/reference/restful/rest/Script/v1Script_GetAll.html]
-[getScriptEntityDoc]: [https://docs.superoffice.com/en/api/reference/restful/rest/Script/v1Script_GetCRMScriptByUniqueIdentifier.html]
-[executeScriptByStringDoc]: [https://docs.superoffice.com/en/api/reference/restful/agent/CRMScript_Agent/v1CRMScriptAgent_ExecuteScriptByString.html]
+[2]: https://marketplace.visualstudio.com/items?itemName=salesforce.salesforcedx-vscode
+[3]: https://docs.superoffice.com/en/authentication/online/sign-in-user/auth-code-flow.html
+[viewContainerDoc]: https://code.visualstudio.com/api/ux-guidelines/views#view-containers
+[viewsDoc]: https://code.visualstudio.com/api/ux-guidelines/views
+[treeViewDoc]: https://code.visualstudio.com/api/ux-guidelines/views#tree-views
+[getAllScriptsDoc]: https://docs.superoffice.com/en/api/reference/restful/rest/Script/v1Script_GetAll.html
+[getScriptEntityDoc]: https://docs.superoffice.com/en/api/reference/restful/rest/Script/v1Script_GetCRMScriptByUniqueIdentifier.html
+[executeScriptByStringDoc]: https://docs.superoffice.com/en/api/reference/restful/agent/CRMScript_Agent/v1CRMScriptAgent_ExecuteScriptByString.html
 
 ## Other thoughts/ideas
 
