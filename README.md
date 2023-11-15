@@ -14,16 +14,16 @@ The vscode extension was created to support consultants and developers create an
 
 1. Clone this repo
 2. npm install
-3. Run/Debug root folder (F5)
+3. Run/Debug root folder (F5)  
     Note: Launch.json defines that it is run/debugged with '--disable-extensions', which disables all other extension in vscode. If you want to run this extension WITH all other extensions activate you have to remove this line.
 4. Open a local workspace (e.g. a working directory)
 5. Click on the SuperOffice Icon on the right navigation bar
-6. Click 'Login' to start the authenticationflow
+6. Click 'Login' to start the authenticationflow  
     Note: This will start the Native App Flow, and you will have to follow the steps described [here](#authentication-flow-for-native-app-with-pkce)
 7. After authentication the tab will be populated with the scripts belonging to your tenant.
     Note: Depending if your tenant is 'cold' it could take a little while for it to be read to execute the API request that fetches all scripts.
 8. When right-clicking on a script, in the treeView, it will give you options to preview or download.
-9. When you have downloaded a script you can go back to your workspace and see the script has been created. If you right-click this script you will se a new menu-item, 'SuperOffice', which contains 2 execution-options: Execute and ExecuteLocally.
+9. When you have downloaded a script you can go back to your workspace and see the script has been created. If you right-click this script you will se a new menu-item, 'SuperOffice', which contains 2 execution-options: Execute and ExecuteLocally.  
 Note: ExecuteLocally will launch Node and automatically attach to the process, and will start debugging the execution.
 
 Images/details of the functionality can be found [here](#feature-details)
@@ -85,9 +85,9 @@ This is a local API-call that gives toward the local Node Application. The NodeA
 The new Node application that executes JavaScript is in a restricted Kubernetes environment that does not allow access for external applications. It is NOT an option to open the cluster for external attachment.  
 A workaround for this is to get a copy of this Node and run it locally. This way you can attach to the node and step-through the code execution. This is a significant improvement to the existing functionality that is inside SuperOffice, as that ‘only’ gives you tracings after the code is executed.  
 
-When you have authenticated with the Native App Flow in vscode you get an access_token and webapi_uri. These values need to be set as header when communicating with the node:
-x-apiendpoint
-x-accesstoken
+When you have authenticated with the Native App Flow in vscode you get an access_token and webapi_uri. These values need to be set as header when communicating with the node:  
+x-apiendpoint  
+x-accesstoken  
 
 This is then used by the node to execute the request. This flow makes it flexible and easy to work with the same Node towards different environments.  
 
