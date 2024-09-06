@@ -1,0 +1,12 @@
+{
+    "scripts": {
+        "preinstall": "npx only-allow pnpm",
+        "build:vscode": "npm run build --prefix ./packages/vscode"
+    },
+    "devDependencies": {
+        "@types/node": "latest",
+        "typescript": "latest",
+        "@superoffice/webapi": "^10.3.4",
+        "@volar/language-server": "~2.2.0"
+    }
+}

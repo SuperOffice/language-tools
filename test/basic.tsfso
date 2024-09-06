@@ -1,0 +1,10 @@
+const cAgent = SO.getContactAgent();
+const cEntity = await cAgent.createDefaultContactEntityAsync();
+cEntity.name = "BigCompany AS";
+
+const pAgent = SO.getPersonAgent();
+const pEntity = await pAgent.createDefaultPersonEntityAsync();
+pEntity.firstname = "123";
+
+SO.getAppointmentAgent();
+

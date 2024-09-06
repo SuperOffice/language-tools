@@ -1,0 +1,24 @@
+{
+    "name": "@superoffice/language-server",
+    "description": "",
+    "author": "Eivind Fasting",
+    "version": "0.0.1",
+    "publisher": "SuperOffice",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/SuperOffice/language-tools"
+    },
+    "type": "module",
+    "scripts": {
+        "preinstall": "npx only-allow pnpm"
+    },
+    "devDependencies": {
+        "@volar/language-core": "~2.2.0",
+        "@volar/language-server": "*",
+        "volar-service-css": "volar-2.2",
+		"volar-service-emmet": "volar-2.2",
+		"volar-service-html": "volar-2.2",
+		"volar-service-typescript": "volar-2.2",
+        "vscode-html-languageservice": "^5.2.0"
+    }
+}

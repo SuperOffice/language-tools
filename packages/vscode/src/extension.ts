@@ -5,12 +5,20 @@ import { VirtualFileSystemProvider } from './workspace/virtualWorkspaceFileManag
 import { CONFIG_COMMANDS } from './config';
 import { SuperofficeAuthenticationProvider } from './providers/authentication/authenticationProvider';
 import { WebViewDataProvider } from './providers/views/webViewDataProvider';
+import { startLanguageFeatures } from './languageFeatures';
+
+//Volar
+import { createLabsInfo } from '@volar/vscode';
+import * as serverProtocol from '@volar/language-server/protocol';
 
 export const treeViewDataProvider = new TreeViewDataProvider();
 export const vfsProvider = new VirtualFileSystemProvider();
 
+
 export async function activate(context: vscode.ExtensionContext) {
-    console.log('"superoffice-vscode" extension is now active.');
+    console.log('"vscode-superoffice" extension is now active.');
+
+    const languageClient = await startLanguageFeatures(context);      
 
     // Register Virtual File System Provider
     const vfsProviderRegistration = vscode.workspace.registerFileSystemProvider(CONFIG_COMMANDS.VFS_SCHEME, vfsProvider, { isCaseSensitive: true });
@@ -30,6 +38,11 @@ export async function activate(context: vscode.ExtensionContext) {
     await registerCommands(context);
     // Add to the extension context's subscriptions
     context.subscriptions.push(vfsProviderRegistration, treeviewProvider);
+
+    //Volar labs
+	const labsInfo = createLabsInfo(serverProtocol);
+	labsInfo.addLanguageClient(languageClient);
+	return labsInfo.extensionExports;
 }
 
 export function deactivate() {}

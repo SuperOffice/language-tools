@@ -1,6 +1,6 @@
 # superoffice-vscode README
 
-This extension is created to help working with crmscript v2 in superoffice.
+This extension is created to help working with Typescript for SuperOffice.
 
 ## Features
 
@@ -50,13 +50,13 @@ Result is presented as informationmessage (down right)
 ![Alt text](assets/executeResult.png?raw=true "executeResult")
 
 ## Planned features
-1. webview for showing content
-2. Upload script back to the tenant
-3. execute script in the tenant
-4. Versioncontrol/view for files that are edited compared to what is stored inside SuperOffice
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+1. Support for legacy crmscript
 
+## Suggested features
 
+1. Upload script back to the tenant
+2. execute script in the tenant
+3. Versioncontrol/view for files that are edited compared to what is stored inside SuperOffice
 
 **Enjoy!**

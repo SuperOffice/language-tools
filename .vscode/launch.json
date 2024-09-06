@@ -22,27 +22,29 @@
 			"type": "extensionHost",
 			"request": "launch",
 			"args": [
-				"--extensionDevelopmentPath=${workspaceFolder}/client",
-				"--disable-extensions"
+				"--extensionDevelopmentPath=${workspaceFolder}/packages/vscode/",
+				"--folder-uri=${workspaceRoot}/test"
 			],
 			"outFiles": [
-				"${workspaceFolder}/client/out/**/*.js"
+				"${workspaceFolder}/packages/vscode/dist/**/*.js"
 			],
-			"preLaunchTask": "${defaultBuildTask}",
-			"autoAttachChildProcesses": true,
+			"preLaunchTask": "npm: build:vscode",
+			"autoAttachChildProcesses": false
 		},
 		{
-			"name": "Extension Tests",
+			"name": "Run Extension without extensions",
 			"type": "extensionHost",
 			"request": "launch",
 			"args": [
-				"--extensionDevelopmentPath=${workspaceFolder}",
-				"--extensionTestsPath=${workspaceFolder}/client/out/test/suite/index"
+				"--extensionDevelopmentPath=${workspaceFolder}/packages/vscode/",
+				"--disable-extensions",
+				"--folder-uri=${workspaceRoot}/test"
 			],
 			"outFiles": [
-				"${workspaceFolder}/client/out/test/**/*.js"
+				"${workspaceFolder}/packages/vscode/dist/**/*.js"
 			],
-			"preLaunchTask": "${defaultBuildTask}"
+			"preLaunchTask": "npm: build:vscode",
+			"autoAttachChildProcesses": false
 		}
 	]
 }

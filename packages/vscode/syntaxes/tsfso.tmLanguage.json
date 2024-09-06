@@ -1,0 +1,50 @@
+{
+    "fileTypes": ["tsfso"],
+    "scopeName": "source.tsfso",
+    "name": "tsfso",
+    "patterns": [
+        {
+            "begin": "%EJSCRIPT_START%",
+            "end": "%EJSCRIPT_END%",
+            "name": "source.tsfso.embedded.html",
+            "beginCaptures": {
+                "0": { "name": "punctuation.definition.tag.begin.ejscript" }
+            },
+            "endCaptures": {
+                "0": { "name": "punctuation.definition.tag.end.ejscript" }
+            },
+            "patterns": [
+                { "include": "#embedded" }
+            ]
+        },
+        { "include": "source.ts" }
+    ],
+    "repository": {
+        "embedded": {
+            "patterns": [
+                {
+                    "begin": "<%",
+                    "end": "%>",
+                    "name": "meta.tag.inline.ejscript.html",
+                    "beginCaptures": {
+                        "0": { "name": "punctuation.definition.tag.begin.ejscript" }
+                    },
+                    "endCaptures": {
+                        "0": { "name": "punctuation.definition.tag.end.ejscript" }
+                    },
+                    "patterns": [
+                        { "include": "#typescript" }
+                    ]
+                },
+                { "include": "text.html.basic" }
+            ]
+        },
+        "typescript": {
+            "patterns": [
+                { "include": "source.ts" }
+            ]
+        }
+    },
+    "uuid": "generated-uuid-for-tsfso-tmlanguage-file",
+    "information_for_contributors": "This tmLanguage file defines syntax for tsfso."
+}

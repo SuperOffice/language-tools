@@ -1,29 +1,48 @@
-# SuperOffice Extension for vscode
+# SuperOffice Language Tools
+
+This repository contains all the editor tooling required for working with Typescript for SuperOffice (.tsfso files).
+
+It contains an implementation of the [Language Server Protocol (LSP)](https://microsoft.github.io/language-server-protocol/), powered by [Volar](https://volarjs.dev/), and is currently under development.
 
 ## Motivation
 
-The vscode extension was created to support consultants and developers create and maintain CRMScripts created in SuperOffice. With the CRMScript v2-project ongoing it felt like a suitable time to add support for creating scripts outside of SuperOffice/Codemirror. This will enhance the developer experience, and open new possibilities for how you work with and debug your scripts.  
+With the [Typescript for SuperOffice](https://github.com/SuperOffice/javascript-for-superoffice)-project ongoing it felt like a suitable time to add support for creating scripts outside of SuperOffice. This will enhance the developer experience, and open new possibilities for how you work with and debug your scripts.
 
-## Features
+## Packages
+
+This repository is a monorepo managed through [pnpm](https://pnpm.io/).
+
+### [`@superoffice/language-server`](packages/language-server)
+
+The SuperOffice language server, powered by [Volar](https://volarjs.dev/), contains the implementation of the [Language Server Protocol (LSP)](https://microsoft.github.io/language-server-protocol/) and is currently under development.
+
+This module acts as the Language Server Protocol (LSP) language Server. It provides intellisense for the vscode extension, but could be used by any client (vscode, monaco, vim etc).
+It also handles %ejscript%-nuggets and has basic support for HTML/css/javascript outside of these nuggets. This is experimental but could be useful in cases where one would like to create html-pages.
+
+### [`@superoffice/vscode`](packages/vscode)
+
+This module acts as a Language Server Protocol (LSP) language client. Its primary responsibility is to communicate with the [`@superoffice/language-server`](packages/language-server) module (acting as an LSP server) and integrate the language services provided by the server into the VS Code editor. This architecture allows for the reuse of language services across different editors and IDEs, with the implementation of the corresponding LSP client. In this case, @volar/vscode is the LSP client implementation for VS Code.
+
+#### Features
 
 - View all scripts in an online tenant
 - Download single or folders of scripts
-- Execute single script either through the API (ExecuteScriptByString) or through a local Node service
 
-## How-to
+## Getting Started
 
-1. Clone this repo
-2. npm install
-3. Run/Debug root folder (F5)  
-    Note: Launch.json defines that it is run/debugged with '--disable-extensions', which disables all other extension in vscode. If you want to run this extension WITH all other extensions activate you have to remove this line.
-4. Open a local workspace (e.g. a working directory)
-5. Click on the SuperOffice Icon on the right navigation bar
-6. Click 'Login' to start the authenticationflow  
+1. `git clone https://github.com/SuperOffice/language-tools.git`
+2. `code .\language-tools\`
+3. `pnpm i`
+4. `Run&debug` -> `Launch client without extensions`
+
+## How-to use the extension
+
+1. Click on the SuperOffice Icon on the right navigation bar
+2. Click 'Login' to start the authenticationflow  
     Note: This will start the Native App Flow, and you will have to follow the steps described [here](#authentication-flow-for-native-app-with-pkce)
-7. After authentication the tab will be populated with the scripts belonging to your tenant.
-    Note: Depending if your tenant is 'cold' it could take a little while for it to be read to execute the API request that fetches all scripts.
-8. When right-clicking on a script, in the treeView, it will give you options to preview or download.
-9. When you have downloaded a script you can go back to your workspace and see the script has been created. If you right-click this script you will se a new menu-item, 'SuperOffice', which contains 2 execution-options: Execute and ExecuteLocally.  
+3. After authentication the tab will be populated with the scripts belonging to your tenant.   Note: Depending if your tenant is 'cold' it could take a little while for it to be read to execute the API request that fetches all scripts.
+4. When right-clicking on a script, in the treeView, it will give you options to preview or download.
+5. When you have downloaded a script you can go back to your workspace and see the script has been created. If you right-click this script you will se a new menu-item, 'SuperOffice', which contains 2 execution-options: Execute and ExecuteLocally.  
 Note: ExecuteLocally will launch Node and automatically attach to the process, and will start debugging the execution.
 
 Images/details of the functionality can be found [here](#feature-details)
@@ -148,19 +167,6 @@ Similar to how GIT handles keeping track of your changed files. In short GIT han
 Similar logic can be added to our extension, where we create a sha1-string when you download a file and store it in a file.
 
 It is NOT suggested/recommended we recreate all what GIT has to offer, but this small feature would make it much easier to know what files you have locally that is changed. You could in theory also compare local files with what is stored in the online tenant when you open a workspace, but it needs to be tested to see how much of a performance impact this is.
-
-### Support for %ejscript%-nuggets
-
-Vscode does not understand %EJSCRIPT%-nuggets out of the box. This is a special feature that is implemented in Service, and a code editor has no way of knowing which language is in which section.  
-One way to handle this is to add embedded programming languages: Embedded Programming Languages | Visual Studio Code Extension API  
-
-In short, we need to add our own file extension, for example .crmscript, and handle the code completions ourselves. There are two ways to handle it:
-
-Language Service
-
-Request forwarding
-
-At this point a Language Service sounds most probably the solution, as it can handle state.
 
 ### Provide intellisense with the extension
 

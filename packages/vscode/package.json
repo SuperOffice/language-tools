@@ -6,17 +6,37 @@
   "version": "0.0.1",
   "repository": {
     "type": "git",
-    "url": "https://github.com/SuperOffice/superoffice-vscode.git"
+    "url": "https://github.com/SuperOffice/language-tools.git"
   },
   "engines": {
-    "vscode": "^1.82.0"
+    "vscode": "^1.85.0"
   },
   "categories": [
     "Other"
   ],
   "activationEvents": [],
-  "main": "./out/extension.js",
+  "main": "./dist/extension.js",
   "contributes": {
+    "languages": [
+      {
+        "id": "tsfso",
+        "extensions": [
+          ".tsfso"
+        ],
+        "configuration": "./syntaxes/tsfso-language-configuration.json",
+        "icon": {
+          "light": "/resources/logo.svg",
+          "dark": "/resources/logo.svg"
+        }
+      }
+    ],
+    "grammars": [
+      {
+        "language": "tsfso",
+        "scopeName": "source.tsfso",
+        "path": "./syntaxes/tsfso.tmLanguage.json"
+      }
+    ],
     "commands": [
       {
         "command": "superoffice-vscode.signIn",
@@ -121,46 +141,32 @@
         "id": "superoffice.submenu",
         "label": "SuperOffice"
       }
-    ],
-    "languages": [
-      {
-        "id": "crmscript",
-        "aliases": [
-          "crmscript",
-          "CRMScript"
-        ],
-        "extensions": [
-          ".suo",
-          ".crmscript"
-        ],
-        "icon": {
-          "light": "/resources/logo.svg",
-          "dark": "/resources/logo.svg"
-        }
-      }
     ]
   },
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
+    "test": "node ./out/test/runTest.js",
+    "build": "node ./scripts/build.js"
   },
   "devDependencies": {
+    "@volar/vscode": "~2.2.0",
+    "@volar/language-server": "*",
     "@types/mocha": "^10.0.1",
-    "@types/node": "16.x",
+    "@types/node": "*",
     "@types/uuid": "^9.0.5",
     "@types/vscode": "^1.82.0",
-    "@typescript-eslint/eslint-plugin": "^6.4.1",
-    "@typescript-eslint/parser": "^6.4.1",
     "@vscode/test-electron": "^2.3.4",
     "eslint": "^8.47.0",
     "glob": "^10.3.3",
     "mocha": "^10.2.0",
-    "typescript": "^5.1.6",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "esbuild": "^0.20.2",
+    "vscode-languageclient": "^9.0.1"
   },
   "dependencies": {
     "openid-client": "^5.5.0"
