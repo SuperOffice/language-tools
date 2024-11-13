@@ -107,6 +107,8 @@ function startServer(): Promise<TokenSet> {
             reject(err);
         });
 
+
+        const parsedUri = new URL(redirectUri);
         // Start server
         server.listen(parseInt(parsedUri.port, 10), parsedUri.hostname, () => {
             // Server is now listening

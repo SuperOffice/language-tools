@@ -1,0 +1,150 @@
+{
+  "name": "vscode-superoffice",
+  "publisher": "superoffice",
+  "displayName": "SuperOffice Core Tools",
+  "description": "Provides core functionality for SuperOffice VS Code extensions.",
+  "qna": "https://github.com/SuperOffice/language-tools/issues",
+  "bugs": {
+    "url": "https://github.com/SuperOffice/language-tools/issues"
+  },
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SuperOffice/language-tools.git"
+  },
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "superOfficeDX.startNativeAppFlow",
+        "title": "Sign In",
+        "icon": "$(log-in)",
+        "category": "SuperOffice"
+      },
+      {
+        "command": "superOfficeDX.viewScriptDetails",
+        "title": "ViewScriptDetails"
+      },
+      {
+        "command": "superOfficeDX.previewScript",
+        "title": "PreviewScript"
+      },
+      {
+        "command": "superOfficeDX.downloadScript",
+        "title": "DownloadScript"
+      },
+      {
+        "command": "superOfficeDX.downloadScriptFolder",
+        "title": "DownloadScriptFolder"
+      },
+      {
+        "command": "superOfficeDX.executeScriptLocally",
+        "title": "ExecuteScriptLocally",
+        "category": "SuperOffice",
+        "enablement": "resourceScheme == file"
+      },
+      {
+        "command": "superOfficeDX.executeScript",
+        "title": "ExecuteScript",
+        "category": "SuperOffice",
+        "enablement": "resourceScheme == file"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "superOfficeDX",
+          "title": "SuperOffice DX",
+          "icon": "/resources/logo.svg"
+        }
+      ]
+    },
+    "views": {
+      "superOfficeDX": [
+        {
+          "id": "superOfficeDX.scriptExplorer",
+          "name": "Scripts"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "superOfficeDX.scriptExplorer",
+        "contents": "You are not logged in to SuperOffice [learn more](https://docs.superoffice.com/).\n[Login](command:superOfficeDX.startNativeAppFlow)"
+      }
+    ],
+    "menus": {
+      "view/title": [],
+      "view/item/context": [
+        {
+          "command": "superOfficeDX.previewScript",
+          "group": "0_script",
+          "when": "view == superOfficeDX.scriptExplorer && viewItem == script"
+        },
+        {
+          "command": "superOfficeDX.downloadScript",
+          "group": "0_script",
+          "when": "view == superOfficeDX.scriptExplorer && viewItem == script"
+        },
+        {
+          "command": "superOfficeDX.downloadScriptFolder",
+          "group": "0_script",
+          "when": "view == superOfficeDX.scriptExplorer && viewItem == folder"
+        }
+      ],
+      "explorer/context": [
+        {
+          "submenu": "superoffice.submenu",
+          "group": "superoffice",
+          "when": "authenticated"
+        }
+      ],
+      "superoffice.submenu": [
+        {
+          "command": "superOfficeDX.executeScriptLocally"
+        },
+        {
+          "command": "superOfficeDX.executeScript"
+        }
+      ]
+    },
+    "submenus": [
+      {
+        "id": "superoffice.submenu",
+        "label": "SuperOffice"
+      }
+    ]
+  },
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js",
+    "build": "node ./scripts/build.js"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.1",
+    "@types/node": "*",
+    "@types/uuid": "^9.0.5",
+    "@types/vscode": "^1.82.0",
+    "@vscode/test-electron": "^2.3.4",
+    "eslint": "^8.47.0",
+    "glob": "^10.3.3",
+    "mocha": "^10.2.0",
+    "uuid": "^9.0.1",
+    "esbuild": "^0.20.2"
+  },
+  "dependencies": {
+    "openid-client": "^5.5.0"
+  }
+}

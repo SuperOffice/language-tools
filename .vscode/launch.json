@@ -45,6 +45,20 @@
 			],
 			"preLaunchTask": "npm: build:vscode",
 			"autoAttachChildProcesses": false
-		}
+		},
+		{
+			"name": "Run Core Extension",
+			"type": "extensionHost",
+			"request": "launch",
+			"args": [
+				"--extensionDevelopmentPath=${workspaceFolder}/packages/superofficedx-vscode-core/",
+				"--folder-uri=${workspaceRoot}/test"
+			],
+			"outFiles": [
+				"${workspaceFolder}/packages/superofficedx-vscode-core/dist/**/*.js"
+			],
+			"preLaunchTask": "npm: build:vscode-core",
+			"autoAttachChildProcesses": false
+		},
 	]
 }

@@ -1,7 +1,7 @@
 import { create as createEmmetService } from 'volar-service-emmet';
 import { create as createHtmlService } from 'volar-service-html';
 import { create as createCssService } from 'volar-service-css';
-import { create as createTypeScriptService } from 'volar-service-typescript';
+import { create as createTypeScriptServices } from 'volar-service-typescript';
 import { createServer, createConnection, createTypeScriptProjectProvider, loadTsdkByPath } from '@volar/language-server/node.js';
 
 import { getSuperOfficeLanguageModule } from './languagePlugin.js';
@@ -21,7 +21,7 @@ connection.onInitialize(params => {
 			createHtmlService(),
 			createCssService(),
 			createEmmetService({}),
-			...createTypeScriptService(tsdk.typescript, {})
+			...createTypeScriptServices(tsdk.typescript, {})
 		],
 		createTypeScriptProjectProvider(tsdk.typescript, tsdk.diagnosticMessages, () => [getSuperOfficeLanguageModule()]),
 	);

@@ -1,7 +1,8 @@
 {
     "scripts": {
         "preinstall": "npx only-allow pnpm",
-        "build:vscode": "npm run build --prefix ./packages/vscode"
+        "build:vscode": "npm run build --prefix ./packages/vscode",
+        "build:vscode-core": "npm run build --prefix ./packages/superofficedx-vscode-core"
     },
     "devDependencies": {
         "@types/node": "latest",
