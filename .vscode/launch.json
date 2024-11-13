@@ -7,14 +7,14 @@
 	"configurations": [
 		{
 			"name": "Launch Node",
-			"program": "${workspaceFolder}/client/node_app/mainworker.cjs",
+			"program": "${workspaceFolder}/packages/node_app/mainworker.cjs",
 			"request": "launch",
 			"skipFiles": [
 				"<node_internals>/**"
 			],
 			"type": "node",
 			"resolveSourceMapLocations": [
-				"${workspaceFolder}/client/node/**"
+				"${workspaceFolder}/packages/node_app/**"
 			],
 		},
 		{

@@ -1,6 +1,5 @@
 export const Core = {
-    EXTENSION_NAME: 'superoffice.vscode-superoffice',
-    EXTENSION_NAME_TEST: "vscode-superoffice",
+    EXTENSION_NAME: 'superoffice.superofficedx-vscode-core',
 } as const;
 
 export const AuthProvider = {
@@ -30,6 +29,10 @@ export const Commands = {
     START_NATIVE_APP_FLOW: 'superOfficeDX.startNativeAppFlow',
     VIEW_SCRIPT_DETAILS: 'superOfficeDX.viewScriptDetails',
     PREVIEW_SCRIPT: 'superOfficeDX.previewScript',
+    DOWNLOAD_SCRIPT: 'superOfficeDX.downloadScript',
+    DOWNLOAD_SCRIPT_FOLDER: 'superOfficeDX.downloadScriptFolder',
+    EXECUTE_SCRIPT: 'superOfficeDX.executeScript',
+    EXECUTE_SCRIPT_Locally: 'superOfficeDX.executeScriptLocally',
     VFS_SCHEME: 'vfs',
     LOGOUT: 'superOfficeDX.logout'
 } as const;

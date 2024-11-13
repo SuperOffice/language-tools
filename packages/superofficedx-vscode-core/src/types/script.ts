@@ -1,18 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-
-import { IdTokenClaims } from "openid-client";
-import { AuthenticationSession } from "vscode";
-
-export type SuoFile = {
-    contextIdentifier: string;
-};
-
-// export interface HttpRequestResponse<T = any> {
-//     status: number;
-//     body: T;
-//     ok: boolean;
-//     statusText: string;
-// };
 interface ResponseOdataMetadata {
     "odata.metadata": string;
     "odata.nextLink": null | string;  // Assuming the value can sometimes be a string
@@ -61,6 +46,7 @@ export interface ScriptEntity {
     TableRight: null;
     FieldProperties: Record<string, unknown>;
 }
+
 export interface ExecuteScriptResponse {
     Output: string;
     Parameters: {
@@ -80,31 +66,3 @@ export interface ExecuteScriptResponse {
         }
     };
 }
-export interface StateResponse {
-    ContextIdentifier: string;
-    Endpoint: string;
-    State: string;
-    IsRunning: boolean;
-    ValidUntil: Date;
-    Api: string;
-}
-
-export interface UserClaims extends IdTokenClaims {
-    "http://schemes.superoffice.net/identity/ctx": string;
-    "http://schemes.superoffice.net/identity/netserver_url": string;
-    "http://schemes.superoffice.net/identity/webapi_url": string;
-}
-
-export interface SuperOfficeAuthenticationSession extends AuthenticationSession {
-    contextIdentifier: string;
-    refreshToken?: string;
-    webApiUri: string;
-    claims: UserClaims;
-    expiresAt?: number;
-};
-
-export type NodeRequest = {
-    scriptbody: string;
-    parameters: string;
-    eventData: string;
-};

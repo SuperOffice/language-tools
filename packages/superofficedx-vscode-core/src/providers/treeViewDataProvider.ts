@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { ScriptInfo } from '../types/types';
+import { ScriptInfo } from '../types/index';
 import { SuperofficeAuthenticationProvider } from './superofficeAuthenticationProvider';
 import { Commands, Core, TreeView } from '../constants';
 import { IHttpService } from '../services/httpService';
@@ -65,7 +65,7 @@ function getOrAddChildNode(parentNode: TreeDataItem, part: string): TreeDataItem
 function addToTreeData(root: TreeDataItem, scriptPath: string, scriptInfo: ScriptInfo) {
     // Split path by '/' and remove empty segments
     const parts = scriptPath.split('/').filter(Boolean);
-    let currentNode = parts.reduce(getOrAddChildNode, root);
+    const currentNode = parts.reduce(getOrAddChildNode, root);
     currentNode.children.push({ label: scriptInfo.name, children: [], scriptInfo });
 }
 

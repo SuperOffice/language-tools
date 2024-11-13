@@ -1,13 +1,13 @@
 
 import * as vscode from 'vscode';
-import { SuperofficeAuthenticationProvider } from '../providers/superofficeAuthenticationProvider';
-import { Node } from '../providers/treeViewDataProvider';
-import { IHttpService } from '../services/httpService';
-import { ScriptInfo } from '../types/types';
-import { Commands } from '../constants';
-import { VirtualFileSystemProvider } from '../workspace/virtualWorkspaceFileManager';
+import { SuperofficeAuthenticationProvider } from '../../providers/superofficeAuthenticationProvider';
+import { Node } from '../../providers/treeViewDataProvider';
+import { IHttpService } from '../../services/httpService';
+import { ScriptInfo } from '../../types/index';
+import { Commands } from '../../constants';
+import { VirtualFileSystemProvider } from '../../workspace/virtualWorkspaceFileManager';
 
-export async function previewScript(node: Node, authProvider: SuperofficeAuthenticationProvider, httpService: IHttpService, vfsProvider: VirtualFileSystemProvider) {
+export async function previewAsync(node: Node, authProvider: SuperofficeAuthenticationProvider, httpService: IHttpService, vfsProvider: VirtualFileSystemProvider) {
     if (node?.scriptInfo) {
         const scriptInfo: ScriptInfo = node.scriptInfo;
         try {
@@ -23,7 +23,7 @@ export async function previewScript(node: Node, authProvider: SuperofficeAuthent
             const virtualUri = vscode.Uri.parse(`${Commands.VFS_SCHEME}:/scripts/${filename}`);
 
             // "Write" the content to the virtual file
-            vfsProvider.writeFile(virtualUri, Buffer.from(scriptEntity.Source, 'utf8'), { create: true, overwrite: true });
+            vfsProvider.writeFile(virtualUri, Buffer.from(scriptEntity.Source, 'utf8'));
 
             // Open the virtual file in VSCode
             const document = await vscode.workspace.openTextDocument(virtualUri);

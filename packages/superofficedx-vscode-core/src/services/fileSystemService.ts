@@ -2,13 +2,14 @@ import * as vscode from 'vscode'
 
 import { IFileSystemHandler } from '../handlers/fileSystemHandler';
 import { AuthProvider } from '../constants';
-import { SuoFile } from '../types/types';
+import { ScriptEntity, SuoFile } from '../types/index';
 import path from 'path';
 
 export interface IFileSystemService {
     ensureDirectoryExists(uri: vscode.Uri): Promise<void>;
     readSuoFile(): Promise<SuoFile | undefined>;
     writeSuoFile(content: string): Promise<void>;
+    writeScriptToFile(content: ScriptEntity): Promise<vscode.Uri>;
 }
 
 export class FileSystemService implements IFileSystemService {
@@ -87,4 +88,26 @@ export class FileSystemService implements IFileSystemService {
         }
     }
     
+    async writeScriptToFile(scriptEntity: ScriptEntity): Promise<vscode.Uri> {
+        try {
+            const filePath = this.joinPaths(scriptEntity.Path, scriptEntity.Name + ".ts");
+            const fileUri = this.getFileUriInWorkspace(filePath);
+            const dirUri = fileUri.with({ path: fileUri.path.replace(/\/[^/]+$/, '') });
+
+            await this.ensureDirectoryExists(dirUri);      
+
+            await this.fileSystemHandler.writeFile(fileUri, scriptEntity.Source);
+            return fileUri;
+        }
+        catch (error) {
+            if (error instanceof vscode.FileSystemError) {
+                throw new Error(`Failed to write file: ${scriptEntity.Name}. Reason: ${error.message}`);
+            }
+            throw new Error(`An unexpected error occurred while writing to file`);
+        }
+    }
+
+    private joinPaths(part1: string, part2: string): string {
+        return `${part1.replace(/\/$/, '')}/${part2.replace(/^\//, '')}`;
+    }
 }

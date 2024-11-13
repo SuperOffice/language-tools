@@ -136,7 +136,7 @@ export class AuthenticationService implements IAuthenticationService {
         }
     }
 
-    private handleAuthorizeRequestError(error: any): void {
+    private handleAuthorizeRequestError(error: unknown): void {
         if (error instanceof Error) {
             vscode.window.showErrorMessage('Failed to open URL: ' + error.message);
         } else {

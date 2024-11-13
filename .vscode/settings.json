@@ -11,9 +11,12 @@
         "FILESYSTEMHANDLER",
         "Fullname",
         "Fullpath",
-        "tsfso",
         "languageservice",
+        "mainworker",
+        "metafile",
+        "nodenext",
         "odata",
+        "outdir",
         "PKCE",
         "preinstall",
         "scriptbody",
@@ -21,12 +24,13 @@
         "SCRIPTSERVICE",
         "SUOFILE",
         "superoffice",
+        "superofficedx",
         "SYSTEMSERVICE",
         "treeview",
         "TREEVIEWPROVIDER",
-        "webapi",
-        "metafile",
-        "outdir",
-        "nodenext"
-    ]
+        "tseslint",
+        "tsfso",
+        "webapi"
+    ],
+    "eslint.validate": ["typescript"]
 }

@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 
 export interface IFileSystemHandler {
     readFile(fileUri: vscode.Uri): Promise<string | undefined>;
-    writeFile(fileUri: vscode.Uri, content: string): Promise<void>;
+    writeFile(fileUri: vscode.Uri, content: string): Promise<boolean>;
     deleteFile(fileUri: vscode.Uri): Promise<void>;
     exists(uri: vscode.Uri): Promise<boolean>;
 }
@@ -19,12 +19,14 @@ export class FileSystemHandler implements IFileSystemHandler {
         }
     }
 
-    public async writeFile(fileUri: vscode.Uri, content: string): Promise<void> {
+    public async writeFile(fileUri: vscode.Uri, content: string): Promise<boolean> {
         try {
             const fileData = Buffer.from(content, 'utf8');
             await vscode.workspace.fs.writeFile(fileUri, fileData);
+            return true;
         } catch (error) {
             vscode.window.showErrorMessage(`Failed to write file: ${error}`);
+            return false;
         }
     }
 

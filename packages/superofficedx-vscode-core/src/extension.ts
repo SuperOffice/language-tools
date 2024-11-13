@@ -1,11 +1,11 @@
 import * as vscode from 'vscode';
 import { TreeViewDataProvider } from './providers/treeViewDataProvider';
-import { initializeCommands } from './commands/initilizeCommands';
+import { initializeCommands } from './commands/initializeCommands';
 import { VirtualFileSystemProvider } from './workspace/virtualWorkspaceFileManager';
 //import { Commands } from './config';
 // import { SuperofficeAuthenticationProvider } from './providers/authentication/authenticationProvider';
 // import { WebViewDataProvider } from './providers/views/webViewDataProvider';
-import { startLanguageFeatures } from './languageFeatures';
+//import { startLanguageFeatures } from './languageFeatures';
 import { FileSystemHandler } from './handlers/fileSystemHandler';
 import { FileSystemService } from './services/fileSystemService';
 import { SuperofficeAuthenticationProvider } from './providers/superofficeAuthenticationProvider';
@@ -13,6 +13,7 @@ import { AuthenticationService } from './services/authenticationService';
 import { HttpHandler } from './handlers/httpHandler';
 import { HttpService } from './services/httpService';
 import { Commands } from './constants';
+import { NodeService } from './services/nodeService';
 
 //Volar
 // import { createLabsInfo } from '@volar/vscode';
@@ -33,14 +34,14 @@ export async function activate(context: vscode.ExtensionContext) {
     const vfsProviderRegistration = vscode.workspace.registerFileSystemProvider(Commands.VFS_SCHEME, vfsProvider, { isCaseSensitive: true });
     context.subscriptions.push(vfsProviderRegistration);
 
-    // Http handler
-    const httpHandler = new HttpHandler();
-    const httpService = new HttpService(httpHandler);
-
     // Filesystem handler
     const fileSystemHandler = new FileSystemHandler();
     const fileSystemService = new FileSystemService(fileSystemHandler);
-    
+
+    // Http handler
+    const httpHandler = new HttpHandler();
+    const httpService = new HttpService(httpHandler, fileSystemService);
+  
     // Authentication provider
     const authenticationService = new AuthenticationService();
     const authProvider = new SuperofficeAuthenticationProvider(context, fileSystemService, authenticationService, httpService);
@@ -56,7 +57,9 @@ export async function activate(context: vscode.ExtensionContext) {
         treeViewDataProvider.refresh();
     });
 
-    initializeCommands(context, authProvider, httpService, vfsProvider);
+    const nodeService = new NodeService(httpHandler);
+
+    initializeCommands(context, authProvider, httpService, vfsProvider, nodeService);
     
 
     //Volar labs

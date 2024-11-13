@@ -3,21 +3,19 @@ import {
 	authentication,
 	AuthenticationProvider,
 	AuthenticationProviderAuthenticationSessionsChangeEvent,
-    AuthenticationSession,
 	Disposable,
 	EventEmitter,
 	ExtensionContext,
 	window,
+    commands,
 } from 'vscode';
 
 import { v4 as uuid } from 'uuid';
-import { SuperOfficeAuthenticationSession, UserClaims } from '../types/types';
+import { SuperOfficeAuthenticationSession, UserClaims } from '../types/index';
 import { AuthFlow, AuthProvider } from '../constants';
 import { IFileSystemService } from '../services/fileSystemService';
 import { IAuthenticationService } from '../services/authenticationService';
 import { IHttpService } from '../services/httpService';
-
-export let currentSession: SuperOfficeAuthenticationSession | null = null;
 
 export class SuperofficeAuthenticationProvider implements AuthenticationProvider, Disposable {
     private readonly id = AuthProvider.ID; // Unique ID for your provider
@@ -40,7 +38,7 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
      * @param scopes 
      * @returns 
      */
-    public async getSessions(_scopes?: string[]): Promise<SuperOfficeAuthenticationSession[]> {
+    public async getSessions(): Promise<SuperOfficeAuthenticationSession[]> {
         try {
             if(this.currentSession){
                     // Check if session has expired
@@ -57,7 +55,7 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
             }
 
               // Attempt to parse session data
-             let sessions: SuperOfficeAuthenticationSession[] = JSON.parse(sessionData);
+             const sessions: SuperOfficeAuthenticationSession[] = JSON.parse(sessionData);
 
              const suoFile = await this.fileSystemService.readSuoFile();
              if(suoFile === undefined){
@@ -92,7 +90,7 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
      * @param scopes 
      * @returns 
      */
-    public async createSession(_scopes: string[]): Promise<SuperOfficeAuthenticationSession> {
+    public async createSession(): Promise<SuperOfficeAuthenticationSession> {
         try {
             const environment = await this.selectEnvironment();
 
@@ -105,7 +103,7 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
 
             // //Get Claims and tenant Status
             const claims: UserClaims = tokenSet.claims() as UserClaims;
-            let contextIdentifier = `${claims['http://schemes.superoffice.net/identity/ctx']}`;
+            const contextIdentifier = `${claims['http://schemes.superoffice.net/identity/ctx']}`;
 
             const state = await this.httpService.getTenantStateAsync(environment, contextIdentifier);
             if(!state.IsRunning){
@@ -145,7 +143,7 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
     public async removeSession(sessionId: string): Promise<void> {
         const allSessions = await this.context.secrets.get(`${this.id}.sessions`);
         if (allSessions) {
-            let sessions = JSON.parse(allSessions) as SuperOfficeAuthenticationSession[];
+            const sessions = JSON.parse(allSessions) as SuperOfficeAuthenticationSession[];
             const sessionIdx = sessions.findIndex(s => s.id === sessionId);
             const session = sessions[sessionIdx];
             sessions.splice(sessionIdx, 1);
@@ -158,10 +156,14 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
 
             this.currentSession = undefined;
             this._onDidChangeSessions.fire({ added: [], removed: [session], changed: [] });
-
-            //TODO: WORKAROUND UNTIL HTTPSERVICE IS FIXED
-            currentSession = null;
         }
+
+        // Set the context key
+        await commands.executeCommand(
+            'setContext',
+            'extension.isAuthenticated',
+            false
+        );
     }
 
     async selectEnvironment(): Promise<typeof AuthFlow.ENVIRONMENT[number]> {
@@ -181,7 +183,7 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
         return this.currentSession;
     }
 
-    setSession(session: SuperOfficeAuthenticationSession) {
+    async setSession(session: SuperOfficeAuthenticationSession) {
         this.currentSession = session;
         // Notify listeners about the session change
         this._onDidChangeSessions.fire({
@@ -189,10 +191,13 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
             removed: [],
             changed: [],
         });
-        
-        
-        //TODO: WORKAROUND UNTIL HTTPSERVICE IS FIXED
-        currentSession = session;
+
+        // Set the context key
+        await commands.executeCommand(
+            'setContext',
+            'extension.isAuthenticated',
+            true
+        );
     }
 
     /**

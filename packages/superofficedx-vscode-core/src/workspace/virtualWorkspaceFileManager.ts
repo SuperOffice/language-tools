@@ -7,7 +7,7 @@ export class VirtualFileSystemProvider implements vscode.FileSystemProvider {
     private files = new Map<string, Uint8Array>();
 
     // Required methods
-    watch(_uri: vscode.Uri, _options: { recursive: boolean; excludes: string[]; }): vscode.Disposable {
+    watch(): vscode.Disposable {
         // Just a stub. You might want to implement actual watching logic if needed.
         return new vscode.Disposable(() => { });
     }
@@ -24,11 +24,11 @@ export class VirtualFileSystemProvider implements vscode.FileSystemProvider {
         throw vscode.FileSystemError.FileNotFound();
     }
 
-    readDirectory(_uri: vscode.Uri): [string, vscode.FileType][] | Thenable<[string, vscode.FileType][]> {
+    readDirectory(): [string, vscode.FileType][] | Thenable<[string, vscode.FileType][]> {
         return []; // Stub
     }
 
-    createDirectory(_uri: vscode.Uri): void | Thenable<void> {
+    createDirectory(): void | Thenable<void> {
         // Stub
     }
 
@@ -40,16 +40,16 @@ export class VirtualFileSystemProvider implements vscode.FileSystemProvider {
         throw vscode.FileSystemError.FileNotFound();
     }
 
-    writeFile(uri: vscode.Uri, content: Uint8Array, _options: { create: boolean, overwrite: boolean }): void | Thenable<void> {
+    writeFile(uri: vscode.Uri, content: Uint8Array): void | Thenable<void> {
         this.files.set(uri.toString(), content);
         this._onDidChangeFile.fire([{ type: vscode.FileChangeType.Created, uri }]);
     }
 
-    delete(_uri: vscode.Uri, _options: { recursive: boolean; }): void | Thenable<void> {
+    delete(): void | Thenable<void> {
         // Implement delete logic if necessary
     }
 
-    rename(_oldUri: vscode.Uri, _newUri: vscode.Uri, _options: { overwrite: boolean; }): void | Thenable<void> {
+    rename(): void | Thenable<void> {
         // Implement rename logic if necessary
     }
 }
