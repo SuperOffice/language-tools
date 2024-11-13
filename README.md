@@ -19,7 +19,7 @@ The SuperOffice language server, powered by [Volar](https://volarjs.dev/), conta
 This module acts as the Language Server Protocol (LSP) language Server. It provides intellisense for the vscode extension, but could be used by any client (vscode, monaco, vim etc).
 It also handles %ejscript%-nuggets and has basic support for HTML/css/javascript outside of these nuggets. This is experimental but could be useful in cases where one would like to create html-pages.
 
-### [`@superoffice/vscode`](packages/vscode)
+### [`superofficedx-vscode-core`](packages/superofficedx-vscode-core)
 
 This module acts as a Language Server Protocol (LSP) language client. Its primary responsibility is to communicate with the [`@superoffice/language-server`](packages/language-server) module (acting as an LSP server) and integrate the language services provided by the server into the VS Code editor. This architecture allows for the reuse of language services across different editors and IDEs, with the implementation of the corresponding LSP client. In this case, @volar/vscode is the LSP client implementation for VS Code.
 
@@ -27,6 +27,8 @@ This module acts as a Language Server Protocol (LSP) language client. Its primar
 
 - View all scripts in an online tenant
 - Download single or folders of scripts
+- Execute local scripts through the API
+- Execute local scripts through a local NodeService, which gives step-through capabilities
 
 ## Getting Started
 
@@ -159,14 +161,6 @@ Result is presented as informationmessage (down right)
 ### Replace Treeview with webview
 
 Replacing the treeview with a webview will make it much more flexible to add logic/functionality. A webview is not restricted to the bounds of vscode, and we can create a modern design either with vanilla HTML or for instance react. It will also make it possible to make it more SuperOffice-like.
-
-### List scripts that have changed in your local workspace
-
-Similar to how GIT handles keeping track of your changed files. In short GIT handles this by storing a SHA1 value of each file/script in your local workspace. When a change is done to a document you create a new SHA1-value and compare it to the existing one, if and if they are not identical you consider the file as changed. It is then listed under ‘changed files.  
-
-Similar logic can be added to our extension, where we create a sha1-string when you download a file and store it in a file.
-
-It is NOT suggested/recommended we recreate all what GIT has to offer, but this small feature would make it much easier to know what files you have locally that is changed. You could in theory also compare local files with what is stored in the online tenant when you open a workspace, but it needs to be tested to see how much of a performance impact this is.
 
 ### Provide intellisense with the extension
 
