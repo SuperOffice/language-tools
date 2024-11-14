@@ -4,16 +4,12 @@ import * as vscode from 'vscode';
 import * as http from 'http';
 
 export interface IAuthenticationService {
-    /**
-     * Initiates the authentication process and retrieves a session.
-     * @returns A promise that resolves to a user session.
-     */
     authenticate(environment: typeof AuthFlow.ENVIRONMENT[number]): Promise<TokenSet>;
-  }
-  
+    generateAuthorizeUrl(environment: typeof AuthFlow.ENVIRONMENT[number]): Promise<string>;
+    startServer(timeout: number): Promise<TokenSet>;
+}
 
 export class AuthenticationService implements IAuthenticationService {
-
     private issuer: Issuer | undefined;
     private client: Client | undefined;
     private server: http.Server | null = null;
@@ -23,124 +19,112 @@ export class AuthenticationService implements IAuthenticationService {
     public async authenticate(environment: typeof AuthFlow.ENVIRONMENT[number]): Promise<TokenSet> {
         try {
             const url = await this.generateAuthorizeUrl(environment);
-            
             await vscode.env.openExternal(vscode.Uri.parse(url));
-            
-            // Start the HTTP server to listen for the callback
-            return await this.startServer();
-
+            return await this.startServer(30000); // Pass timeout as argument
         } catch (error) {
-            this.handleAuthorizeRequestError(error);
-            throw error;
+            throw new Error("Authentication Error: " + (error instanceof Error ? error.message : String(error)));
         }
     }
 
-    private async generateAuthorizeUrl(environment: typeof AuthFlow.ENVIRONMENT[number]): Promise<string> {   
-       this.issuer = await Issuer.discover(AuthFlow.getDiscoveryUrl(environment));
+    public async generateAuthorizeUrl(environment: typeof AuthFlow.ENVIRONMENT[number]): Promise<string> {
+        try {
+            this.issuer = await Issuer.discover(AuthFlow.getDiscoveryUrl(environment));
+            const clientMetadata: ClientMetadata = {
+                client_id: process.env.CLIENT_ID || AuthFlow.CLIENT_ID,
+                redirect_uri: process.env.REDIRECT_URI || AuthFlow.REDIRECT_URI,
+                response_types: ['code'],
+                token_endpoint_auth_method: 'none',
+            };
 
-        const clientMetadata: ClientMetadata = {
-            client_id: process.env.CLIENT_ID || AuthFlow.CLIENT_ID,
-            redirect_uri: process.env.REDIRECT_URI || AuthFlow.REDIRECT_URI,
-            response_types: ['code'], 
-            token_endpoint_auth_method: 'none'
+            this.client = new this.issuer.Client(clientMetadata);
+            const state = generators.state();
+            this.codeVerifier = generators.codeVerifier();
+            const codeChallenge = generators.codeChallenge(this.codeVerifier);
+
+            return this.client.authorizationUrl({
+                scope: 'openid',
+                state,
+                code_challenge: codeChallenge,
+                code_challenge_method: 'S256',
+            });
+        } catch (error) {
+            throw new Error("Error generating authorization URL: " + (error instanceof Error ? error.message : String(error)));
         }
-
-        this.client = new this.issuer.Client(clientMetadata);
-        const state = generators.state();
-        this.codeVerifier = generators.codeVerifier();
-        const codeChallenge = generators.codeChallenge(this.codeVerifier);
-    
-        const url = this.client.authorizationUrl({
-            scope: 'openid',
-            state,
-            code_challenge: codeChallenge, 
-            code_challenge_method: 'S256'
-        });
-
-        return url;
     }
 
-    private async startServer(): Promise<TokenSet> {
+    public async startServer(timeout: number): Promise<TokenSet> {
         return new Promise<TokenSet>((resolve, reject) => {
             if (this.server) return reject(new Error('Server already started'));
-    
+
             this.server = http.createServer(async (req, res) => {
-                if (!req.url) {
-                    res.end('Request URL not provided during authentication callback.');
-                    return reject(new Error('Request URL not provided during authentication callback.'));
-                }
-                
-                
-                const query = new URLSearchParams(req.url.split('?')[1]);
+                try {
+                    if (!req.url) {
+                        throw new Error('Request URL not provided during authentication callback.');
+                    }
 
-                // Display a user-friendly page with optional redirection
-                res.writeHead(200, { 'Content-Type': 'text/html' });
-                res.end(`
-                    <html>
-                    <body>
-                        <h1>Authentication successful!</h1>
-                        <p>You can close this tab and return to Visual Studio Code.</p>
-                    </body>
-                    </html>
-                `);
+                    const query = new URLSearchParams(req.url.split('?')[1]);
+                    const authorizationCode = query.get('code');
+                    if (!authorizationCode) {
+                        throw new Error('Callback does not contain a code.');
+                    }
 
-                const authorizationCode = query.get('code');
-                if (!authorizationCode) {
-                    res.end('Callback does not contain a code.');
-                    return reject(new Error('Callback does not contain a code.'));
-                }
-                   try {
-                    const token = await this.exchangeAuthorizationCode(authorizationCode as string);
+                    res.writeHead(200, { 'Content-Type': 'text/html' });
+                    res.end(`
+                        <html>
+                        <body>
+                            <h1>Authentication successful!</h1>
+                            <p>You can close this tab and return to Visual Studio Code.</p>
+                        </body>
+                        </html>
+                    `);
+
+                    const token = await this.exchangeAuthorizationCode(authorizationCode);
                     resolve(token);
                 } catch (error) {
                     reject(error);
                 } finally {
-                    this.server?.close();
-                    this.server = null;
+                    this.closeServer();
                 }
             });
-    
-            this.server.on('error', reject);
-            
-            // Start server
+
+            this.server.on('error', (error) => {
+                reject(new Error("Server error: " + error.message));
+                this.closeServer();
+            });
+
             this.server.listen(parseInt(this.parsedUri.port, 10), this.parsedUri.hostname, () => {
                 console.log(`Server listening on ${this.parsedUri.hostname}:${this.parsedUri.port}`);
             });
-    
-            // Timeout to prevent indefinite waiting
+
             setTimeout(() => {
                 reject(new Error('Authorization timed out'));
-            }, 30000);
+                this.closeServer();
+            }, timeout);
         });
     }
 
     private async exchangeAuthorizationCode(authorizationCode: string): Promise<TokenSet> {
-        if (!this.issuer) {
-            throw new Error("Issuer not initialized");
+        if (!this.client || !this.codeVerifier) {
+            throw new Error("Client or codeVerifier not initialized");
         }
-        
+
         try {
-            if(this.client && this.codeVerifier) {
-                return await this.client.callback(AuthFlow.REDIRECT_URI, { code: authorizationCode }, { code_verifier: this.codeVerifier }) as TokenSet;
-            }
-            else {
-                throw new Error("Client or codeVerifier not initialized");
-            }
-        } 
-        catch (error) {
-            if (error instanceof Error) {
-                throw new Error("Error obtaining token: " + error.message);
-            } else {
-                throw new Error("Error obtaining token: " + String(error));
-            }
+            const token = await this.client.callback(
+                AuthFlow.REDIRECT_URI,
+                { code: authorizationCode },
+                { code_verifier: this.codeVerifier }
+            ) as TokenSet;
+            this.codeVerifier = null; // Clear code verifier after use
+            return token;
+        } catch (error) {
+            throw new Error("Error obtaining token: " + (error instanceof Error ? error.message : String(error)));
         }
     }
 
-    private handleAuthorizeRequestError(error: unknown): void {
-        if (error instanceof Error) {
-            vscode.window.showErrorMessage('Failed to open URL: ' + error.message);
-        } else {
-            console.error(error);
+    private closeServer(): void {
+        if (this.server) {
+            this.server.close();
+            this.server = null;
         }
     }
-}    
+}
