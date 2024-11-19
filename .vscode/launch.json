@@ -18,36 +18,36 @@
 			],
 		},
 		{
-			"name": "Run Extension",
+			"name": "TSFSO extension",
 			"type": "extensionHost",
 			"request": "launch",
 			"args": [
-				"--extensionDevelopmentPath=${workspaceFolder}/packages/vscode/",
+				"--extensionDevelopmentPath=${workspaceFolder}/packages/superofficedx-vscode-tsfso/",
 				"--folder-uri=${workspaceRoot}/test"
 			],
 			"outFiles": [
-				"${workspaceFolder}/packages/vscode/dist/**/*.js"
+				"${workspaceFolder}/packages/superofficedx-vscode-tsfso/dist/**/*.js"
 			],
-			"preLaunchTask": "npm: build:vscode",
+			"preLaunchTask": "npm: build:vscode-tsfso",
 			"autoAttachChildProcesses": false
 		},
 		{
-			"name": "Run Extension without extensions",
+			"name": "TSFSO extension (disable others)",
 			"type": "extensionHost",
 			"request": "launch",
 			"args": [
-				"--extensionDevelopmentPath=${workspaceFolder}/packages/vscode/",
+				"--extensionDevelopmentPath=${workspaceFolder}/packages/superofficedx-vscode-tsfso/",
 				"--disable-extensions",
 				"--folder-uri=${workspaceRoot}/test"
 			],
 			"outFiles": [
-				"${workspaceFolder}/packages/vscode/dist/**/*.js"
+				"${workspaceFolder}/packages/superofficedx-vscode-tsfso/dist/**/*.js"
 			],
-			"preLaunchTask": "npm: build:vscode",
+			"preLaunchTask": "npm: build:vscode-tsfso",
 			"autoAttachChildProcesses": false
 		},
 		{
-			"name": "Run Core Extension",
+			"name": "Core Extension",
 			"type": "extensionHost",
 			"request": "launch",
 			"args": [

@@ -1,19 +1,19 @@
 import {
-	forEachEmbeddedCode,
-	ExtraServiceScript,
-	type LanguagePlugin,
-	VirtualCode,
 	CodeInformation,
 	CodeMapping,
-	Segment,
-	toString as volarToString,
-	buildMappings,
+	forEachEmbeddedCode,
+	type LanguagePlugin,
+	Mapping,
+	VirtualCode,
 } from '@volar/language-core';
+import { TypeScriptExtraServiceScript } from '@volar/typescript';
+import { type Segment, toString as volarToString } from 'muggle-string';
+import path from 'path';
 import ts, { ModuleResolutionKind } from 'typescript';
 import * as html from 'vscode-html-languageservice';
+import { URI } from 'vscode-uri';
 
 // Constants
-const npmImport = `import { WebApi } from "@superoffice/webapi";const SO = new WebApi();\n`;
 const EJSCRIPT_START = '%EJSCRIPT_START%';
 const EJSCRIPT_END = '%EJSCRIPT_END%';
 const SCRIPT_START = '<%';
@@ -30,10 +30,10 @@ const typescriptFeatures = {
 
 const htmlLs = html.getLanguageService();
 
-export function getSuperOfficeLanguageModule(): LanguagePlugin<SuperOfficeVirtualCode> {
+export function getSuperOfficeLanguagePlugin(): LanguagePlugin<URI, SuperOfficeVirtualCode> {
 	return {
 		getLanguageId(uri) {
-			if (uri.endsWith('.tsfso')) {
+			if (uri.path.endsWith('.tsfso')) {
 				return 'tsfso';
 			}
 		},
@@ -45,12 +45,12 @@ export function getSuperOfficeLanguageModule(): LanguagePlugin<SuperOfficeVirtua
 
 		},
 		typescript: {
-			extraFileExtensions: [{ extension: 'tsfso', isMixedContent: true, scriptKind: 0 satisfies ts.ScriptKind.Unknown }],
+			extraFileExtensions: [{ extension: 'tsfso', isMixedContent: true, scriptKind: ts.ScriptKind.TS }],
 			getServiceScript() {
 				return undefined;
 			},
 			getExtraServiceScripts(fileName, root) {
-				const scripts: ExtraServiceScript[] = [];
+				const scripts: TypeScriptExtraServiceScript[] = [];
 				for (const code of forEachEmbeddedCode(root)) {
 					if (code.languageId === 'javascript') {
 						scripts.push({
@@ -71,11 +71,7 @@ export function getSuperOfficeLanguageModule(): LanguagePlugin<SuperOfficeVirtua
 				}
 				return scripts;
 			},
-			resolveLanguageServiceHost(host) {
-				// Here we can edit the ts compiler.
-				// We can for example se host.getScriptFileNames() to get all the files in the project, and inject a *.d.ts file with our types. 
-				//This is an alternative to injecting the import-statement at the top of the virtual code.
-
+			resolveLanguageServiceHost(host) {		
 				// Set compiler options
 				const newSettings = {
 					...host.getCompilationSettings(),
@@ -86,6 +82,17 @@ export function getSuperOfficeLanguageModule(): LanguagePlugin<SuperOfficeVirtua
 				return {
 					...host,
 					getCompilationSettings: () => newSettings,
+					getScriptFileNames: () => {
+						const fileNames = host.getScriptFileNames();
+						const addedFileNames: string[] = [];
+						 addedFileNames.push(
+							...['./global-webapi.d.ts'].map((filePath) =>
+								ts.sys.resolvePath(path.resolve(__dirname, filePath)),
+							),
+						);
+
+						return [...fileNames, ...addedFileNames]
+					}
 				};
 			}
 		}
@@ -94,7 +101,7 @@ export function getSuperOfficeLanguageModule(): LanguagePlugin<SuperOfficeVirtua
 
 class SuperOfficeVirtualCode implements VirtualCode {
 	id = 'root';
-	languageId = 'superoffice';
+	languageId = 'tsfso';
 	mappings: CodeMapping[] = []; // Change this type according to your needs
 	embeddedCodes: VirtualCode[] = [];
 	editedTextDocument: string = '';
@@ -156,7 +163,6 @@ class SuperOfficeVirtualCode implements VirtualCode {
 		let end = 0;
 		this.editedTextDocument = textDocument;
 		const segments: Segment<CodeInformation>[] = [];
-        segments.push([npmImport, undefined, textDocument.length + npmImport.length, typescriptFeatures]);
 
 		if (textDocument.includes(EJSCRIPT_START) && textDocument.includes(EJSCRIPT_END)) {
 			// Replace %EJSCRIPT_START% and %EJSCRIPT_END% with whitespace
@@ -306,4 +312,23 @@ class SuperOfficeVirtualCode implements VirtualCode {
 			}
 		}
 	}
+}
+
+function buildMappings<T>(chunks: Segment<T>[]) {
+	let length = 0;
+	const mappings: Mapping<T>[] = [];
+	for (const segment of chunks) {
+		if (typeof segment === 'string') {
+			length += segment.length;
+		} else {
+			mappings.push({
+				sourceOffsets: [segment[2]],
+				generatedOffsets: [length],
+				lengths: [segment[0].length],
+				data: segment[3]!,
+			});
+			length += segment[0].length;
+		}
+	}
+	return mappings;
 }

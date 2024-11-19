@@ -1,0 +1,60 @@
+{
+  "name": "superofficedx-vscode-tsfso",
+  "publisher": "superoffice",
+  "displayName": "TypeScript for SuperOffice",
+  "description": "",
+  "qna": "https://github.com/SuperOffice/language-tools/issues",
+  "bugs": {
+    "url": "https://github.com/SuperOffice/language-tools/issues"
+  },
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SuperOffice/language-tools.git"
+  },
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "tsfso",
+        "extensions": [
+          ".tsfso"
+        ],
+        "configuration": "./syntaxes/tsfso-language-configuration.json",
+        "icon": {
+          "light": "/resources/logo.svg",
+          "dark": "/resources/logo.svg"
+        }
+      }
+    ],
+    "grammars": [
+      {
+        "language": "tsfso",
+        "scopeName": "source.tsfso",
+        "path": "./syntaxes/tsfso.tmLanguage.json"
+      }
+    ]
+  },
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js",
+    "build": "node ./scripts/build.js"
+  },
+  "devDependencies": {
+    "@volar/vscode": "*",
+    "@volar/language-server": "*",
+    "esbuild": "*"
+  }
+}

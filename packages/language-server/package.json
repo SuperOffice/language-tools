@@ -1,5 +1,5 @@
 {
-    "name": "@superoffice/language-server",
+    "name": "language-server",
     "description": "",
     "author": "Eivind Fasting",
     "version": "0.0.1",
@@ -13,12 +13,15 @@
         "preinstall": "npx only-allow pnpm"
     },
     "devDependencies": {
-        "@volar/language-core": "~2.2.0",
-        "@volar/language-server": "^2.2.0",
-        "volar-service-css": "volar-2.2",
-        "volar-service-emmet": "volar-2.2",
-        "volar-service-html": "volar-2.2",
-        "volar-service-typescript": "volar-2.2",
-        "vscode-html-languageservice": "^5.3.1"
+        "@volar/language-core": "~2.4.0",
+        "@volar/language-server": "*",
+        "@volar/typescript": "~2.4.0",
+        "volar-service-css": "volar-2.4",
+        "volar-service-emmet": "volar-2.4",
+        "volar-service-html": "volar-2.4",
+        "volar-service-typescript": "volar-2.4",
+        "vscode-html-languageservice": "^5.3.1",
+        "muggle-string": "^0.4.1",
+        "vscode-uri": "^3.0.8"
     }
 }
