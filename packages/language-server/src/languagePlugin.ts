@@ -76,7 +76,9 @@ export function getSuperOfficeLanguagePlugin(): LanguagePlugin<URI, SuperOfficeV
 				const newSettings = {
 					...host.getCompilationSettings(),
 					module: ts.ModuleKind.ESNext,
-					moduleResolution: ModuleResolutionKind.NodeNext
+					moduleResolution: ModuleResolutionKind.NodeNext,
+					moduleDetection: ts.ModuleDetectionKind.Force,
+					
 				};
 
 				return {
