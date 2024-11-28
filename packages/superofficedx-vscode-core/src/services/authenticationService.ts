@@ -1,10 +1,8 @@
 import { Client, ClientMetadata, generators, Issuer, TokenSet } from 'openid-client';
 import { AuthFlow } from '../constants';
-import * as vscode from 'vscode';
 import * as http from 'http';
 
 export interface IAuthenticationService {
-    authenticate(environment: typeof AuthFlow.ENVIRONMENT[number]): Promise<TokenSet>;
     generateAuthorizeUrl(environment: typeof AuthFlow.ENVIRONMENT[number]): Promise<string>;
     startServer(timeout: number): Promise<TokenSet>;
 }
@@ -15,16 +13,6 @@ export class AuthenticationService implements IAuthenticationService {
     private server: http.Server | null = null;
     private codeVerifier: string | null = null;
     private parsedUri: URL = new URL(AuthFlow.REDIRECT_URI);
-
-    public async authenticate(environment: typeof AuthFlow.ENVIRONMENT[number]): Promise<TokenSet> {
-        try {
-            const url = await this.generateAuthorizeUrl(environment);
-            await vscode.env.openExternal(vscode.Uri.parse(url));
-            return await this.startServer(30000); // Pass timeout as argument
-        } catch (error) {
-            throw new Error("Authentication Error: " + (error instanceof Error ? error.message : String(error)));
-        }
-    }
 
     public async generateAuthorizeUrl(environment: typeof AuthFlow.ENVIRONMENT[number]): Promise<string> {
         try {

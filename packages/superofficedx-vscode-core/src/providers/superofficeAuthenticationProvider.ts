@@ -7,6 +7,8 @@ import {
     ExtensionContext,
     window,
     commands,
+    Uri,
+    env,
 } from 'vscode';
 
 import { v4 as uuid } from 'uuid';
@@ -100,7 +102,10 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
 
     // Authentication Methods
     private async authenticateWithPKCE(environment: typeof AuthFlow.ENVIRONMENT[number]): Promise<TokenSet> {
-        const tokenSet = await this.authenticationService.authenticate(environment);
+        const url = await this.authenticationService.generateAuthorizeUrl(environment);
+        await env.openExternal(Uri.parse(url));
+        const tokenSet = await this.authenticationService.startServer(30000);
+        //const tokenSet = await this.authenticationService.authenticate(environment);
         return tokenSet;
     }
 
