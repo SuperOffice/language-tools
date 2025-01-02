@@ -132,6 +132,7 @@
     "build": "node ./scripts/build.js"
   },
   "devDependencies": {
+    "@playwright/test": "^1.49.0",
     "@types/mocha": "^10.0.1",
     "@types/node": "*",
     "@types/sinon": "^17.0.3",
