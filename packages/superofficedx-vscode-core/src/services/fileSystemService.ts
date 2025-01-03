@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 
 import { IFileSystemHandler } from '../handlers/fileSystemHandler';
-import { AuthProvider } from '../constants';
+import { AuthProvider, FileExtensions } from '../constants';
 import { ScriptEntity, SuoFile } from '../types/index';
 import path from 'path';
 
@@ -90,7 +90,7 @@ export class FileSystemService implements IFileSystemService {
     
     async writeScriptToFile(scriptEntity: ScriptEntity): Promise<vscode.Uri> {
         try {
-            const filePath = this.joinPaths(scriptEntity.Path, scriptEntity.Name + ".ts");
+            const filePath = this.joinPaths(scriptEntity.Path, scriptEntity.Name + FileExtensions.TYPESCRIPT);
             const fileUri = this.getFileUriInWorkspace(filePath);
             const dirUri = fileUri.with({ path: fileUri.path.replace(/\/[^/]+$/, '') });
 

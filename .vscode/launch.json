@@ -52,6 +52,7 @@
 			"request": "launch",
 			"args": [
 				"--extensionDevelopmentPath=${workspaceFolder}/packages/superofficedx-vscode-core/",
+				"--disable-extensions",
 				"--folder-uri=${workspaceRoot}/test"
 			],
 			"outFiles": [

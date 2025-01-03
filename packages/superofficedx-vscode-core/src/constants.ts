@@ -41,3 +41,8 @@ export const Endpoints = {
     SCRIPT_URI: '/v1/Script/',
     EXECUTESCRIPT_ENDPOINT_URI: '/v1/Agents/CRMScript/ExecuteScriptByString'
 }
+
+export const FileExtensions = {
+    TYPESCRIPT: '.tsfso',
+    CRMSCRIPT: '.crmscript'
+} as const;

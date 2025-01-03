@@ -49,25 +49,29 @@ export class AuthenticationService implements IAuthenticationService {
                     if (!req.url) {
                         throw new Error('Request URL not provided during authentication callback.');
                     }
-
-                    const query = new URLSearchParams(req.url.split('?')[1]);
-                    const authorizationCode = query.get('code');
-                    if (!authorizationCode) {
-                        throw new Error('Callback does not contain a code.');
+                    if(req.url === '/favicon.ico') {
+                        console.log('Favicon requested');
                     }
-
-                    res.writeHead(200, { 'Content-Type': 'text/html' });
-                    res.end(`
-                        <html>
-                        <body>
-                            <h1>Authentication successful!</h1>
-                            <p>You can close this tab and return to Visual Studio Code.</p>
-                        </body>
-                        </html>
-                    `);
-
-                    const token = await this.exchangeAuthorizationCode(authorizationCode);
-                    resolve(token);
+                    else{
+                        const query = new URLSearchParams(req.url.split('?')[1]);
+                        const authorizationCode = query.get('code');
+                        if (!authorizationCode) {
+                            throw new Error('Callback does not contain a code.');
+                        }
+    
+                        res.writeHead(200, { 'Content-Type': 'text/html' });
+                        res.end(`
+                            <html>
+                            <body>
+                                <h1>Authentication successful!</h1>
+                                <p>You can close this tab and return to Visual Studio Code.</p>
+                            </body>
+                            </html>
+                        `);
+    
+                        const token = await this.exchangeAuthorizationCode(authorizationCode);
+                        resolve(token);
+                    }
                 } catch (error) {
                     reject(error);
                 } finally {
