@@ -4,8 +4,8 @@ import { SuperofficeAuthenticationProvider } from '../../providers/superofficeAu
 import { Node } from '../../providers/treeViewDataProvider';
 import { IHttpService } from '../../services/httpService';
 import { ScriptInfo } from '../../types/index';
-import { Commands } from '../../constants';
-import { VirtualFileSystemProvider } from '../../workspace/virtualWorkspaceFileManager';
+import { FileExtensions } from '../../constants';
+import { VirtualFileSystemProvider } from '../../providers/virtualFileSystemProvider';
 
 export async function previewAsync(node: Node, authProvider: SuperofficeAuthenticationProvider, httpService: IHttpService, vfsProvider: VirtualFileSystemProvider) {
     if (node?.scriptInfo) {
@@ -20,7 +20,7 @@ export async function previewAsync(node: Node, authProvider: SuperofficeAuthenti
             
             // Create a virtual URI for the file based on the desired filename
             const filename = `${scriptInfo.name}.js`;
-            const virtualUri = vscode.Uri.parse(`${Commands.VFS_SCHEME}:/scripts/${filename}`);
+            const virtualUri = vscode.Uri.parse(`${FileExtensions.VFS_SCHEME}:/scripts/${filename}`);
 
             // "Write" the content to the virtual file
             vfsProvider.writeFile(virtualUri, Buffer.from(scriptEntity.Source, 'utf8'));

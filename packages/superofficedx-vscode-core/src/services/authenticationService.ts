@@ -43,51 +43,70 @@ export class AuthenticationService implements IAuthenticationService {
     public async startServer(timeout: number): Promise<TokenSet> {
         return new Promise<TokenSet>((resolve, reject) => {
             if (this.server) return reject(new Error('Server already started'));
-
+    
             this.server = http.createServer(async (req, res) => {
                 try {
                     if (!req.url) {
                         throw new Error('Request URL not provided during authentication callback.');
                     }
-                    if(req.url === '/favicon.ico') {
-                        console.log('Favicon requested');
-                    }
-                    else{
-                        const query = new URLSearchParams(req.url.split('?')[1]);
-                        const authorizationCode = query.get('code');
-                        if (!authorizationCode) {
-                            throw new Error('Callback does not contain a code.');
-                        }
     
-                        res.writeHead(200, { 'Content-Type': 'text/html' });
-                        res.end(`
-                            <html>
-                            <body>
-                                <h1>Authentication successful!</h1>
-                                <p>You can close this tab and return to Visual Studio Code.</p>
-                            </body>
-                            </html>
-                        `);
-    
-                        const token = await this.exchangeAuthorizationCode(authorizationCode);
-                        resolve(token);
+                    const url = new URL(req.url, `http://${this.parsedUri.hostname}:${this.parsedUri.port}`);
+                    
+                    if (url.pathname === '/favicon.ico') {
+                        res.writeHead(204); // Respond with "No Content" for favicon requests
+                        return res.end();
                     }
+    
+                    if (url.pathname !== '/') {
+                        throw new Error('Invalid callback path.');
+                    }
+    
+                    const authorizationCode = url.searchParams.get('code');
+                    if (!authorizationCode) {
+                        throw new Error('Callback does not contain a code.');
+                    }
+    
+                    // Send a confirmation page to the browser
+                    res.writeHead(200, { 'Content-Type': 'text/html' });
+                    res.end(`
+                        <html>
+                        <body>
+                            <h1>Authentication Successful!</h1>
+                            <p>You can close this tab and return to Visual Studio Code.</p>
+                        </body>
+                        </html>
+                    `);
+    
+                    // Exchange the authorization code for a token
+                    const token = await this.exchangeAuthorizationCode(authorizationCode);
+                    resolve(token);
                 } catch (error) {
+                    // Send error feedback to the browser if possible
+                    res.writeHead(500, { 'Content-Type': 'text/html' });
+                    res.end(`
+                        <html>
+                        <body>
+                            <h1>Authentication Failed</h1>
+                            <p>${(error as Error).message}</p>
+                        </body>
+                        </html>
+                    `);
                     reject(error);
                 } finally {
                     this.closeServer();
                 }
             });
-
+    
             this.server.on('error', (error) => {
-                reject(new Error("Server error: " + error.message));
+                reject(new Error(`Server error: ${error.message}`));
                 this.closeServer();
             });
-
+    
             this.server.listen(parseInt(this.parsedUri.port, 10), this.parsedUri.hostname, () => {
                 console.log(`Server listening on ${this.parsedUri.hostname}:${this.parsedUri.port}`);
             });
-
+    
+            // Timeout to reject the promise if no callback is received within the specified time
             setTimeout(() => {
                 reject(new Error('Authorization timed out'));
                 this.closeServer();

@@ -90,7 +90,17 @@ export class FileSystemService implements IFileSystemService {
     
     async writeScriptToFile(scriptEntity: ScriptEntity): Promise<vscode.Uri> {
         try {
-            const filePath = this.joinPaths(scriptEntity.Path, scriptEntity.Name + FileExtensions.TYPESCRIPT);
+            // WORKAROUND - Should not be done this way, but it works for now..
+            // https://docs.superoffice.com/en/database/tables/enums/scripttype.html
+            let fileType = "";
+            if (scriptEntity.Type === 1) {
+                fileType = FileExtensions.CRMSCRIPT
+            }
+            else if (scriptEntity.Type === 2) {
+                fileType = FileExtensions.TYPESCRIPT
+            }
+
+            const filePath = this.joinPaths(scriptEntity.Path, scriptEntity.Name + fileType);
             const fileUri = this.getFileUriInWorkspace(filePath);
             const dirUri = fileUri.with({ path: fileUri.path.replace(/\/[^/]+$/, '') });
 

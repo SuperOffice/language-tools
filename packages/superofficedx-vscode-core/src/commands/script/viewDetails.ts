@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
-import { ScriptInfo } from '../types/index';
+import { ScriptInfo } from '../../types/index';
     
 const openedScripts = new Map<string, vscode.TextDocument>();
 
-export async function viewScriptDetailsAsync(script: ScriptInfo) {
+export async function viewDetailsAsync(script: ScriptInfo) {
     try {
         const doc = openedScripts.get(script.PrimaryKey);
 

@@ -1,7 +1,7 @@
 import { Uri } from "vscode";
 import { AuthFlow, Endpoints } from "../constants";
 import { IHttpHandler } from "../handlers/httpHandler";
-import { ExecuteScriptResponse, ScriptEntity, Scripts, State, SuperOfficeAuthenticationSession } from "../types/index";
+import { DynamicScriptOdata, ExecuteScriptResponse, ScriptEntity, Scripts, State, SuperOfficeAuthenticationSession } from "../types/index";
 import { IFileSystemService } from "./fileSystemService";
 
 export interface IHttpService {
@@ -10,6 +10,7 @@ export interface IHttpService {
     getScriptEntityAsync(session: SuperOfficeAuthenticationSession, uniqueIdentifier: string): Promise<ScriptEntity>
     executeScriptAsync(session: SuperOfficeAuthenticationSession, script: string): Promise<ExecuteScriptResponse>
     downloadScriptAsync(session: SuperOfficeAuthenticationSession, uniqueIdentifier: string): Promise<Uri>
+    getDynamicScriptInfo(session: SuperOfficeAuthenticationSession, uniqueIdentifier: string): Promise<DynamicScriptInfo>
 }
 
 export class HttpService implements IHttpService {
@@ -77,10 +78,30 @@ export class HttpService implements IHttpService {
     async downloadScriptAsync(session: SuperOfficeAuthenticationSession, uniqueIdentifier: string): Promise<Uri> {
         try {
             const scriptEntity = await this.getScriptEntityAsync(session, uniqueIdentifier);
+
+            // Workaround to get the ejscript.type.. should be returned in the scriptEntity in the future
+            const dynamicScriptOdata = await this.getDynamicScriptInfo(session, uniqueIdentifier);
+            scriptEntity.Type = dynamicScriptOdata.value[0]["ejscript.type"];
+            //
             return await this.fileSystemService.writeScriptToFile(scriptEntity);
         }
         catch(error) {
             throw new Error('Error downloading script with : ' + error);
+        }
+    }
+
+    async getDynamicScriptInfo(session: SuperOfficeAuthenticationSession, uniqueIdentifier: string): Promise<DynamicScriptOdata> {
+        try {
+            const dynamicUri = Endpoints.getDynamicUrl(uniqueIdentifier);
+            return await this.httpHandler.get<DynamicScriptOdata>(`${session.webApiUri}${dynamicUri}`, 
+                { 
+                    Authorization: `Bearer ${session.accessToken}`,
+                    'Accept': 'application/json' 
+                }
+            );
+        }
+        catch(error) {
+            throw new Error('Error getting All Script info: ' + error);
         }
     }
 }

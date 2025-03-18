@@ -32,6 +32,21 @@ export interface ScriptInfo {
     screenType: string;
     enabled: boolean;
 }
+
+export interface DynamicScriptOdata {
+    "odata.metadata": string;
+    "odata.nextLink": null | string;
+    value: DynamicScriptOdataValue[];
+    
+}
+interface DynamicScriptOdataValue {
+    PrimaryKey: string;
+    EntityName: string;
+    "ejscript.id": number;
+    "ejscript.type": number;
+    "ejscript.body": string;
+}
+
 export interface ScriptEntity {
     UniqueIdentifier: string;
     Name: string;
@@ -45,6 +60,7 @@ export interface ScriptEntity {
     Path: string;
     TableRight: null;
     FieldProperties: Record<string, unknown>;
+    Type: number;
 }
 
 export interface ExecuteScriptResponse {

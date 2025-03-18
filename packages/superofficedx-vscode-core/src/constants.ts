@@ -33,16 +33,17 @@ export const Commands = {
     DOWNLOAD_SCRIPT_FOLDER: 'superOfficeDX.downloadScriptFolder',
     EXECUTE_SCRIPT: 'superOfficeDX.executeScript',
     EXECUTE_SCRIPT_Locally: 'superOfficeDX.executeScriptLocally',
-    VFS_SCHEME: 'vfs',
-    LOGOUT: 'superOfficeDX.logout'
 } as const;
 
 export const Endpoints = {
     SCRIPT_URI: '/v1/Script/',
-    EXECUTESCRIPT_ENDPOINT_URI: '/v1/Agents/CRMScript/ExecuteScriptByString'
-}
+    EXECUTESCRIPT_ENDPOINT_URI: '/v1/Agents/CRMScript/ExecuteScriptByString',
+    getDynamicUrl: (uniqueIdentifier: string) => 
+        `/v1/archive/dynamic?$select=ejscript.id,ejscript.type,ejscript.description,ejscript.include_id,ejscript.access_key,ejscript.unique_identifier&$filter=ejscript.unique_identifier eq '${uniqueIdentifier}'`,
+} as const;
 
 export const FileExtensions = {
     TYPESCRIPT: '.tsfso',
-    CRMSCRIPT: '.crmscript'
+    CRMSCRIPT: '.crmscript',
+    VFS_SCHEME: 'vfs'
 } as const;

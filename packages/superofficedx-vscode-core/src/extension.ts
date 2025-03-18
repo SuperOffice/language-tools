@@ -1,37 +1,26 @@
 import * as vscode from 'vscode';
+import { FileExtensions } from './constants';
+
 import { TreeViewDataProvider } from './providers/treeViewDataProvider';
-import { initializeCommands } from './commands/initializeCommands';
-import { VirtualFileSystemProvider } from './workspace/virtualWorkspaceFileManager';
-//import { Commands } from './config';
-// import { SuperofficeAuthenticationProvider } from './providers/authentication/authenticationProvider';
-// import { WebViewDataProvider } from './providers/views/webViewDataProvider';
-//import { startLanguageFeatures } from './languageFeatures';
-import { FileSystemHandler } from './handlers/fileSystemHandler';
-import { FileSystemService } from './services/fileSystemService';
 import { SuperofficeAuthenticationProvider } from './providers/superofficeAuthenticationProvider';
-import { AuthenticationService } from './services/authenticationService';
+import { VirtualFileSystemProvider } from './providers/virtualFileSystemProvider';
+
+import { FileSystemHandler } from './handlers/fileSystemHandler';
 import { HttpHandler } from './handlers/httpHandler';
+
+import { FileSystemService } from './services/fileSystemService';
+import { AuthenticationService } from './services/authenticationService';
 import { HttpService } from './services/httpService';
-import { Commands } from './constants';
 import { NodeService } from './services/nodeService';
 
-//Volar
-// import { createLabsInfo } from '@volar/vscode';
-// import * as serverProtocol from '@volar/language-server/protocol';
-
+import { registerCommands } from './commands/registerCommands';
 
 export async function activate(context: vscode.ExtensionContext) {
     console.log('"vscode-superoffice" extension is now active.');
 
-    //const languageClient = await startLanguageFeatures(context);      
-
-    // Register webview
-    // const webviewViewProvider = new WebViewDataProvider(context.extensionUri);
-    // vscode.window.registerWebviewViewProvider(WebViewDataProvider.viewId, webviewViewProvider);
-    
     // Virtual filesystem provider
     const vfsProvider = new VirtualFileSystemProvider();
-    const vfsProviderRegistration = vscode.workspace.registerFileSystemProvider(Commands.VFS_SCHEME, vfsProvider, { isCaseSensitive: true });
+    const vfsProviderRegistration = vscode.workspace.registerFileSystemProvider(FileExtensions.VFS_SCHEME, vfsProvider, { isCaseSensitive: true });
     context.subscriptions.push(vfsProviderRegistration);
 
     // Filesystem handler
@@ -59,13 +48,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     const nodeService = new NodeService(httpHandler);
 
-    initializeCommands(context, authProvider, httpService, vfsProvider, nodeService);
-    
-
-    //Volar labs
-	// const labsInfo = createLabsInfo(serverProtocol);
-	// labsInfo.addLanguageClient(languageClient);
-	// return labsInfo.extensionExports;
+    registerCommands(context, authProvider, httpService, vfsProvider, nodeService);
 }
 
 export function deactivate() {}
