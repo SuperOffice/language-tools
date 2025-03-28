@@ -1,0 +1,35 @@
+{
+    "name": "langium-crmscript",
+    "description": "Please enter a brief description here",
+    "version": "0.0.1",
+    "files": [
+        "out",
+        "src"
+    ],
+    "type": "module",
+    "scripts": {
+        "preinstall": "npx only-allow pnpm",
+        "build": "tsc -b tsconfig.json",
+        "watch": "tsc -b tsconfig.json --watch",
+        "lint": "eslint src --ext ts",
+        "langium:generate": "langium generate",
+        "langium:generate:production": "langium generate --mode=production",
+        "langium:watch": "langium generate --watch"
+    },
+    "dependencies": {
+        "langium": "~3.4.0",
+        "vscode-languageclient": "~9.0.1",
+        "vscode-languageserver": "~9.0.1"
+    },
+    "devDependencies": {
+        "@types/node": "*",
+        "eslint": "*",
+        "langium-cli": "~3.4.0",
+        "typescript": "*",
+        "vscode-uri": "^3.0.8"
+    },
+    "volta": {
+        "node": "18.19.1",
+        "npm": "10.2.4"
+    }
+}

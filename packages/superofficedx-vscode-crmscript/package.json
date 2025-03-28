@@ -1,5 +1,5 @@
 {
-  "name": "superofficedx-vscode-tsfso",
+  "name": "superofficedx-vscode-crmscript",
   "publisher": "superoffice",
   "displayName": "TypeScript for SuperOffice",
   "description": "",
@@ -18,16 +18,27 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [],  
   "main": "./out/superofficedx-vscode-crmscript/src/main.cjs",
   "contributes": {
     "languages": [
       {
-        "id": "tsfso",
+        "id": "crmscript",
         "extensions": [
-          ".tsfso"
+          ".crmscript"
         ],
-        "configuration": "./syntaxes/tsfso-language-configuration.json",
+        "configuration": "./syntaxes/crmscript-language-configuration.json",
+        "icon": {
+          "light": "/resources/logo.svg",
+          "dark": "/resources/logo.svg"
+        }
+      },
+      {
+        "id": "crmscript-definition",
+        "extensions": [
+          ".crmscript-definition"
+        ],
+        "configuration": "./syntaxes/crmscript-language-configuration.json",
         "icon": {
           "light": "/resources/logo.svg",
           "dark": "/resources/logo.svg"
@@ -36,9 +47,14 @@
     ],
     "grammars": [
       {
-        "language": "tsfso",
-        "scopeName": "source.tsfso",
-        "path": "./syntaxes/tsfso.tmLanguage.json"
+        "language": "crmscript",
+        "scopeName": "source.crmscript",
+        "path": "./syntaxes/crmscript.tmLanguage.json"
+      },
+      {
+        "language": "crmscript-definition",
+        "scopeName": "source.crmscript-definition",
+        "path": "./syntaxes/crmscript-definition.tmLanguage.json"
       }
     ]
   },
@@ -50,11 +66,12 @@
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js",
-    "build": "node ./scripts/build.js"
+    "build": "node ./scripts/esbuild.mjs"
+  },
+  "dependencies": {
+    "vscode-languageclient": "~9.0.1"
   },
   "devDependencies": {
-    "@volar/vscode": "*",
-    "@volar/language-server": "*",
     "esbuild": "*"
   }
 }

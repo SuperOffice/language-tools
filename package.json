@@ -4,6 +4,8 @@
         "preinstall": "npx only-allow pnpm",
         "build:vscode-core": "npm run build --prefix ./packages/superofficedx-vscode-core",
         "build:vscode-tsfso": "npm run build --prefix ./packages/superofficedx-vscode-tsfso",
+        "build:vscode-crmscript": "npm run build --prefix ./packages/superofficedx-vscode-crmscript",
+        "build:langium-crmscript": "npm run langium:generate --prefix ./packages/langium-crmscript",
         "test:core": "npm run test --prefix ./packages/superofficedx-vscode-core"
     },
     "devDependencies": {
