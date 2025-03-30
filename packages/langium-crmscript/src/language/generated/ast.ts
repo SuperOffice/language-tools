@@ -12,12 +12,14 @@ export const CrmscriptTerminals = {
     ID: /[_a-zA-Z][\w_]*/,
     ML_COMMENT: /\/\*[\s\S]*?\*\//,
     SL_COMMENT: /\/\/[^\n\r]*/,
+    INT: /[0-9]+/,
     STRING: /"[^"]*"|'[^']*'/,
 };
 
 export type CrmscriptTerminalNames = keyof typeof CrmscriptTerminals;
 
 export type CrmscriptKeywordNames = 
+    | "!"
     | "!="
     | "("
     | ")"
@@ -27,7 +29,6 @@ export type CrmscriptKeywordNames =
     | "-"
     | "."
     | "/"
-    | ":"
     | ";"
     | "<"
     | "<="
@@ -38,11 +39,15 @@ export type CrmscriptKeywordNames =
     | "Class"
     | "and"
     | "else"
+    | "false"
     | "for"
     | "if"
+    | "nil"
     | "or"
     | "print"
     | "return"
+    | "this"
+    | "true"
     | "while"
     | "{"
     | "}";
@@ -65,7 +70,7 @@ export function isDefinitionElement(item: unknown): item is DefinitionElement {
     return reflection.isInstance(item, DefinitionElement);
 }
 
-export type DefinitionNamedElement = Class | FieldMember;
+export type DefinitionNamedElement = Class | ClassMember;
 
 export const DefinitionNamedElement = 'DefinitionNamedElement';
 
@@ -100,9 +105,9 @@ export function isImplementationNamedElement(item: unknown): item is Implementat
 export interface BinaryExpression extends AstNode {
     readonly $container: BinaryExpression | ForStatement | IfStatement | ImplementationUnit | MemberCall | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
     readonly $type: 'BinaryExpression';
-    left: Expression | MemberCall;
+    left: Expression;
     operator: '!=' | '*' | '+' | '-' | '/' | '<' | '<=' | '=' | '==' | '>' | '>=' | 'and' | 'or';
-    right: Expression | MemberCall;
+    right: Expression;
 }
 
 export const BinaryExpression = 'BinaryExpression';
@@ -243,9 +248,9 @@ export interface MemberCall extends AstNode {
     readonly $container: BinaryExpression | ForStatement | IfStatement | ImplementationUnit | MemberCall | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
     readonly $type: 'MemberCall';
     arguments: Array<Expression>;
-    element: Reference<ImplementationNamedElement>;
+    element?: Reference<ImplementationNamedElement>;
     explicitOperationCall: boolean;
-    previous?: MemberCall;
+    previous?: Expression;
 }
 
 export const MemberCall = 'MemberCall';
@@ -255,7 +260,7 @@ export function isMemberCall(item: unknown): item is MemberCall {
 }
 
 export interface MethodMember extends AstNode {
-    readonly $container: Class;
+    readonly $container: Class | DefinitionUnit | ExpressionBlock;
     readonly $type: 'MethodMember';
     name: string;
     parameters: Array<Parameter>;
@@ -417,7 +422,8 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
             case UnaryExpression: {
                 return this.isSubtype(Expression, supertype);
             }
-            case Class: {
+            case Class:
+            case ClassMember: {
                 return this.isSubtype(DefinitionNamedElement, supertype);
             }
             case DefinitionNamedElement: {
@@ -435,14 +441,12 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
             case ExpressionBlock: {
                 return this.isSubtype(DefinitionElement, supertype) || this.isSubtype(ImplementationElement, supertype);
             }
-            case FieldMember: {
-                return this.isSubtype(ClassMember, supertype) || this.isSubtype(DefinitionNamedElement, supertype);
+            case FieldMember:
+            case MethodMember: {
+                return this.isSubtype(ClassMember, supertype);
             }
             case FunctionDeclaration: {
                 return this.isSubtype(ImplementationElement, supertype) || this.isSubtype(ImplementationNamedElement, supertype);
-            }
-            case MethodMember: {
-                return this.isSubtype(ClassMember, supertype);
             }
             case VariableDeclaration: {
                 return this.isSubtype(ImplementationNamedElement, supertype);

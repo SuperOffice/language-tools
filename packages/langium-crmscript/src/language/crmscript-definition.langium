@@ -26,7 +26,7 @@ ExpressionBlock: '{'
     definitionelements+=DefinitionElement*
 '}';
 
-type DefinitionNamedElement = Class | FieldMember;
+type DefinitionNamedElement = Class | ClassMember;
 
 hidden terminal WS: /\s+/;
 terminal ID: /[_a-zA-Z][\w_]*/;

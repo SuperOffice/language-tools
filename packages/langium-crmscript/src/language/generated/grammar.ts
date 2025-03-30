@@ -329,10 +329,6 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
             }
           },
           {
-            "$type": "Keyword",
-            "value": ":"
-          },
-          {
             "$type": "Assignment",
             "feature": "name",
             "operator": "=",
@@ -470,7 +466,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
           {
             "$type": "SimpleType",
             "typeRef": {
-              "$ref": "#/rules@5"
+              "$ref": "#/rules@3"
             }
           }
         ]
@@ -1480,86 +1476,19 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
     {
       "$type": "ParserRule",
       "name": "MemberCall",
+      "inferredType": {
+        "$type": "InferredType",
+        "name": "Expression"
+      },
       "definition": {
         "$type": "Group",
         "elements": [
           {
-            "$type": "Assignment",
-            "feature": "element",
-            "operator": "=",
-            "terminal": {
-              "$type": "CrossReference",
-              "type": {
-                "$ref": "#/types@0"
-              },
-              "terminal": {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@32"
-                },
-                "arguments": []
-              },
-              "deprecatedSyntax": false
-            }
-          },
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Assignment",
-                "feature": "explicitOperationCall",
-                "operator": "?=",
-                "terminal": {
-                  "$type": "Keyword",
-                  "value": "("
-                }
-              },
-              {
-                "$type": "Group",
-                "elements": [
-                  {
-                    "$type": "Assignment",
-                    "feature": "arguments",
-                    "operator": "+=",
-                    "terminal": {
-                      "$type": "RuleCall",
-                      "rule": {
-                        "$ref": "#/rules@9"
-                      },
-                      "arguments": []
-                    }
-                  },
-                  {
-                    "$type": "Group",
-                    "elements": [
-                      {
-                        "$type": "Keyword",
-                        "value": ","
-                      },
-                      {
-                        "$type": "Assignment",
-                        "feature": "arguments",
-                        "operator": "+=",
-                        "terminal": {
-                          "$type": "RuleCall",
-                          "rule": {
-                            "$ref": "#/rules@9"
-                          },
-                          "arguments": []
-                        }
-                      }
-                    ],
-                    "cardinality": "*"
-                  }
-                ],
-                "cardinality": "?"
-              },
-              {
-                "$type": "Keyword",
-                "value": ")"
-              }
-            ],
-            "cardinality": "?"
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@16"
+            },
+            "arguments": []
           },
           {
             "$type": "Group",
@@ -2398,10 +2327,6 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
             }
           },
           {
-            "$type": "Keyword",
-            "value": ":"
-          },
-          {
             "$type": "Assignment",
             "feature": "name",
             "operator": "=",
@@ -2560,7 +2485,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
           {
             "$type": "SimpleType",
             "typeRef": {
-              "$ref": "#/rules@28"
+              "$ref": "#/rules@26"
             }
           }
         ]
