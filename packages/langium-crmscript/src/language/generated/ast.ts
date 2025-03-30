@@ -94,7 +94,7 @@ export function isImplementationElement(item: unknown): item is ImplementationEl
     return reflection.isInstance(item, ImplementationElement);
 }
 
-export type ImplementationNamedElement = FunctionDeclaration | VariableDeclaration;
+export type ImplementationNamedElement = Class | ClassMember | FunctionDeclaration | VariableDeclaration;
 
 export const ImplementationNamedElement = 'ImplementationNamedElement';
 
@@ -129,7 +129,7 @@ export function isBooleanExpression(item: unknown): item is BooleanExpression {
 }
 
 export interface Class extends AstNode {
-    readonly $container: DefinitionUnit | ExpressionBlock;
+    readonly $container: DefinitionUnit | ExpressionBlock | ForStatement | ImplementationUnit;
     readonly $type: 'Class';
     members: Array<ClassMember>;
     name: string;
@@ -165,10 +165,10 @@ export function isExpressionBlock(item: unknown): item is ExpressionBlock {
 }
 
 export interface FieldMember extends AstNode {
-    readonly $container: Class | DefinitionUnit | ExpressionBlock;
+    readonly $container: Class | DefinitionUnit | ExpressionBlock | ForStatement | ImplementationUnit;
     readonly $type: 'FieldMember';
     name: string;
-    returnType: Reference<Class>;
+    type: Reference<Class>;
 }
 
 export const FieldMember = 'FieldMember';
@@ -260,7 +260,7 @@ export function isMemberCall(item: unknown): item is MemberCall {
 }
 
 export interface MethodMember extends AstNode {
-    readonly $container: Class | DefinitionUnit | ExpressionBlock;
+    readonly $container: Class | DefinitionUnit | ExpressionBlock | ForStatement | ImplementationUnit;
     readonly $type: 'MethodMember';
     name: string;
     parameters: Array<Parameter>;
@@ -424,7 +424,7 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
             }
             case Class:
             case ClassMember: {
-                return this.isSubtype(DefinitionNamedElement, supertype);
+                return this.isSubtype(DefinitionNamedElement, supertype) || this.isSubtype(ImplementationNamedElement, supertype);
             }
             case DefinitionNamedElement: {
                 return this.isSubtype(DefinitionElement, supertype);
@@ -460,7 +460,7 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
     getReferenceType(refInfo: ReferenceInfo): string {
         const referenceId = `${refInfo.container.$type}:${refInfo.property}`;
         switch (referenceId) {
-            case 'FieldMember:returnType':
+            case 'FieldMember:type':
             case 'FunctionDeclaration:returnType':
             case 'MethodMember:returnType':
             case 'Parameter:type':
@@ -526,7 +526,7 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                     name: FieldMember,
                     properties: [
                         { name: 'name' },
-                        { name: 'returnType' }
+                        { name: 'type' }
                     ]
                 };
             }

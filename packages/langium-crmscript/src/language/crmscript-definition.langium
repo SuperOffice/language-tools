@@ -18,9 +18,9 @@ ClassMember: MethodMember | FieldMember;
      returnType=[Class:ID] name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' ';';
 
 FieldMember:
-    returnType=[Class:ID] name=ID ';';
+    type=[Class:ID] name=ID ';';
 
-Parameter: type=[Class:ID] name=ID ;
+ Parameter: type=[Class:ID] name=ID ;
 
 ExpressionBlock: '{'
     definitionelements+=DefinitionElement*

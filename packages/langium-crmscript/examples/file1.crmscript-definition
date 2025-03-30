@@ -1,0 +1,11 @@
+Class Parent {
+    String stringVar;
+    Child childClass();
+}
+
+Class Child {
+    /** Returns a string from the child class*/
+    String childVar();
+    /** What is this */
+    Integer child_id;
+}

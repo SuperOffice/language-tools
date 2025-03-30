@@ -1,6 +1,6 @@
 import { AstNode } from "langium";
-import { BinaryExpression, Class, isBinaryExpression, isBooleanExpression, isClass, isFieldMember, isIntegerExpression, isMemberCall, isParameter, isStringExpression, isUnaryExpression, isVariableDeclaration, MemberCall } from "../generated/ast.js";
-import { createBooleanType, createClassType, createErrorType, createNilType, createIntegerType, createStringType, createVoidType, isFunctionType, isStringType, TypeDescription } from "./descriptions.js";
+import { BinaryExpression, Class, isBinaryExpression, isBooleanExpression, isClass, isFieldMember, isFunctionDeclaration, isIntegerExpression, isMemberCall, isMethodMember, isParameter, isStringExpression, isUnaryExpression, isVariableDeclaration, MemberCall } from "../generated/ast.js";
+import { createBooleanType, createClassType, createErrorType, createIntegerType, createStringType, isFunctionType, isStringType, TypeDescription, createFunctionType } from "./descriptions.js";
 
 export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDescription>): TypeDescription {
     let type: TypeDescription | undefined;
@@ -20,14 +20,14 @@ export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDes
     } else if (isBooleanExpression(node)) {
         type = createBooleanType(node);
     } 
-    // else if (isFunctionDeclaration(node) || isMethodMember(node)) {
-    //     const returnType = inferType(node.returnType, cache);
-    //     const parameters = node.parameters.map(e => ({
-    //         name: e.name,
-    //         type: inferType(e.type, cache)
-    //     }));
-    //     type = createFunctionType(returnType, parameters);
-    // } 
+    else if (isFunctionDeclaration(node) || isMethodMember(node)) {
+        const returnType = inferType(node.returnType.ref, cache);
+        const parameters = node.parameters.map(e => ({
+            name: e.name,
+            type: inferType(node.returnType.ref, cache)
+        }));
+        type = createFunctionType(returnType, parameters);
+    } 
     else if (isMemberCall(node)) {
         type = inferMemberCall(node, cache);
         if (node.explicitOperationCall) {
@@ -46,7 +46,7 @@ export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDes
     } else if (isParameter(node)) {
         type = inferType(node, cache);
     } else if (isFieldMember(node)) {
-        type = inferType(node.type.$nodeDescription?.node, cache);
+        type = inferType(node.type.ref, cache);
     } else if (isClass(node)) {
         type = createClassType(node);
     } else if (isBinaryExpression(node)) {
@@ -115,7 +115,7 @@ function inferBinaryExpression(expr: BinaryExpression, cache: Map<AstNode, TypeD
 
 export function getClassChain(classItem: Class): Class[] {
     const set = new Set<Class>();
-    let value: Class | undefined = classItem;
+    const value: Class | undefined = classItem;
     while (value && !set.has(value)) {
         set.add(value);
         //value = value.superClass?.ref;

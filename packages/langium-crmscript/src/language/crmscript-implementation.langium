@@ -110,4 +110,4 @@ StringExpression: value=STRING;
 BooleanExpression: value?='true' | 'false';
 NilExpression: value='nil';
 
-type ImplementationNamedElement = VariableDeclaration | FunctionDeclaration;
+type ImplementationNamedElement = VariableDeclaration | FunctionDeclaration | Class | ClassMember;

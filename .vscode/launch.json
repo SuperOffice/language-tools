@@ -68,7 +68,7 @@
 			"args": [
 				"--extensionDevelopmentPath=${workspaceFolder}/packages/superofficedx-vscode-crmscript/",
 				"--disable-extensions",
-				"--folder-uri=${workspaceRoot}/test"
+				"--folder-uri=${workspaceRoot}/packages/langium-crmscript/examples"
 			],
 			"outFiles": [
 				"${workspaceFolder}/packages/superofficedx-vscode-crmscript/out/**/*.js",

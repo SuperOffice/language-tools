@@ -261,7 +261,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
         "elements": [
           {
             "$type": "Assignment",
-            "feature": "returnType",
+            "feature": "type",
             "operator": "=",
             "terminal": {
               "$type": "CrossReference",
@@ -2259,7 +2259,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
         "elements": [
           {
             "$type": "Assignment",
-            "feature": "returnType",
+            "feature": "type",
             "operator": "=",
             "terminal": {
               "$type": "CrossReference",
@@ -2465,6 +2465,18 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
             "$type": "SimpleType",
             "typeRef": {
               "$ref": "#/rules@3"
+            }
+          },
+          {
+            "$type": "SimpleType",
+            "typeRef": {
+              "$ref": "#/rules@25/definition/elements@0/inferredType"
+            }
+          },
+          {
+            "$type": "SimpleType",
+            "typeRef": {
+              "$ref": "#/rules@26"
             }
           }
         ]
