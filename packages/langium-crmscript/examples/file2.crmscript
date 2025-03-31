@@ -21,10 +21,15 @@ isWellFormed = 123;
 isWellFormed = nsContact;
 
 //Float logic
-Float m = 3.14; //Valid assignment
-m = "123";
-m = 123;
-m = nsContact;
+Float f = 3.14; //Valid assignment
+f = "123";
+f = 123;
+f = nsContact;
+
+//Map logic
+Map m;
+m.insert("Super", "Office");
+myString = m.exists("abc").toString();
 
 //Class logic
 NSContact nsContact;

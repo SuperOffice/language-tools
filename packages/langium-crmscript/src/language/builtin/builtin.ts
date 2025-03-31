@@ -10,8 +10,24 @@ Class Integer {
 /** Float documentation */
 Class Float {}
 
-/** Bool documentation*/
-Class Bool {}
+/** Bool documentation */
+Class Bool {
+    String toString();
+}
+
+/** Void documentation */
+Class Void{}
+
+Class Map {
+    /** insert() adds a new key-value pair to the map. */
+    Map insert(String key, String value);
+    /** exists() checks if the map contains the given key. */
+    Bool exists(String key);
+    /** size() counts the elements in the map and returns that number.*/
+    Integer size();
+    /** Returns the value for the given key. */
+    String get(String key);
+}
 
 /** NSContact documentation */
 Class NSContact {
