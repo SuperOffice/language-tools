@@ -3,7 +3,7 @@ import { AstNode } from "langium";
 import {
     BooleanExpression,
     Class,
-    IntegerExpression,
+    NumberExpression,
     StringExpression
 } from "../generated/ast.js"
 
@@ -13,6 +13,7 @@ export type TypeDescription =
     | BooleanTypeDescription
     | StringTypeDescription
     | IntegerTypeDescription
+    | FloatTypeDescription
     | FunctionTypeDescription
     | ClassTypeDescription
     | ErrorType;
@@ -46,19 +47,19 @@ export function isVoidType(item: TypeDescription): item is VoidTypeDescription {
 }
 
 export interface BooleanTypeDescription {
-    readonly $type: "boolean"
+    readonly $type: "Bool"
     readonly literal?: BooleanExpression
 }
 
 export function createBooleanType(literal?: BooleanExpression): BooleanTypeDescription {
     return {
-        $type: "boolean",
+        $type: "Bool",
         literal
     };
 }
 
 export function isBooleanType(item: TypeDescription): item is BooleanTypeDescription {
-    return item.$type === "boolean";
+    return item.$type === "Bool";
 }
 
 export interface StringTypeDescription {
@@ -79,18 +80,25 @@ export function isStringType(item: TypeDescription): item is StringTypeDescripti
 
 export interface IntegerTypeDescription {
     readonly $type: "Integer",
-    readonly literal?: IntegerExpression
+    readonly literal?: NumberExpression
 }
 
-export function createIntegerType(literal?: IntegerExpression): IntegerTypeDescription {
+export function createIntegerType(literal?: NumberExpression): IntegerTypeDescription {
     return {
         $type: "Integer",
         literal
     };
 }
+export interface FloatTypeDescription {
+    readonly $type: "Float",
+    readonly literal?: NumberExpression
+}
 
-export function isIntegerType(item: TypeDescription): item is IntegerTypeDescription {
-    return item.$type === "Integer";
+export function createFloatType(literal?: NumberExpression): FloatTypeDescription {
+    return {
+        $type: "Float",
+        literal
+    };
 }
 
 export interface FunctionTypeDescription {

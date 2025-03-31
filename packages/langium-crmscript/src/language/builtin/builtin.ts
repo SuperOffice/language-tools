@@ -9,9 +9,11 @@ Class Integer {
 }
 /** Float documentation */
 Class Float {}
-/** NSPerson documentation */
-returnType
 
+/** Bool documentation*/
+Class Bool {}
+
+/** NSContact documentation */
 Class NSContact {
 
     /** The number of active ERP links */

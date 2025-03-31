@@ -1,14 +1,10 @@
 grammar CrmscriptImplementation
 
-import "crmscript-definition";
+entry Grammar:
+    (statements+=Statement | types+=Type)*;
 
-entry ImplementationUnit:
-    (implementationelements+=ImplementationElement)*;
-
-ImplementationElement:
+Statement:
     ExpressionBlock | 
-    VariableDeclaration ';' |
-    FunctionDeclaration |
     IfStatement | 
     WhileStatement | 
     ForStatement | 
@@ -17,12 +13,9 @@ ImplementationElement:
     Expression ';' 
 ;
 
-VariableDeclaration returns ImplementationNamedElement:
-    {infer VariableDeclaration} type=[Class:ID] name=ID (assignment?='=' value=Expression)? 
-;
-
-FunctionDeclaration:
-    returnType=[Class:ID] name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' body=ExpressionBlock
+Type:
+    VariableDeclaration ';' |
+    FunctionDeclaration
 ;
 
 IfStatement: 
@@ -44,29 +37,44 @@ PrintStatement: 'print' '(' value=StringExpression ')'
 ReturnStatement: 'return' value=Expression? 
 ;
 
+ExpressionBlock: '{'
+    (statements+=Statement | types+=Type)*
+'}'
+;
+
+VariableDeclaration returns NamedElement:
+    {infer VariableDeclaration} type=[Class:ID] name=ID (assignment?='=' value=Expression)? 
+;
+
 Expression:
-    Assignment;
+    Assignment
+;
 
 Assignment infers Expression:
-    Addition ({infer BinaryExpression.left=current} operator=('=') right=Addition)*;
+    Addition ({infer BinaryExpression.left=current} operator=('=') right=Addition)*
+;
 
 Addition infers Expression:
-    Multiplication ({infer BinaryExpression.left=current} operator=('+' | '-') right=Multiplication)*;
+    Multiplication ({infer BinaryExpression.left=current} operator=('+' | '-') right=Multiplication)*
+;
 
 Multiplication infers Expression:
-    Logical ({infer BinaryExpression.left=current} operator=('*' | '/') right=Logical)*;
+    Logical ({infer BinaryExpression.left=current} operator=('*' | '/') right=Logical)*
+;
 
 Logical infers Expression:
-    Comparison ({infer BinaryExpression.left=current} operator=('and' | 'or') right=Comparison)*;
+    Comparison ({infer BinaryExpression.left=current} operator=('and' | 'or') right=Comparison)*
+;
 
 Comparison infers Expression:
-    MemberCall ({infer BinaryExpression.left=current} operator=('<' | '<=' | '>' | '>=' | '==' | '!=') right=MemberCall)*;
+    MemberCall ({infer BinaryExpression.left=current} operator=('<' | '<=' | '>' | '>=' | '==' | '!=') right=MemberCall)*
+;
 
 MemberCall infers Expression:
     Primary
 	({infer MemberCall.previous=current} 
         // Member call with function call
-        ("." element=[ImplementationNamedElement:ID] (
+        ("." element=[NamedElement:ID] (
 		explicitOperationCall?='('
 		(
 		    arguments+=Expression (',' arguments+=Expression)*
@@ -79,35 +87,70 @@ MemberCall infers Expression:
 		    arguments+=Expression (',' arguments+=Expression)*
 		)?
 		')'))
-    )*;
+    )*
+;
 
 Primary infers Expression:
     '(' Expression ')' |
     UnaryExpression |
     StringExpression |
     BooleanExpression |
-    IntegerExpression |
+    NumberExpression |
     NilExpression |
     FeatureCall
 ;
 
 FeatureCall infers Expression:
 	{infer MemberCall}
-	(element=[ImplementationNamedElement:ID] | element=[ImplementationNamedElement:'this'])
+	(element=[NamedElement:ID] | element=[NamedElement:'this'])
     // Optional function call after referencing an element
     (explicitOperationCall?='('
 	(
 	    arguments+=Expression (',' arguments+=Expression)*
 	)?
-	')')?;
+	')')?
+;
 
 UnaryExpression:
    operator=('!' | '-' | '+') value=Expression
 ;
 
-IntegerExpression: value=INT;
+NumberExpression: value=NUMBER;
 StringExpression: value=STRING;
 BooleanExpression: value?='true' | 'false';
 NilExpression: value='nil';
 
-type ImplementationNamedElement = VariableDeclaration | FunctionDeclaration | Class | ClassMember;
+Class returns NamedElement: 
+    {infer Class} 'Class' name=ID '{'
+    members+=ClassMember*
+'}';
+
+ClassMember: MethodMember | FieldMember;
+
+MethodMember:
+    returnType=[Class:ID] name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' ';';
+
+Parameter: type=[Class:ID] name=ID
+;
+
+FieldMember:
+    type=[Class:ID] name=ID ';'
+;
+
+FunctionDeclaration:
+    returnType=[Class:ID] name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' body=ExpressionBlock
+;
+
+type NamedElement = VariableDeclaration | FunctionDeclaration | Class | MethodMember | FieldMember;
+
+hidden terminal WS: /\s+/;
+terminal ID: /[_a-zA-Z][\w_]*/;
+terminal NUMBER returns number: /[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?/;
+terminal STRING: /"[^"]*"|'[^']*'/;
+
+hidden terminal EJSCRIPT_START: /%EJSCRIPT_START%/;
+hidden terminal EJSCRIPT_END: /%EJSCRIPT_END%/;
+hidden terminal SCRIPT_END: /%>/;
+hidden terminal SCRIPT_START: /<%/;
+hidden terminal ML_COMMENT: /\/\*[\s\S]*?\*\//;
+hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;

@@ -10,7 +10,7 @@
     },
     {
       "name": "keyword.control.crmscript",
-      "match": "\\b(Class|and|else|false|for|if|nil|or|print|return|this|true|while)\\b"
+      "match": "\\b(and|else|false|for|if|nil|or|print|return|this|true|while)\\b"
     },
     {
       "name": "string.quoted.double.crmscript",
@@ -36,6 +36,66 @@
   "repository": {
     "comments": {
       "patterns": [
+        {
+          "name": "comment.block.crmscript",
+          "begin": "%EJSCRIPT_START%",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.crmscript"
+            }
+          },
+          "end": "%EJSCRIPT_START%",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.crmscript"
+            }
+          }
+        },
+        {
+          "name": "comment.block.crmscript",
+          "begin": "%EJSCRIPT_END%",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.crmscript"
+            }
+          },
+          "end": "%EJSCRIPT_END%",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.crmscript"
+            }
+          }
+        },
+        {
+          "name": "comment.block.crmscript",
+          "begin": "%>",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.crmscript"
+            }
+          },
+          "end": "%>",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.crmscript"
+            }
+          }
+        },
+        {
+          "name": "comment.block.crmscript",
+          "begin": "<%",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.crmscript"
+            }
+          },
+          "end": "<%",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.crmscript"
+            }
+          }
+        },
         {
           "name": "comment.block.crmscript",
           "begin": "/\\*",

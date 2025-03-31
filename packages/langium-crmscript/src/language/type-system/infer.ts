@@ -1,6 +1,6 @@
 import { AstNode } from "langium";
-import { BinaryExpression, Class, isBinaryExpression, isBooleanExpression, isClass, isFieldMember, isFunctionDeclaration, isIntegerExpression, isMemberCall, isMethodMember, isParameter, isStringExpression, isUnaryExpression, isVariableDeclaration, MemberCall } from "../generated/ast.js";
-import { createBooleanType, createClassType, createErrorType, createIntegerType, createStringType, isFunctionType, isStringType, TypeDescription, createFunctionType } from "./descriptions.js";
+import { BinaryExpression, Class, isBinaryExpression, isBooleanExpression, isClass, isFieldMember, isFunctionDeclaration, isMemberCall, isMethodMember, isNumberExpression, isParameter, isPrintStatement, isReturnStatement, isStringExpression, isUnaryExpression, isVariableDeclaration, MemberCall } from "../generated/ast.js";
+import { createBooleanType, createClassType, createErrorType, createIntegerType, createStringType, isFunctionType, isStringType, TypeDescription, createFunctionType, createVoidType, createFloatType } from "./descriptions.js";
 
 export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDescription>): TypeDescription {
     let type: TypeDescription | undefined;
@@ -15,8 +15,13 @@ export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDes
     cache.set(node, createErrorType('Recursive definition', node));
     if (isStringExpression(node)) {
         type = createStringType(node);
-    } else if (isIntegerExpression(node)) {
-        type = createIntegerType(node);
+    } else if (isNumberExpression(node)){
+        if(Number.isInteger(node.value)){
+            type = createIntegerType()
+        }
+        else {
+            type = createFloatType()
+        }
     } else if (isBooleanExpression(node)) {
         type = createBooleanType(node);
     } 
@@ -58,16 +63,16 @@ export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDes
             type = createIntegerType();
         }
     } 
-    // else if (isPrintStatement(node)) {
-    //     type = createVoidType();
-    // } 
-    // else if (isReturnStatement(node)) {
-    //     if (!node) {
-    //         type = createVoidType();
-    //     } else {
-    //         type = inferType(node.value, cache);
-    //     }
-    // }
+    else if (isPrintStatement(node)) {
+        type = createVoidType();
+    } 
+    else if (isReturnStatement(node)) {
+        if (!node) {
+            type = createVoidType();
+        } else {
+            type = inferType(node.value, cache);
+        }
+    }
     if (!type) {
         type = createErrorType('Could not infer type for ' + node.$type, node);
     }
