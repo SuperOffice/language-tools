@@ -82,6 +82,7 @@ export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDes
 }
 
 function inferMemberCall(node: MemberCall, cache: Map<AstNode, TypeDescription>): TypeDescription {
+    
     const element = node.element?.ref;
     if (element) {
         if(isVariableDeclaration(element)){

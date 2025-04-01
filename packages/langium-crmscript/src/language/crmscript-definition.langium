@@ -6,5 +6,7 @@ entry DefinitionUnit:
     (definitionelements+=DefinitionElement)*;
 
 DefinitionElement:
-    Class
-;
+    Class |
+    FunctionDeclaration
+    ;
+

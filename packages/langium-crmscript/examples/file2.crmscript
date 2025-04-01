@@ -1,71 +1,78 @@
 
-Parent p;
+// Parent p;
 
-//String logic
-String myString = "123";
-myString = "123";
-myString = 123;
-myString = nsContact;
+// //String logic
+// String myString = "123";
+// myString = "123";
+// myString = 123;
+// myString = nsContact;
 
-//Integer logic
-Integer myInteger = 123;
-myInteger = 123; //Valid assignment
-myInteger = "123";
-myInteger = 123.12;
-myInteger = nsContact;
+// //Integer logic
+// Integer myInteger = 123;
+// myInteger = 123; //Valid assignment
+// myInteger = "123";
+// myInteger = 123.12;
+// myInteger = nsContact;
 
-//Bool logic
-Bool isWellFormed = true; //Valid assignment
-isWellFormed = "123";
-isWellFormed = 123;
-isWellFormed = nsContact;
+// //Bool logic
+// Bool isWellFormed = true; //Valid assignment
+// isWellFormed = "123";
+// isWellFormed = 123;
+// isWellFormed = nsContact;
 
-//Float logic
-Float f = 3.14; //Valid assignment
-f = "123";
-f = 123;
-f = nsContact;
+// //Float logic
+// Float f = 3.14; //Valid assignment
+// f = "123";
+// f = 123;
+// f = nsContact;
 
-//Map logic
-Map m;
-m.insert("Super", "Office");
-myString = m.exists("abc").toString();
+// // //Map logic
+// Map m;
+// m.insert("Super", "Office");
+// myString = m.exists("abc").toString();
 
-//Class logic
-NSContact nsContact;
-nsContact = nsContact; //Valid assignment
-nsContact = "123";
-nsContact = 123;
+Map m2 = Map(true);
+//Child child = Child(123);
+// String stringConstructor = String();
+// Integer integerConstructor = Integer();
 
-Parent parent;
-parent = "123";
-parent = 123;
-parent = nsContact;
+// //Class logic
+// NSContact nsContact;
+// nsContact = nsContact; //Valid assignment
+// nsContact = "123";
+// nsContact = 123;
 
-//Duplicate variable name
-Parent parent;
+// Parent parent;
+// parent = "123";
+// parent = 123;
+// parent = nsContact;
 
-myString = parent.stringVar.toInteger();
-myInteger = parent.stringVar.toInteger();
+// //Duplicate variable name
+// Parent parent;
 
-//Statements
-if(true){
-    if(true){
-        String blabla;
-        blabla = myInteger; // invalid assignment from outside of scope
-        blabla = myString; // valid assignment from outside of scope
-    }
-    blabla = "123"; //Not valid outside of scope
-}
-else{}
+// Parent parent;
+// String myString = "123";
+// myString = parent.stringVar.toInteger();
+// myInteger = parent.stringVar.toInteger();
 
-for(Integer i = myInteger; i < 10;){}
+// //Statements
+// if(true){
+//     if(true){
+//         String blabla;
+//         blabla = myInteger; // invalid assignment from outside of scope
+//         blabla = myString; // valid assignment from outside of scope
+//     }
+//     blabla = "123"; //Not valid outside of scope
+// }
+// else{}
 
-while(true){
-}
+// for(Integer i = myInteger; i < 10;){}
 
-%EJSCRIPT_START%
-<% %>
-String temp;
-temp = 123; //Something is wrong with the tmLanguage for %>?
-%EJSCRIPT_END%
+// while(true){
+// }
+
+// %EJSCRIPT_START%
+// <% %>
+// String temp;
+// temp = 123; //Something is wrong with the tmLanguage for %>?
+// %EJSCRIPT_END%

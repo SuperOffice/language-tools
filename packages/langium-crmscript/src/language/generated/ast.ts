@@ -10,14 +10,14 @@ import { AbstractAstReflection } from 'langium';
 export const CrmscriptTerminals = {
     WS: /\s+/,
     ID: /[_a-zA-Z][\w_]*/,
+    NUMBER: /[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?/,
+    STRING: /"[^"]*"|'[^']*'/,
     EJSCRIPT_START: /%EJSCRIPT_START%/,
     EJSCRIPT_END: /%EJSCRIPT_END%/,
     SCRIPT_END: /%>/,
     SCRIPT_START: /<%/,
     ML_COMMENT: /\/\*[\s\S]*?\*\//,
     SL_COMMENT: /\/\/[^\n\r]*/,
-    NUMBER: /[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?/,
-    STRING: /"[^"]*"|'[^']*'/,
 };
 
 export type CrmscriptTerminalNames = keyof typeof CrmscriptTerminals;
@@ -66,7 +66,7 @@ export function isClassMember(item: unknown): item is ClassMember {
     return reflection.isInstance(item, ClassMember);
 }
 
-export type DefinitionElement = NamedElement;
+export type DefinitionElement = FunctionDeclaration | NamedElement;
 
 export const DefinitionElement = 'DefinitionElement';
 
@@ -137,6 +137,7 @@ export interface Class extends AstNode {
     readonly $type: 'Class';
     members: Array<ClassMember>;
     name: string;
+    parameters: Array<Parameter>;
 }
 
 export const Class = 'Class';
@@ -292,7 +293,7 @@ export function isNumberExpression(item: unknown): item is NumberExpression {
 }
 
 export interface Parameter extends AstNode {
-    readonly $container: FunctionDeclaration | MethodMember;
+    readonly $container: Class | FunctionDeclaration | MethodMember;
     readonly $type: 'Parameter';
     name: string;
     type: Reference<Class>;
@@ -446,7 +447,7 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                 return this.isSubtype(ClassMember, supertype) || this.isSubtype(NamedElement, supertype);
             }
             case FunctionDeclaration: {
-                return this.isSubtype(NamedElement, supertype) || this.isSubtype(Type, supertype);
+                return this.isSubtype(DefinitionElement, supertype) || this.isSubtype(NamedElement, supertype) || this.isSubtype(Type, supertype);
             }
             case NamedElement: {
                 return this.isSubtype(DefinitionElement, supertype) || this.isSubtype(Type, supertype);
@@ -501,7 +502,8 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                     name: Class,
                     properties: [
                         { name: 'members', defaultValue: [] },
-                        { name: 'name' }
+                        { name: 'name' },
+                        { name: 'parameters', defaultValue: [] }
                     ]
                 };
             }

@@ -13,9 +13,9 @@ export function isLegalOperation(operator: string, left: TypeDescription, right?
         }
         return left.$type === 'Integer' && right.$type === 'Integer';
     } else if (['and', 'or'].includes(operator)) {
-        return left.$type === 'boolean' && right?.$type === 'boolean';
+        return left.$type === 'Bool' && right?.$type === 'Bool';
     } else if (operator === '!') {
-        return left.$type === 'boolean';
+        return left.$type === 'Bool';
     }
     return true;
 }

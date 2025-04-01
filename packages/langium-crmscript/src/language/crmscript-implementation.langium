@@ -43,11 +43,11 @@ ExpressionBlock: '{'
 ;
 
 VariableDeclaration returns NamedElement:
-    {infer VariableDeclaration} type=[Class:ID] name=ID (assignment?='=' value=Expression)? 
+    {infer VariableDeclaration} type=[Class:ID] name=ID (assignment?='=' value=(Expression))? 
 ;
 
 Expression:
-    Assignment
+    Assignment 
 ;
 
 Assignment infers Expression:
@@ -121,7 +121,7 @@ BooleanExpression: value?='true' | 'false';
 NilExpression: value='nil';
 
 Class returns NamedElement: 
-    {infer Class} 'Class' name=ID '{'
+    {infer Class} 'Class' name=ID ('(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')')? '{'
     members+=ClassMember*
 '}';
 
@@ -140,6 +140,10 @@ FieldMember:
 FunctionDeclaration:
     returnType=[Class:ID] name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' body=ExpressionBlock
 ;
+
+// Constructor:
+//     {infer Constructor} returnType=[Class:ID] name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' block=ExpressionBlock;
+
 
 type NamedElement = VariableDeclaration | FunctionDeclaration | Class | MethodMember | FieldMember;
 

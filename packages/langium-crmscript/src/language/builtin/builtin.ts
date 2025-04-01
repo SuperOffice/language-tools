@@ -18,6 +18,7 @@ Class Bool {
 /** Void documentation */
 Class Void{}
 
+/** Map documentation*/
 Class Map {
     /** insert() adds a new key-value pair to the map. */
     Map insert(String key, String value);

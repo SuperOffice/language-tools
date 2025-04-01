@@ -16,7 +16,8 @@ export type TypeDescription =
     | FloatTypeDescription
     | FunctionTypeDescription
     | ClassTypeDescription
-    | ErrorType;
+    | ErrorType
+    ;
 
 export interface NilTypeDescription {
     readonly $type: "nil"
@@ -45,7 +46,6 @@ export function createVoidType(): VoidTypeDescription {
 export function isVoidType(item: TypeDescription): item is VoidTypeDescription {
     return item.$type === "void";
 }
-
 export interface BooleanTypeDescription {
     readonly $type: "Bool"
     readonly literal?: BooleanExpression

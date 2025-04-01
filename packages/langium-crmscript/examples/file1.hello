@@ -1,0 +1,13 @@
+
+class String { }
+
+class String{ 
+    constructor(String var1, String var2);
+    
+    }
+
+class Integer {
+    constructor(String var1, String var2);
+ }
+
+
