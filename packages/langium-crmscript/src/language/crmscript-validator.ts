@@ -1,5 +1,5 @@
 import { MultiMap, NamedAstNode, stream, Stream, type AstNode, type ValidationAcceptor, type ValidationChecks } from 'langium';
-import { Grammar, type BinaryExpression, type CrmscriptAstType, type VariableDeclaration } from './generated/ast.js';
+import { ConstructorCall, Grammar, isClass, type BinaryExpression, type CrmscriptAstType, type VariableDeclaration } from './generated/ast.js';
 import type { CrmscriptServices } from './crmscript-module.js';
 import { inferType } from './type-system/infer.js';
 import { isAssignable } from './type-system/assigment.js';
@@ -15,8 +15,9 @@ export function registerValidationChecks(services: CrmscriptServices) {
         VariableDeclaration: validator.checkVariableDeclaration,
         BinaryExpression: validator.checkBinaryExpression,
         Grammar: [
-            validator.checkUniqueVariableName
-        ]
+            validator.checkUniqueVariableName,
+        ],
+        ConstructorCall: validator.checkConstructorCallType
     };
     registry.register(checks, validator);
 }
@@ -42,12 +43,32 @@ export class CrmscriptValidator {
             const map = this.getTypeCache();
             const left = inferType(decl.type.$nodeDescription?.node, map);
             const right = inferType(decl.value, map);
+
             if (!isAssignable(right, left)) {
                 accept('error', `Type '${typeToString(right)}' is not assignable to type '${typeToString(left)}'.`, {
                     node: decl,
                     property: 'value'
                 });
             }
+        }
+    }
+
+    checkConstructorCallType(call: ConstructorCall, accept: ValidationAcceptor) {
+        const typeDecl = call.type?.ref;
+        if (!typeDecl || !isClass(typeDecl)) return;
+    
+        const constructors = typeDecl.constructors ?? [];
+        
+        const matchingCtor = constructors.find(ctor =>
+            ctor.parameters.length === call.params.length //&&
+            //ctor.params.every((param, i) => areTypesCompatible(param.type.ref, argTypes[i]))
+        );
+    
+        if (!matchingCtor) {
+            accept('error', `No matching constructor for ${typeDecl.name} accepting ${call.params.length} parameters`, {
+                node: call,
+                property: 'type'
+            });
         }
     }
 

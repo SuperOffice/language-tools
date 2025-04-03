@@ -1,5 +1,7 @@
 grammar CrmscriptImplementation
 
+import "crmscript-definition";
+
 entry Grammar:
     (statements+=Statement | types+=Type)*;
 
@@ -43,8 +45,11 @@ ExpressionBlock: '{'
 ;
 
 VariableDeclaration returns NamedElement:
-    {infer VariableDeclaration} type=[Class:ID] name=ID (assignment?='=' value=(Expression))? 
+    {infer VariableDeclaration} type=[Class:ID] name=ID (assignment?='=' value=(ConstructorCall | Expression))? 
 ;
+
+ConstructorCall:
+    type=[Class:ID] '(' (params+=Parameter (',' params+=Parameter)*)? ')';
 
 Expression:
     Assignment 
@@ -87,8 +92,7 @@ MemberCall infers Expression:
 		    arguments+=Expression (',' arguments+=Expression)*
 		)?
 		')'))
-    )*
-;
+    )*;
 
 Primary infers Expression:
     '(' Expression ')' |
@@ -96,7 +100,7 @@ Primary infers Expression:
     StringExpression |
     BooleanExpression |
     NumberExpression |
-    NilExpression |
+    NilExpression | 
     FeatureCall
 ;
 
@@ -120,30 +124,10 @@ StringExpression: value=STRING;
 BooleanExpression: value?='true' | 'false';
 NilExpression: value='nil';
 
-Class returns NamedElement: 
-    {infer Class} 'Class' name=ID ('(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')')? '{'
-    members+=ClassMember*
-'}';
-
-ClassMember: MethodMember | FieldMember;
-
-MethodMember:
-    returnType=[Class:ID] name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' ';';
-
-Parameter: type=[Class:ID] name=ID
-;
-
-FieldMember:
-    type=[Class:ID] name=ID ';'
-;
 
 FunctionDeclaration:
     returnType=[Class:ID] name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' body=ExpressionBlock
 ;
-
-// Constructor:
-//     {infer Constructor} returnType=[Class:ID] name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' block=ExpressionBlock;
-
 
 type NamedElement = VariableDeclaration | FunctionDeclaration | Class | MethodMember | FieldMember;
 

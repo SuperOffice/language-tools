@@ -40,8 +40,9 @@ export type CrmscriptKeywordNames =
     | "=="
     | ">"
     | ">="
-    | "Class"
     | "and"
+    | "class"
+    | "constructor"
     | "else"
     | "false"
     | "for"
@@ -135,15 +136,40 @@ export function isBooleanExpression(item: unknown): item is BooleanExpression {
 export interface Class extends AstNode {
     readonly $container: DefinitionUnit | ExpressionBlock | ForStatement | Grammar;
     readonly $type: 'Class';
+    constructors: Array<Constructor>;
     members: Array<ClassMember>;
     name: string;
-    parameters: Array<Parameter>;
 }
 
 export const Class = 'Class';
 
 export function isClass(item: unknown): item is Class {
     return reflection.isInstance(item, Class);
+}
+
+export interface Constructor extends AstNode {
+    readonly $container: Class;
+    readonly $type: 'Constructor';
+    parameters: Array<Parameter>;
+}
+
+export const Constructor = 'Constructor';
+
+export function isConstructor(item: unknown): item is Constructor {
+    return reflection.isInstance(item, Constructor);
+}
+
+export interface ConstructorCall extends AstNode {
+    readonly $container: VariableDeclaration;
+    readonly $type: 'ConstructorCall';
+    params: Array<Parameter>;
+    type: Reference<Class>;
+}
+
+export const ConstructorCall = 'ConstructorCall';
+
+export function isConstructorCall(item: unknown): item is ConstructorCall {
+    return reflection.isInstance(item, ConstructorCall);
 }
 
 export interface DefinitionUnit extends AstNode {
@@ -293,7 +319,7 @@ export function isNumberExpression(item: unknown): item is NumberExpression {
 }
 
 export interface Parameter extends AstNode {
-    readonly $container: Class | FunctionDeclaration | MethodMember;
+    readonly $container: Constructor | ConstructorCall | FunctionDeclaration | MethodMember;
     readonly $type: 'Parameter';
     name: string;
     type: Reference<Class>;
@@ -360,7 +386,7 @@ export interface VariableDeclaration extends AstNode {
     assignment: boolean;
     name: string;
     type: Reference<Class>;
-    value?: Expression;
+    value?: ConstructorCall | Expression;
 }
 
 export const VariableDeclaration = 'VariableDeclaration';
@@ -387,6 +413,8 @@ export type CrmscriptAstType = {
     BooleanExpression: BooleanExpression
     Class: Class
     ClassMember: ClassMember
+    Constructor: Constructor
+    ConstructorCall: ConstructorCall
     DefinitionElement: DefinitionElement
     DefinitionUnit: DefinitionUnit
     Expression: Expression
@@ -415,7 +443,7 @@ export type CrmscriptAstType = {
 export class CrmscriptAstReflection extends AbstractAstReflection {
 
     getAllTypes(): string[] {
-        return [BinaryExpression, BooleanExpression, Class, ClassMember, DefinitionElement, DefinitionUnit, Expression, ExpressionBlock, FieldMember, ForStatement, FunctionDeclaration, Grammar, IfStatement, MemberCall, MethodMember, NamedElement, NilExpression, NumberExpression, Parameter, PrintStatement, ReturnStatement, Statement, StringExpression, Type, UnaryExpression, VariableDeclaration, WhileStatement];
+        return [BinaryExpression, BooleanExpression, Class, ClassMember, Constructor, ConstructorCall, DefinitionElement, DefinitionUnit, Expression, ExpressionBlock, FieldMember, ForStatement, FunctionDeclaration, Grammar, IfStatement, MemberCall, MethodMember, NamedElement, NilExpression, NumberExpression, Parameter, PrintStatement, ReturnStatement, Statement, StringExpression, Type, UnaryExpression, VariableDeclaration, WhileStatement];
     }
 
     protected override computeIsSubtype(subtype: string, supertype: string): boolean {
@@ -461,6 +489,7 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
     getReferenceType(refInfo: ReferenceInfo): string {
         const referenceId = `${refInfo.container.$type}:${refInfo.property}`;
         switch (referenceId) {
+            case 'ConstructorCall:type':
             case 'FieldMember:type':
             case 'FunctionDeclaration:returnType':
             case 'MethodMember:returnType':
@@ -501,9 +530,26 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                 return {
                     name: Class,
                     properties: [
+                        { name: 'constructors', defaultValue: [] },
                         { name: 'members', defaultValue: [] },
-                        { name: 'name' },
+                        { name: 'name' }
+                    ]
+                };
+            }
+            case Constructor: {
+                return {
+                    name: Constructor,
+                    properties: [
                         { name: 'parameters', defaultValue: [] }
+                    ]
+                };
+            }
+            case ConstructorCall: {
+                return {
+                    name: ConstructorCall,
+                    properties: [
+                        { name: 'params', defaultValue: [] },
+                        { name: 'type' }
                     ]
                 };
             }

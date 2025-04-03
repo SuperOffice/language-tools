@@ -139,7 +139,6 @@ export function createClassType(literal: Class): ClassTypeDescription {
 export function isClassType(item: TypeDescription): item is ClassTypeDescription {
     return item.$type === "class";
 }
-
 export interface ErrorType {
     readonly $type: "error"
     readonly source?: AstNode

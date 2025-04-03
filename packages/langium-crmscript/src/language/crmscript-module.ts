@@ -4,7 +4,7 @@ import { CrmscriptDefinitionGeneratedModule, CrmscriptImplementationGeneratedMod
 import { CrmscriptValidator, registerValidationChecks } from './crmscript-validator.js';
 import { CrmscriptWorkspaceManager } from './builtin/workspaceManager.js';
 import { CrmscriptScopeProvider } from './crmscript-scope.js';
-import { CrmscriptCompletionProvider } from './lsp/completion-provider.js';
+import { CrmscriptSignatureHelpProvider } from './lsp/signaturehelp-provider.js';
 
 export type CrmscriptSharedServices = LangiumSharedServices;
 
@@ -42,7 +42,7 @@ export const CrmscriptModule: Module<CrmscriptServices, PartialLangiumServices &
         ScopeProvider: (services) => new CrmscriptScopeProvider(services)
     },
     lsp: {
-        CompletionProvider: (services) => new CrmscriptCompletionProvider(services)
+        SignatureHelp: () => new CrmscriptSignatureHelpProvider()
     }
 };
 

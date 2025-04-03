@@ -7,8 +7,9 @@ import {
 } from "langium";
 import { WorkspaceFolder } from 'vscode-languageserver';
 import { URI } from "vscode-uri";
-import { builtin } from './builtin.js';
-
+import { CRMScriptGlobals } from './CRMScript.Global/CRMScriptGlobals.js';
+import { CRMScriptNetServer } from './CRMScript.NetServer/CRMScriptNetServer.js';
+import { CRMScriptNative } from './CRMScript.Native/CRMScriptNative.js';
 export class CrmscriptWorkspaceManager extends DefaultWorkspaceManager {
 
     private documentFactory: LangiumDocumentFactory;
@@ -24,6 +25,8 @@ export class CrmscriptWorkspaceManager extends DefaultWorkspaceManager {
     ): Promise<void> {
         await super.loadAdditionalDocuments(folders, collector);
         // Load our library using the `builtin` URI schema
-        collector(this.documentFactory.fromString(builtin, URI.parse('builtin:///library.crmscript-definition')));
+        collector(this.documentFactory.fromString(CRMScriptGlobals, URI.parse('CRMScriptGlobals:///library.crmscript-definition')));
+        collector(this.documentFactory.fromString(CRMScriptNetServer, URI.parse('CRMScriptNetServer:///library.crmscript-definition')));
+        collector(this.documentFactory.fromString(CRMScriptNative, URI.parse('CRMScriptNative:///library.crmscript-definition')));
     }
 }

@@ -45,16 +45,385 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@26"
+              "$ref": "#/rules@2"
             },
             "arguments": []
           },
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@31"
+              "$ref": "#/rules@33"
             },
             "arguments": []
+          }
+        ]
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
+      "name": "Class",
+      "returnType": {
+        "$ref": "#/types@0"
+      },
+      "definition": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "Action",
+            "inferredType": {
+              "$type": "InferredType",
+              "name": "Class"
+            }
+          },
+          {
+            "$type": "Keyword",
+            "value": "class"
+          },
+          {
+            "$type": "Assignment",
+            "feature": "name",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$ref": "#/rules@35"
+              },
+              "arguments": []
+            }
+          },
+          {
+            "$type": "Keyword",
+            "value": "{"
+          },
+          {
+            "$type": "Assignment",
+            "feature": "constructors",
+            "operator": "+=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$ref": "#/rules@3"
+              },
+              "arguments": []
+            },
+            "cardinality": "*"
+          },
+          {
+            "$type": "Assignment",
+            "feature": "members",
+            "operator": "+=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$ref": "#/rules@4"
+              },
+              "arguments": []
+            },
+            "cardinality": "*"
+          },
+          {
+            "$type": "Keyword",
+            "value": "}"
+          }
+        ]
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
+      "name": "Constructor",
+      "definition": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "Keyword",
+            "value": "constructor"
+          },
+          {
+            "$type": "Keyword",
+            "value": "("
+          },
+          {
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Assignment",
+                "feature": "parameters",
+                "operator": "+=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$ref": "#/rules@6"
+                  },
+                  "arguments": []
+                }
+              },
+              {
+                "$type": "Group",
+                "elements": [
+                  {
+                    "$type": "Keyword",
+                    "value": ","
+                  },
+                  {
+                    "$type": "Assignment",
+                    "feature": "parameters",
+                    "operator": "+=",
+                    "terminal": {
+                      "$type": "RuleCall",
+                      "rule": {
+                        "$ref": "#/rules@6"
+                      },
+                      "arguments": []
+                    }
+                  }
+                ],
+                "cardinality": "*"
+              }
+            ],
+            "cardinality": "?"
+          },
+          {
+            "$type": "Keyword",
+            "value": ")"
+          },
+          {
+            "$type": "Keyword",
+            "value": ";"
+          }
+        ]
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
+      "name": "ClassMember",
+      "definition": {
+        "$type": "Alternatives",
+        "elements": [
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@5"
+            },
+            "arguments": []
+          },
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@7"
+            },
+            "arguments": []
+          }
+        ]
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
+      "name": "MethodMember",
+      "definition": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "Assignment",
+            "feature": "returnType",
+            "operator": "=",
+            "terminal": {
+              "$type": "CrossReference",
+              "type": {
+                "$ref": "#/rules@2/definition/elements@0/inferredType"
+              },
+              "terminal": {
+                "$type": "RuleCall",
+                "rule": {
+                  "$ref": "#/rules@35"
+                },
+                "arguments": []
+              },
+              "deprecatedSyntax": false
+            }
+          },
+          {
+            "$type": "Assignment",
+            "feature": "name",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$ref": "#/rules@35"
+              },
+              "arguments": []
+            }
+          },
+          {
+            "$type": "Keyword",
+            "value": "("
+          },
+          {
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Assignment",
+                "feature": "parameters",
+                "operator": "+=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$ref": "#/rules@6"
+                  },
+                  "arguments": []
+                }
+              },
+              {
+                "$type": "Group",
+                "elements": [
+                  {
+                    "$type": "Keyword",
+                    "value": ","
+                  },
+                  {
+                    "$type": "Assignment",
+                    "feature": "parameters",
+                    "operator": "+=",
+                    "terminal": {
+                      "$type": "RuleCall",
+                      "rule": {
+                        "$ref": "#/rules@6"
+                      },
+                      "arguments": []
+                    }
+                  }
+                ],
+                "cardinality": "*"
+              }
+            ],
+            "cardinality": "?"
+          },
+          {
+            "$type": "Keyword",
+            "value": ")"
+          },
+          {
+            "$type": "Keyword",
+            "value": ";"
+          }
+        ]
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
+      "name": "Parameter",
+      "definition": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "Assignment",
+            "feature": "type",
+            "operator": "=",
+            "terminal": {
+              "$type": "CrossReference",
+              "type": {
+                "$ref": "#/rules@2/definition/elements@0/inferredType"
+              },
+              "terminal": {
+                "$type": "RuleCall",
+                "rule": {
+                  "$ref": "#/rules@35"
+                },
+                "arguments": []
+              },
+              "deprecatedSyntax": false
+            }
+          },
+          {
+            "$type": "Assignment",
+            "feature": "name",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$ref": "#/rules@35"
+              },
+              "arguments": []
+            }
+          }
+        ]
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
+      "name": "FieldMember",
+      "definition": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "Assignment",
+            "feature": "type",
+            "operator": "=",
+            "terminal": {
+              "$type": "CrossReference",
+              "type": {
+                "$ref": "#/rules@2/definition/elements@0/inferredType"
+              },
+              "terminal": {
+                "$type": "RuleCall",
+                "rule": {
+                  "$ref": "#/rules@35"
+                },
+                "arguments": []
+              },
+              "deprecatedSyntax": false
+            }
+          },
+          {
+            "$type": "Assignment",
+            "feature": "name",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$ref": "#/rules@35"
+              },
+              "arguments": []
+            }
+          },
+          {
+            "$type": "Keyword",
+            "value": ";"
           }
         ]
       },
@@ -79,7 +448,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@3"
+                "$ref": "#/rules@9"
               },
               "arguments": []
             }
@@ -91,7 +460,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@4"
+                "$ref": "#/rules@10"
               },
               "arguments": []
             }
@@ -114,28 +483,28 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@10"
+              "$ref": "#/rules@16"
             },
             "arguments": []
           },
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@5"
+              "$ref": "#/rules@11"
             },
             "arguments": []
           },
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@6"
+              "$ref": "#/rules@12"
             },
             "arguments": []
           },
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@7"
+              "$ref": "#/rules@13"
             },
             "arguments": []
           },
@@ -145,7 +514,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@8"
+                  "$ref": "#/rules@14"
                 },
                 "arguments": []
               },
@@ -161,7 +530,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@9"
+                  "$ref": "#/rules@15"
                 },
                 "arguments": []
               },
@@ -177,7 +546,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@12"
+                  "$ref": "#/rules@19"
                 },
                 "arguments": []
               },
@@ -208,7 +577,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@11"
+                  "$ref": "#/rules@17"
                 },
                 "arguments": []
               },
@@ -221,7 +590,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@31"
+              "$ref": "#/rules@33"
             },
             "arguments": []
           }
@@ -255,7 +624,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@12"
+                "$ref": "#/rules@19"
               },
               "arguments": []
             }
@@ -271,7 +640,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@10"
+                "$ref": "#/rules@16"
               },
               "arguments": []
             }
@@ -290,7 +659,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@10"
+                    "$ref": "#/rules@16"
                   },
                   "arguments": []
                 }
@@ -328,7 +697,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@12"
+                "$ref": "#/rules@19"
               },
               "arguments": []
             }
@@ -344,7 +713,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@10"
+                "$ref": "#/rules@16"
               },
               "arguments": []
             }
@@ -379,7 +748,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@11"
+                "$ref": "#/rules@17"
               },
               "arguments": []
             },
@@ -396,7 +765,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@12"
+                "$ref": "#/rules@19"
               },
               "arguments": []
             },
@@ -413,7 +782,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@12"
+                "$ref": "#/rules@19"
               },
               "arguments": []
             },
@@ -430,7 +799,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@10"
+                "$ref": "#/rules@16"
               },
               "arguments": []
             }
@@ -465,7 +834,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@23"
+                "$ref": "#/rules@30"
               },
               "arguments": []
             }
@@ -500,7 +869,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@12"
+                "$ref": "#/rules@19"
               },
               "arguments": []
             },
@@ -535,7 +904,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@3"
+                    "$ref": "#/rules@9"
                   },
                   "arguments": []
                 }
@@ -547,7 +916,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@4"
+                    "$ref": "#/rules@10"
                   },
                   "arguments": []
                 }
@@ -591,12 +960,12 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
             "terminal": {
               "$type": "CrossReference",
               "type": {
-                "$ref": "#/rules@26/definition/elements@0/inferredType"
+                "$ref": "#/rules@2/definition/elements@0/inferredType"
               },
               "terminal": {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@33"
+                  "$ref": "#/rules@35"
                 },
                 "arguments": []
               },
@@ -610,7 +979,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@33"
+                "$ref": "#/rules@35"
               },
               "arguments": []
             }
@@ -632,11 +1001,23 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
                 "feature": "value",
                 "operator": "=",
                 "terminal": {
-                  "$type": "RuleCall",
-                  "rule": {
-                    "$ref": "#/rules@12"
-                  },
-                  "arguments": []
+                  "$type": "Alternatives",
+                  "elements": [
+                    {
+                      "$type": "RuleCall",
+                      "rule": {
+                        "$ref": "#/rules@18"
+                      },
+                      "arguments": []
+                    },
+                    {
+                      "$type": "RuleCall",
+                      "rule": {
+                        "$ref": "#/rules@19"
+                      },
+                      "arguments": []
+                    }
+                  ]
                 }
               }
             ],
@@ -653,11 +1034,93 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
     },
     {
       "$type": "ParserRule",
+      "name": "ConstructorCall",
+      "definition": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "Assignment",
+            "feature": "type",
+            "operator": "=",
+            "terminal": {
+              "$type": "CrossReference",
+              "type": {
+                "$ref": "#/rules@2/definition/elements@0/inferredType"
+              },
+              "terminal": {
+                "$type": "RuleCall",
+                "rule": {
+                  "$ref": "#/rules@35"
+                },
+                "arguments": []
+              },
+              "deprecatedSyntax": false
+            }
+          },
+          {
+            "$type": "Keyword",
+            "value": "("
+          },
+          {
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Assignment",
+                "feature": "params",
+                "operator": "+=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$ref": "#/rules@6"
+                  },
+                  "arguments": []
+                }
+              },
+              {
+                "$type": "Group",
+                "elements": [
+                  {
+                    "$type": "Keyword",
+                    "value": ","
+                  },
+                  {
+                    "$type": "Assignment",
+                    "feature": "params",
+                    "operator": "+=",
+                    "terminal": {
+                      "$type": "RuleCall",
+                      "rule": {
+                        "$ref": "#/rules@6"
+                      },
+                      "arguments": []
+                    }
+                  }
+                ],
+                "cardinality": "*"
+              }
+            ],
+            "cardinality": "?"
+          },
+          {
+            "$type": "Keyword",
+            "value": ")"
+          }
+        ]
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
       "name": "Expression",
       "definition": {
         "$type": "RuleCall",
         "rule": {
-          "$ref": "#/rules@13"
+          "$ref": "#/rules@20"
         },
         "arguments": []
       },
@@ -681,7 +1144,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@14"
+              "$ref": "#/rules@21"
             },
             "arguments": []
           },
@@ -713,7 +1176,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@14"
+                    "$ref": "#/rules@21"
                   },
                   "arguments": []
                 }
@@ -743,7 +1206,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@15"
+              "$ref": "#/rules@22"
             },
             "arguments": []
           },
@@ -784,7 +1247,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@15"
+                    "$ref": "#/rules@22"
                   },
                   "arguments": []
                 }
@@ -814,7 +1277,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@16"
+              "$ref": "#/rules@23"
             },
             "arguments": []
           },
@@ -855,7 +1318,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@16"
+                    "$ref": "#/rules@23"
                   },
                   "arguments": []
                 }
@@ -885,7 +1348,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@17"
+              "$ref": "#/rules@24"
             },
             "arguments": []
           },
@@ -926,7 +1389,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@17"
+                    "$ref": "#/rules@24"
                   },
                   "arguments": []
                 }
@@ -956,7 +1419,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@18"
+              "$ref": "#/rules@25"
             },
             "arguments": []
           },
@@ -1013,7 +1476,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@18"
+                    "$ref": "#/rules@25"
                   },
                   "arguments": []
                 }
@@ -1043,7 +1506,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@19"
+              "$ref": "#/rules@26"
             },
             "arguments": []
           },
@@ -1081,7 +1544,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
                           "terminal": {
                             "$type": "RuleCall",
                             "rule": {
-                              "$ref": "#/rules@33"
+                              "$ref": "#/rules@35"
                             },
                             "arguments": []
                           },
@@ -1110,7 +1573,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
                                 "terminal": {
                                   "$type": "RuleCall",
                                   "rule": {
-                                    "$ref": "#/rules@12"
+                                    "$ref": "#/rules@19"
                                   },
                                   "arguments": []
                                 }
@@ -1129,7 +1592,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
                                     "terminal": {
                                       "$type": "RuleCall",
                                       "rule": {
-                                        "$ref": "#/rules@12"
+                                        "$ref": "#/rules@19"
                                       },
                                       "arguments": []
                                     }
@@ -1171,7 +1634,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
                             "terminal": {
                               "$type": "RuleCall",
                               "rule": {
-                                "$ref": "#/rules@12"
+                                "$ref": "#/rules@19"
                               },
                               "arguments": []
                             }
@@ -1190,7 +1653,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
                                 "terminal": {
                                   "$type": "RuleCall",
                                   "rule": {
-                                    "$ref": "#/rules@12"
+                                    "$ref": "#/rules@19"
                                   },
                                   "arguments": []
                                 }
@@ -1241,7 +1704,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@12"
+                  "$ref": "#/rules@19"
                 },
                 "arguments": []
               },
@@ -1254,42 +1717,42 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@21"
+              "$ref": "#/rules@28"
             },
             "arguments": []
           },
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@23"
+              "$ref": "#/rules@30"
             },
             "arguments": []
           },
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@24"
+              "$ref": "#/rules@31"
             },
             "arguments": []
           },
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@22"
+              "$ref": "#/rules@29"
             },
             "arguments": []
           },
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@25"
+              "$ref": "#/rules@32"
             },
             "arguments": []
           },
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@20"
+              "$ref": "#/rules@27"
             },
             "arguments": []
           }
@@ -1334,7 +1797,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
                   "terminal": {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@33"
+                      "$ref": "#/rules@35"
                     },
                     "arguments": []
                   },
@@ -1381,7 +1844,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
                     "terminal": {
                       "$type": "RuleCall",
                       "rule": {
-                        "$ref": "#/rules@12"
+                        "$ref": "#/rules@19"
                       },
                       "arguments": []
                     }
@@ -1400,7 +1863,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
                         "terminal": {
                           "$type": "RuleCall",
                           "rule": {
-                            "$ref": "#/rules@12"
+                            "$ref": "#/rules@19"
                           },
                           "arguments": []
                         }
@@ -1462,7 +1925,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@12"
+                "$ref": "#/rules@19"
               },
               "arguments": []
             }
@@ -1486,7 +1949,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
         "terminal": {
           "$type": "RuleCall",
           "rule": {
-            "$ref": "#/rules@34"
+            "$ref": "#/rules@36"
           },
           "arguments": []
         }
@@ -1508,7 +1971,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
         "terminal": {
           "$type": "RuleCall",
           "rule": {
-            "$ref": "#/rules@35"
+            "$ref": "#/rules@37"
           },
           "arguments": []
         }
@@ -1569,345 +2032,6 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
     },
     {
       "$type": "ParserRule",
-      "name": "Class",
-      "returnType": {
-        "$ref": "#/types@0"
-      },
-      "definition": {
-        "$type": "Group",
-        "elements": [
-          {
-            "$type": "Action",
-            "inferredType": {
-              "$type": "InferredType",
-              "name": "Class"
-            }
-          },
-          {
-            "$type": "Keyword",
-            "value": "Class"
-          },
-          {
-            "$type": "Assignment",
-            "feature": "name",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@33"
-              },
-              "arguments": []
-            }
-          },
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Keyword",
-                "value": "("
-              },
-              {
-                "$type": "Group",
-                "elements": [
-                  {
-                    "$type": "Assignment",
-                    "feature": "parameters",
-                    "operator": "+=",
-                    "terminal": {
-                      "$type": "RuleCall",
-                      "rule": {
-                        "$ref": "#/rules@29"
-                      },
-                      "arguments": []
-                    }
-                  },
-                  {
-                    "$type": "Group",
-                    "elements": [
-                      {
-                        "$type": "Keyword",
-                        "value": ","
-                      },
-                      {
-                        "$type": "Assignment",
-                        "feature": "parameters",
-                        "operator": "+=",
-                        "terminal": {
-                          "$type": "RuleCall",
-                          "rule": {
-                            "$ref": "#/rules@29"
-                          },
-                          "arguments": []
-                        }
-                      }
-                    ],
-                    "cardinality": "*"
-                  }
-                ],
-                "cardinality": "?"
-              },
-              {
-                "$type": "Keyword",
-                "value": ")"
-              }
-            ],
-            "cardinality": "?"
-          },
-          {
-            "$type": "Keyword",
-            "value": "{"
-          },
-          {
-            "$type": "Assignment",
-            "feature": "members",
-            "operator": "+=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@27"
-              },
-              "arguments": []
-            },
-            "cardinality": "*"
-          },
-          {
-            "$type": "Keyword",
-            "value": "}"
-          }
-        ]
-      },
-      "definesHiddenTokens": false,
-      "entry": false,
-      "fragment": false,
-      "hiddenTokens": [],
-      "parameters": [],
-      "wildcard": false
-    },
-    {
-      "$type": "ParserRule",
-      "name": "ClassMember",
-      "definition": {
-        "$type": "Alternatives",
-        "elements": [
-          {
-            "$type": "RuleCall",
-            "rule": {
-              "$ref": "#/rules@28"
-            },
-            "arguments": []
-          },
-          {
-            "$type": "RuleCall",
-            "rule": {
-              "$ref": "#/rules@30"
-            },
-            "arguments": []
-          }
-        ]
-      },
-      "definesHiddenTokens": false,
-      "entry": false,
-      "fragment": false,
-      "hiddenTokens": [],
-      "parameters": [],
-      "wildcard": false
-    },
-    {
-      "$type": "ParserRule",
-      "name": "MethodMember",
-      "definition": {
-        "$type": "Group",
-        "elements": [
-          {
-            "$type": "Assignment",
-            "feature": "returnType",
-            "operator": "=",
-            "terminal": {
-              "$type": "CrossReference",
-              "type": {
-                "$ref": "#/rules@26/definition/elements@0/inferredType"
-              },
-              "terminal": {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@33"
-                },
-                "arguments": []
-              },
-              "deprecatedSyntax": false
-            }
-          },
-          {
-            "$type": "Assignment",
-            "feature": "name",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@33"
-              },
-              "arguments": []
-            }
-          },
-          {
-            "$type": "Keyword",
-            "value": "("
-          },
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Assignment",
-                "feature": "parameters",
-                "operator": "+=",
-                "terminal": {
-                  "$type": "RuleCall",
-                  "rule": {
-                    "$ref": "#/rules@29"
-                  },
-                  "arguments": []
-                }
-              },
-              {
-                "$type": "Group",
-                "elements": [
-                  {
-                    "$type": "Keyword",
-                    "value": ","
-                  },
-                  {
-                    "$type": "Assignment",
-                    "feature": "parameters",
-                    "operator": "+=",
-                    "terminal": {
-                      "$type": "RuleCall",
-                      "rule": {
-                        "$ref": "#/rules@29"
-                      },
-                      "arguments": []
-                    }
-                  }
-                ],
-                "cardinality": "*"
-              }
-            ],
-            "cardinality": "?"
-          },
-          {
-            "$type": "Keyword",
-            "value": ")"
-          },
-          {
-            "$type": "Keyword",
-            "value": ";"
-          }
-        ]
-      },
-      "definesHiddenTokens": false,
-      "entry": false,
-      "fragment": false,
-      "hiddenTokens": [],
-      "parameters": [],
-      "wildcard": false
-    },
-    {
-      "$type": "ParserRule",
-      "name": "Parameter",
-      "definition": {
-        "$type": "Group",
-        "elements": [
-          {
-            "$type": "Assignment",
-            "feature": "type",
-            "operator": "=",
-            "terminal": {
-              "$type": "CrossReference",
-              "type": {
-                "$ref": "#/rules@26/definition/elements@0/inferredType"
-              },
-              "terminal": {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@33"
-                },
-                "arguments": []
-              },
-              "deprecatedSyntax": false
-            }
-          },
-          {
-            "$type": "Assignment",
-            "feature": "name",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@33"
-              },
-              "arguments": []
-            }
-          }
-        ]
-      },
-      "definesHiddenTokens": false,
-      "entry": false,
-      "fragment": false,
-      "hiddenTokens": [],
-      "parameters": [],
-      "wildcard": false
-    },
-    {
-      "$type": "ParserRule",
-      "name": "FieldMember",
-      "definition": {
-        "$type": "Group",
-        "elements": [
-          {
-            "$type": "Assignment",
-            "feature": "type",
-            "operator": "=",
-            "terminal": {
-              "$type": "CrossReference",
-              "type": {
-                "$ref": "#/rules@26/definition/elements@0/inferredType"
-              },
-              "terminal": {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@33"
-                },
-                "arguments": []
-              },
-              "deprecatedSyntax": false
-            }
-          },
-          {
-            "$type": "Assignment",
-            "feature": "name",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@33"
-              },
-              "arguments": []
-            }
-          },
-          {
-            "$type": "Keyword",
-            "value": ";"
-          }
-        ]
-      },
-      "definesHiddenTokens": false,
-      "entry": false,
-      "fragment": false,
-      "hiddenTokens": [],
-      "parameters": [],
-      "wildcard": false
-    },
-    {
-      "$type": "ParserRule",
       "name": "FunctionDeclaration",
       "definition": {
         "$type": "Group",
@@ -1919,12 +2043,12 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
             "terminal": {
               "$type": "CrossReference",
               "type": {
-                "$ref": "#/rules@26/definition/elements@0/inferredType"
+                "$ref": "#/rules@2/definition/elements@0/inferredType"
               },
               "terminal": {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@33"
+                  "$ref": "#/rules@35"
                 },
                 "arguments": []
               },
@@ -1938,7 +2062,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@33"
+                "$ref": "#/rules@35"
               },
               "arguments": []
             }
@@ -1957,7 +2081,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@29"
+                    "$ref": "#/rules@6"
                   },
                   "arguments": []
                 }
@@ -1976,7 +2100,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
                     "terminal": {
                       "$type": "RuleCall",
                       "rule": {
-                        "$ref": "#/rules@29"
+                        "$ref": "#/rules@6"
                       },
                       "arguments": []
                     }
@@ -1998,7 +2122,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@10"
+                "$ref": "#/rules@16"
               },
               "arguments": []
             }
@@ -2130,31 +2254,31 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
           {
             "$type": "SimpleType",
             "typeRef": {
-              "$ref": "#/rules@11/definition/elements@0/inferredType"
+              "$ref": "#/rules@17/definition/elements@0/inferredType"
             }
           },
           {
             "$type": "SimpleType",
             "typeRef": {
-              "$ref": "#/rules@31"
+              "$ref": "#/rules@33"
             }
           },
           {
             "$type": "SimpleType",
             "typeRef": {
-              "$ref": "#/rules@26/definition/elements@0/inferredType"
+              "$ref": "#/rules@2/definition/elements@0/inferredType"
             }
           },
           {
             "$type": "SimpleType",
             "typeRef": {
-              "$ref": "#/rules@28"
+              "$ref": "#/rules@5"
             }
           },
           {
             "$type": "SimpleType",
             "typeRef": {
-              "$ref": "#/rules@30"
+              "$ref": "#/rules@7"
             }
           }
         ]
@@ -2169,6 +2293,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
   "$type": "Grammar",
   "isDeclared": true,
   "name": "CrmscriptImplementation",
+  "imports": [],
   "rules": [
     {
       "$type": "ParserRule",
@@ -2282,7 +2407,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@10"
+                  "$ref": "#/rules@11"
                 },
                 "arguments": []
               },
@@ -2326,7 +2451,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@29"
+              "$ref": "#/rules@25"
             },
             "arguments": []
           }
@@ -2360,7 +2485,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@10"
+                "$ref": "#/rules@11"
               },
               "arguments": []
             }
@@ -2433,7 +2558,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@10"
+                "$ref": "#/rules@11"
               },
               "arguments": []
             }
@@ -2501,7 +2626,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@10"
+                "$ref": "#/rules@11"
               },
               "arguments": []
             },
@@ -2518,7 +2643,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@10"
+                "$ref": "#/rules@11"
               },
               "arguments": []
             },
@@ -2570,7 +2695,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@21"
+                "$ref": "#/rules@22"
               },
               "arguments": []
             }
@@ -2605,7 +2730,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@10"
+                "$ref": "#/rules@11"
               },
               "arguments": []
             },
@@ -2696,12 +2821,12 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
             "terminal": {
               "$type": "CrossReference",
               "type": {
-                "$ref": "#/rules@24/definition/elements@0/inferredType"
+                "$ref": "#/rules@38/definition/elements@0/inferredType"
               },
               "terminal": {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@31"
+                  "$ref": "#/rules@27"
                 },
                 "arguments": []
               },
@@ -2715,7 +2840,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@31"
+                "$ref": "#/rules@27"
               },
               "arguments": []
             }
@@ -2737,11 +2862,23 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                 "feature": "value",
                 "operator": "=",
                 "terminal": {
-                  "$type": "RuleCall",
-                  "rule": {
-                    "$ref": "#/rules@10"
-                  },
-                  "arguments": []
+                  "$type": "Alternatives",
+                  "elements": [
+                    {
+                      "$type": "RuleCall",
+                      "rule": {
+                        "$ref": "#/rules@10"
+                      },
+                      "arguments": []
+                    },
+                    {
+                      "$type": "RuleCall",
+                      "rule": {
+                        "$ref": "#/rules@11"
+                      },
+                      "arguments": []
+                    }
+                  ]
                 }
               }
             ],
@@ -2758,11 +2895,93 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
     },
     {
       "$type": "ParserRule",
+      "name": "ConstructorCall",
+      "definition": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "Assignment",
+            "feature": "type",
+            "operator": "=",
+            "terminal": {
+              "$type": "CrossReference",
+              "type": {
+                "$ref": "#/rules@38/definition/elements@0/inferredType"
+              },
+              "terminal": {
+                "$type": "RuleCall",
+                "rule": {
+                  "$ref": "#/rules@27"
+                },
+                "arguments": []
+              },
+              "deprecatedSyntax": false
+            }
+          },
+          {
+            "$type": "Keyword",
+            "value": "("
+          },
+          {
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Assignment",
+                "feature": "params",
+                "operator": "+=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$ref": "#/rules@42"
+                  },
+                  "arguments": []
+                }
+              },
+              {
+                "$type": "Group",
+                "elements": [
+                  {
+                    "$type": "Keyword",
+                    "value": ","
+                  },
+                  {
+                    "$type": "Assignment",
+                    "feature": "params",
+                    "operator": "+=",
+                    "terminal": {
+                      "$type": "RuleCall",
+                      "rule": {
+                        "$ref": "#/rules@42"
+                      },
+                      "arguments": []
+                    }
+                  }
+                ],
+                "cardinality": "*"
+              }
+            ],
+            "cardinality": "?"
+          },
+          {
+            "$type": "Keyword",
+            "value": ")"
+          }
+        ]
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
       "name": "Expression",
       "definition": {
         "$type": "RuleCall",
         "rule": {
-          "$ref": "#/rules@11"
+          "$ref": "#/rules@12"
         },
         "arguments": []
       },
@@ -2786,7 +3005,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@12"
+              "$ref": "#/rules@13"
             },
             "arguments": []
           },
@@ -2818,7 +3037,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@12"
+                    "$ref": "#/rules@13"
                   },
                   "arguments": []
                 }
@@ -2848,7 +3067,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@13"
+              "$ref": "#/rules@14"
             },
             "arguments": []
           },
@@ -2889,7 +3108,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@13"
+                    "$ref": "#/rules@14"
                   },
                   "arguments": []
                 }
@@ -2919,7 +3138,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@14"
+              "$ref": "#/rules@15"
             },
             "arguments": []
           },
@@ -2960,7 +3179,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@14"
+                    "$ref": "#/rules@15"
                   },
                   "arguments": []
                 }
@@ -2990,7 +3209,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@15"
+              "$ref": "#/rules@16"
             },
             "arguments": []
           },
@@ -3031,7 +3250,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@15"
+                    "$ref": "#/rules@16"
                   },
                   "arguments": []
                 }
@@ -3061,7 +3280,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@16"
+              "$ref": "#/rules@17"
             },
             "arguments": []
           },
@@ -3118,7 +3337,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@16"
+                    "$ref": "#/rules@17"
                   },
                   "arguments": []
                 }
@@ -3148,7 +3367,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@17"
+              "$ref": "#/rules@18"
             },
             "arguments": []
           },
@@ -3186,7 +3405,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                           "terminal": {
                             "$type": "RuleCall",
                             "rule": {
-                              "$ref": "#/rules@31"
+                              "$ref": "#/rules@27"
                             },
                             "arguments": []
                           },
@@ -3215,7 +3434,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                                 "terminal": {
                                   "$type": "RuleCall",
                                   "rule": {
-                                    "$ref": "#/rules@10"
+                                    "$ref": "#/rules@11"
                                   },
                                   "arguments": []
                                 }
@@ -3234,7 +3453,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                                     "terminal": {
                                       "$type": "RuleCall",
                                       "rule": {
-                                        "$ref": "#/rules@10"
+                                        "$ref": "#/rules@11"
                                       },
                                       "arguments": []
                                     }
@@ -3276,7 +3495,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                             "terminal": {
                               "$type": "RuleCall",
                               "rule": {
-                                "$ref": "#/rules@10"
+                                "$ref": "#/rules@11"
                               },
                               "arguments": []
                             }
@@ -3295,7 +3514,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                                 "terminal": {
                                   "$type": "RuleCall",
                                   "rule": {
-                                    "$ref": "#/rules@10"
+                                    "$ref": "#/rules@11"
                                   },
                                   "arguments": []
                                 }
@@ -3346,7 +3565,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@10"
+                  "$ref": "#/rules@11"
                 },
                 "arguments": []
               },
@@ -3359,14 +3578,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@19"
-            },
-            "arguments": []
-          },
-          {
-            "$type": "RuleCall",
-            "rule": {
-              "$ref": "#/rules@21"
+              "$ref": "#/rules@20"
             },
             "arguments": []
           },
@@ -3380,13 +3592,6 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@20"
-            },
-            "arguments": []
-          },
-          {
-            "$type": "RuleCall",
-            "rule": {
               "$ref": "#/rules@23"
             },
             "arguments": []
@@ -3394,7 +3599,21 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@18"
+              "$ref": "#/rules@21"
+            },
+            "arguments": []
+          },
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@24"
+            },
+            "arguments": []
+          },
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@19"
             },
             "arguments": []
           }
@@ -3439,7 +3658,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                   "terminal": {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@31"
+                      "$ref": "#/rules@27"
                     },
                     "arguments": []
                   },
@@ -3486,7 +3705,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                     "terminal": {
                       "$type": "RuleCall",
                       "rule": {
-                        "$ref": "#/rules@10"
+                        "$ref": "#/rules@11"
                       },
                       "arguments": []
                     }
@@ -3505,7 +3724,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                         "terminal": {
                           "$type": "RuleCall",
                           "rule": {
-                            "$ref": "#/rules@10"
+                            "$ref": "#/rules@11"
                           },
                           "arguments": []
                         }
@@ -3567,7 +3786,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@10"
+                "$ref": "#/rules@11"
               },
               "arguments": []
             }
@@ -3591,7 +3810,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
         "terminal": {
           "$type": "RuleCall",
           "rule": {
-            "$ref": "#/rules@32"
+            "$ref": "#/rules@28"
           },
           "arguments": []
         }
@@ -3613,7 +3832,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
         "terminal": {
           "$type": "RuleCall",
           "rule": {
-            "$ref": "#/rules@33"
+            "$ref": "#/rules@29"
           },
           "arguments": []
         }
@@ -3674,345 +3893,6 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
     },
     {
       "$type": "ParserRule",
-      "name": "Class",
-      "returnType": {
-        "$ref": "#/types@0"
-      },
-      "definition": {
-        "$type": "Group",
-        "elements": [
-          {
-            "$type": "Action",
-            "inferredType": {
-              "$type": "InferredType",
-              "name": "Class"
-            }
-          },
-          {
-            "$type": "Keyword",
-            "value": "Class"
-          },
-          {
-            "$type": "Assignment",
-            "feature": "name",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@31"
-              },
-              "arguments": []
-            }
-          },
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Keyword",
-                "value": "("
-              },
-              {
-                "$type": "Group",
-                "elements": [
-                  {
-                    "$type": "Assignment",
-                    "feature": "parameters",
-                    "operator": "+=",
-                    "terminal": {
-                      "$type": "RuleCall",
-                      "rule": {
-                        "$ref": "#/rules@27"
-                      },
-                      "arguments": []
-                    }
-                  },
-                  {
-                    "$type": "Group",
-                    "elements": [
-                      {
-                        "$type": "Keyword",
-                        "value": ","
-                      },
-                      {
-                        "$type": "Assignment",
-                        "feature": "parameters",
-                        "operator": "+=",
-                        "terminal": {
-                          "$type": "RuleCall",
-                          "rule": {
-                            "$ref": "#/rules@27"
-                          },
-                          "arguments": []
-                        }
-                      }
-                    ],
-                    "cardinality": "*"
-                  }
-                ],
-                "cardinality": "?"
-              },
-              {
-                "$type": "Keyword",
-                "value": ")"
-              }
-            ],
-            "cardinality": "?"
-          },
-          {
-            "$type": "Keyword",
-            "value": "{"
-          },
-          {
-            "$type": "Assignment",
-            "feature": "members",
-            "operator": "+=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@25"
-              },
-              "arguments": []
-            },
-            "cardinality": "*"
-          },
-          {
-            "$type": "Keyword",
-            "value": "}"
-          }
-        ]
-      },
-      "definesHiddenTokens": false,
-      "entry": false,
-      "fragment": false,
-      "hiddenTokens": [],
-      "parameters": [],
-      "wildcard": false
-    },
-    {
-      "$type": "ParserRule",
-      "name": "ClassMember",
-      "definition": {
-        "$type": "Alternatives",
-        "elements": [
-          {
-            "$type": "RuleCall",
-            "rule": {
-              "$ref": "#/rules@26"
-            },
-            "arguments": []
-          },
-          {
-            "$type": "RuleCall",
-            "rule": {
-              "$ref": "#/rules@28"
-            },
-            "arguments": []
-          }
-        ]
-      },
-      "definesHiddenTokens": false,
-      "entry": false,
-      "fragment": false,
-      "hiddenTokens": [],
-      "parameters": [],
-      "wildcard": false
-    },
-    {
-      "$type": "ParserRule",
-      "name": "MethodMember",
-      "definition": {
-        "$type": "Group",
-        "elements": [
-          {
-            "$type": "Assignment",
-            "feature": "returnType",
-            "operator": "=",
-            "terminal": {
-              "$type": "CrossReference",
-              "type": {
-                "$ref": "#/rules@24/definition/elements@0/inferredType"
-              },
-              "terminal": {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@31"
-                },
-                "arguments": []
-              },
-              "deprecatedSyntax": false
-            }
-          },
-          {
-            "$type": "Assignment",
-            "feature": "name",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@31"
-              },
-              "arguments": []
-            }
-          },
-          {
-            "$type": "Keyword",
-            "value": "("
-          },
-          {
-            "$type": "Group",
-            "elements": [
-              {
-                "$type": "Assignment",
-                "feature": "parameters",
-                "operator": "+=",
-                "terminal": {
-                  "$type": "RuleCall",
-                  "rule": {
-                    "$ref": "#/rules@27"
-                  },
-                  "arguments": []
-                }
-              },
-              {
-                "$type": "Group",
-                "elements": [
-                  {
-                    "$type": "Keyword",
-                    "value": ","
-                  },
-                  {
-                    "$type": "Assignment",
-                    "feature": "parameters",
-                    "operator": "+=",
-                    "terminal": {
-                      "$type": "RuleCall",
-                      "rule": {
-                        "$ref": "#/rules@27"
-                      },
-                      "arguments": []
-                    }
-                  }
-                ],
-                "cardinality": "*"
-              }
-            ],
-            "cardinality": "?"
-          },
-          {
-            "$type": "Keyword",
-            "value": ")"
-          },
-          {
-            "$type": "Keyword",
-            "value": ";"
-          }
-        ]
-      },
-      "definesHiddenTokens": false,
-      "entry": false,
-      "fragment": false,
-      "hiddenTokens": [],
-      "parameters": [],
-      "wildcard": false
-    },
-    {
-      "$type": "ParserRule",
-      "name": "Parameter",
-      "definition": {
-        "$type": "Group",
-        "elements": [
-          {
-            "$type": "Assignment",
-            "feature": "type",
-            "operator": "=",
-            "terminal": {
-              "$type": "CrossReference",
-              "type": {
-                "$ref": "#/rules@24/definition/elements@0/inferredType"
-              },
-              "terminal": {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@31"
-                },
-                "arguments": []
-              },
-              "deprecatedSyntax": false
-            }
-          },
-          {
-            "$type": "Assignment",
-            "feature": "name",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@31"
-              },
-              "arguments": []
-            }
-          }
-        ]
-      },
-      "definesHiddenTokens": false,
-      "entry": false,
-      "fragment": false,
-      "hiddenTokens": [],
-      "parameters": [],
-      "wildcard": false
-    },
-    {
-      "$type": "ParserRule",
-      "name": "FieldMember",
-      "definition": {
-        "$type": "Group",
-        "elements": [
-          {
-            "$type": "Assignment",
-            "feature": "type",
-            "operator": "=",
-            "terminal": {
-              "$type": "CrossReference",
-              "type": {
-                "$ref": "#/rules@24/definition/elements@0/inferredType"
-              },
-              "terminal": {
-                "$type": "RuleCall",
-                "rule": {
-                  "$ref": "#/rules@31"
-                },
-                "arguments": []
-              },
-              "deprecatedSyntax": false
-            }
-          },
-          {
-            "$type": "Assignment",
-            "feature": "name",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@31"
-              },
-              "arguments": []
-            }
-          },
-          {
-            "$type": "Keyword",
-            "value": ";"
-          }
-        ]
-      },
-      "definesHiddenTokens": false,
-      "entry": false,
-      "fragment": false,
-      "hiddenTokens": [],
-      "parameters": [],
-      "wildcard": false
-    },
-    {
-      "$type": "ParserRule",
       "name": "FunctionDeclaration",
       "definition": {
         "$type": "Group",
@@ -4024,12 +3904,12 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
             "terminal": {
               "$type": "CrossReference",
               "type": {
-                "$ref": "#/rules@24/definition/elements@0/inferredType"
+                "$ref": "#/rules@38/definition/elements@0/inferredType"
               },
               "terminal": {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@31"
+                  "$ref": "#/rules@27"
                 },
                 "arguments": []
               },
@@ -4043,7 +3923,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@31"
+                "$ref": "#/rules@27"
               },
               "arguments": []
             }
@@ -4062,7 +3942,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@27"
+                    "$ref": "#/rules@42"
                   },
                   "arguments": []
                 }
@@ -4081,7 +3961,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                     "terminal": {
                       "$type": "RuleCall",
                       "rule": {
-                        "$ref": "#/rules@27"
+                        "$ref": "#/rules@42"
                       },
                       "arguments": []
                     }
@@ -4220,6 +4100,427 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
         "regex": "/\\\\/\\\\/[^\\\\n\\\\r]*/"
       },
       "fragment": false
+    },
+    {
+      "$type": "ParserRule",
+      "entry": false,
+      "name": "DefinitionUnit",
+      "definition": {
+        "$type": "Assignment",
+        "feature": "definitionelements",
+        "operator": "+=",
+        "terminal": {
+          "$type": "RuleCall",
+          "rule": {
+            "$ref": "#/rules@37"
+          },
+          "arguments": []
+        },
+        "cardinality": "*"
+      },
+      "definesHiddenTokens": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
+      "name": "DefinitionElement",
+      "definition": {
+        "$type": "Alternatives",
+        "elements": [
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@38"
+            },
+            "arguments": []
+          },
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@25"
+            },
+            "arguments": []
+          }
+        ]
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
+      "name": "Class",
+      "returnType": {
+        "$ref": "#/types@0"
+      },
+      "definition": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "Action",
+            "inferredType": {
+              "$type": "InferredType",
+              "name": "Class"
+            }
+          },
+          {
+            "$type": "Keyword",
+            "value": "class"
+          },
+          {
+            "$type": "Assignment",
+            "feature": "name",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$ref": "#/rules@27"
+              },
+              "arguments": []
+            }
+          },
+          {
+            "$type": "Keyword",
+            "value": "{"
+          },
+          {
+            "$type": "Assignment",
+            "feature": "constructors",
+            "operator": "+=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$ref": "#/rules@39"
+              },
+              "arguments": []
+            },
+            "cardinality": "*"
+          },
+          {
+            "$type": "Assignment",
+            "feature": "members",
+            "operator": "+=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$ref": "#/rules@40"
+              },
+              "arguments": []
+            },
+            "cardinality": "*"
+          },
+          {
+            "$type": "Keyword",
+            "value": "}"
+          }
+        ]
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
+      "name": "Constructor",
+      "definition": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "Keyword",
+            "value": "constructor"
+          },
+          {
+            "$type": "Keyword",
+            "value": "("
+          },
+          {
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Assignment",
+                "feature": "parameters",
+                "operator": "+=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$ref": "#/rules@42"
+                  },
+                  "arguments": []
+                }
+              },
+              {
+                "$type": "Group",
+                "elements": [
+                  {
+                    "$type": "Keyword",
+                    "value": ","
+                  },
+                  {
+                    "$type": "Assignment",
+                    "feature": "parameters",
+                    "operator": "+=",
+                    "terminal": {
+                      "$type": "RuleCall",
+                      "rule": {
+                        "$ref": "#/rules@42"
+                      },
+                      "arguments": []
+                    }
+                  }
+                ],
+                "cardinality": "*"
+              }
+            ],
+            "cardinality": "?"
+          },
+          {
+            "$type": "Keyword",
+            "value": ")"
+          },
+          {
+            "$type": "Keyword",
+            "value": ";"
+          }
+        ]
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
+      "name": "ClassMember",
+      "definition": {
+        "$type": "Alternatives",
+        "elements": [
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@41"
+            },
+            "arguments": []
+          },
+          {
+            "$type": "RuleCall",
+            "rule": {
+              "$ref": "#/rules@43"
+            },
+            "arguments": []
+          }
+        ]
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
+      "name": "MethodMember",
+      "definition": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "Assignment",
+            "feature": "returnType",
+            "operator": "=",
+            "terminal": {
+              "$type": "CrossReference",
+              "type": {
+                "$ref": "#/rules@38/definition/elements@0/inferredType"
+              },
+              "terminal": {
+                "$type": "RuleCall",
+                "rule": {
+                  "$ref": "#/rules@27"
+                },
+                "arguments": []
+              },
+              "deprecatedSyntax": false
+            }
+          },
+          {
+            "$type": "Assignment",
+            "feature": "name",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$ref": "#/rules@27"
+              },
+              "arguments": []
+            }
+          },
+          {
+            "$type": "Keyword",
+            "value": "("
+          },
+          {
+            "$type": "Group",
+            "elements": [
+              {
+                "$type": "Assignment",
+                "feature": "parameters",
+                "operator": "+=",
+                "terminal": {
+                  "$type": "RuleCall",
+                  "rule": {
+                    "$ref": "#/rules@42"
+                  },
+                  "arguments": []
+                }
+              },
+              {
+                "$type": "Group",
+                "elements": [
+                  {
+                    "$type": "Keyword",
+                    "value": ","
+                  },
+                  {
+                    "$type": "Assignment",
+                    "feature": "parameters",
+                    "operator": "+=",
+                    "terminal": {
+                      "$type": "RuleCall",
+                      "rule": {
+                        "$ref": "#/rules@42"
+                      },
+                      "arguments": []
+                    }
+                  }
+                ],
+                "cardinality": "*"
+              }
+            ],
+            "cardinality": "?"
+          },
+          {
+            "$type": "Keyword",
+            "value": ")"
+          },
+          {
+            "$type": "Keyword",
+            "value": ";"
+          }
+        ]
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
+      "name": "Parameter",
+      "definition": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "Assignment",
+            "feature": "type",
+            "operator": "=",
+            "terminal": {
+              "$type": "CrossReference",
+              "type": {
+                "$ref": "#/rules@38/definition/elements@0/inferredType"
+              },
+              "terminal": {
+                "$type": "RuleCall",
+                "rule": {
+                  "$ref": "#/rules@27"
+                },
+                "arguments": []
+              },
+              "deprecatedSyntax": false
+            }
+          },
+          {
+            "$type": "Assignment",
+            "feature": "name",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$ref": "#/rules@27"
+              },
+              "arguments": []
+            }
+          }
+        ]
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
+      "name": "FieldMember",
+      "definition": {
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "Assignment",
+            "feature": "type",
+            "operator": "=",
+            "terminal": {
+              "$type": "CrossReference",
+              "type": {
+                "$ref": "#/rules@38/definition/elements@0/inferredType"
+              },
+              "terminal": {
+                "$type": "RuleCall",
+                "rule": {
+                  "$ref": "#/rules@27"
+                },
+                "arguments": []
+              },
+              "deprecatedSyntax": false
+            }
+          },
+          {
+            "$type": "Assignment",
+            "feature": "name",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$ref": "#/rules@27"
+              },
+              "arguments": []
+            }
+          },
+          {
+            "$type": "Keyword",
+            "value": ";"
+          }
+        ]
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
     }
   ],
   "types": [
@@ -4238,25 +4539,25 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
           {
             "$type": "SimpleType",
             "typeRef": {
-              "$ref": "#/rules@29"
+              "$ref": "#/rules@25"
             }
           },
           {
             "$type": "SimpleType",
             "typeRef": {
-              "$ref": "#/rules@24/definition/elements@0/inferredType"
+              "$ref": "#/rules@38/definition/elements@0/inferredType"
             }
           },
           {
             "$type": "SimpleType",
             "typeRef": {
-              "$ref": "#/rules@26"
+              "$ref": "#/rules@41"
             }
           },
           {
             "$type": "SimpleType",
             "typeRef": {
-              "$ref": "#/rules@28"
+              "$ref": "#/rules@43"
             }
           }
         ]
@@ -4265,7 +4566,6 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
   ],
   "definesHiddenTokens": false,
   "hiddenTokens": [],
-  "imports": [],
   "interfaces": [],
   "usedGrammars": []
 }`));

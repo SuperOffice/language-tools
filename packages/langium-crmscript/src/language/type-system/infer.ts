@@ -1,6 +1,6 @@
 import { AstNode } from "langium";
-import { BinaryExpression, Class, isBinaryExpression, isBooleanExpression, isClass, isFieldMember, isFunctionDeclaration, isMemberCall, isMethodMember, isNumberExpression, isParameter, isPrintStatement, isReturnStatement, isStringExpression, isUnaryExpression, isVariableDeclaration, MemberCall } from "../generated/ast.js";
-import { createBooleanType, createClassType, createErrorType, createIntegerType, createStringType, isFunctionType, isStringType, TypeDescription, createFunctionType, createVoidType, createFloatType } from "./descriptions.js";
+import { BinaryExpression, Class, isBinaryExpression, isBooleanExpression, isClass, isConstructorCall, isFieldMember, isFunctionDeclaration, isMemberCall, isMethodMember, isNumberExpression, isParameter, isPrintStatement, isReturnStatement, isStringExpression, isUnaryExpression, isVariableDeclaration, MemberCall } from "../generated/ast.js";
+import { createBooleanType, createClassType, createErrorType, createIntegerType, createStringType, isFunctionType, isStringType, TypeDescription, createVoidType, createFloatType, createFunctionType } from "./descriptions.js";
 
 export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDescription>): TypeDescription {
     let type: TypeDescription | undefined;
@@ -71,6 +71,11 @@ export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDes
             type = createVoidType();
         } else {
             type = inferType(node.value, cache);
+        }
+    }
+    else if(isConstructorCall(node)){
+        if (isClass(node.type.ref)) {
+            type = createClassType(node.type.ref);
         }
     }
     if (!type) {
