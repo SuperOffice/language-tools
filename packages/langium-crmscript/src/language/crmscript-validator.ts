@@ -1,5 +1,5 @@
 import { MultiMap, NamedAstNode, stream, Stream, type AstNode, type ValidationAcceptor, type ValidationChecks } from 'langium';
-import { ConstructorCall, Grammar, isClass, type BinaryExpression, type CrmscriptAstType, type VariableDeclaration } from './generated/ast.js';
+import { ConstructorCall, Grammar, isClass, MemberCall, MethodMember, type BinaryExpression, type CrmscriptAstType, type VariableDeclaration } from './generated/ast.js';
 import type { CrmscriptServices } from './crmscript-module.js';
 import { inferType } from './type-system/infer.js';
 import { isAssignable } from './type-system/assigment.js';
@@ -17,7 +17,8 @@ export function registerValidationChecks(services: CrmscriptServices) {
         Grammar: [
             validator.checkUniqueVariableName,
         ],
-        ConstructorCall: validator.checkConstructorCallType
+        ConstructorCall: validator.checkConstructorCallType,
+        MemberCall: validator.checkMemberCallParameters
     };
     registry.register(checks, validator);
 }
@@ -71,6 +72,37 @@ export class CrmscriptValidator {
             });
         }
     }
+
+    checkMemberCallParameters(memberCall: MemberCall, accept: ValidationAcceptor) {
+
+        const methodMember = memberCall.element?.ref as MethodMember;
+        if(!methodMember.parameters) return;
+
+        if(methodMember.parameters.length != memberCall.arguments.length){
+            accept('error', `Method requires ${methodMember.parameters.length} arguments`, {
+                node: memberCall,
+                property: 'arguments'
+            });
+        }
+        
+        else{   
+            for(let i = 0; i < memberCall.arguments.length; i++){ {
+                const map = this.getTypeCache();
+
+                //const inferredParameterType = inferType(methodMember.parameters[i].type.ref?.name, map);
+                const inferredArgumentType = inferType(memberCall.arguments[i], map);
+
+                if (methodMember.parameters[i].type.$refText != inferredArgumentType.$type) {
+                    accept('error', `Type '${typeToString(inferredArgumentType)}' is not assignable to type '${methodMember.parameters[i].type.$refText}'.`, {
+                        node: memberCall.arguments[i],
+                        property: 'arguments'
+                    });
+
+                }
+            }    
+        }    
+    }
+}
 
     private getTypeCache(): Map<AstNode, TypeDescription> {
         return new Map();

@@ -22,27 +22,33 @@ export class CrmscriptSignatureHelpProvider extends AbstractSignatureHelpProvide
         const signatureHelp: SignatureHelp = { signatures: [], activeSignature: undefined, activeParameter: undefined };
         const constructorCall = element as ConstructorCall;
         
-        constructorCall.type.ref?.constructors.forEach(constructorElements => {
-                const label = `${constructorElements.$container.name}(` +
-                constructorElements.parameters.map(p => `${p.type.$refText} ${p.name}`).join(', ') +
-            `)`;
+        const constructors = constructorCall.type.ref?.constructors;
+        if (!constructors) return signatureHelp;
+
+        for (const constructorElements of constructors) {
+            const parametersString = constructorElements.parameters.map(p => `${p.type.$refText} ${p.name}`).join(', ');
+            const label = `${constructorElements.$container.name}(${parametersString})`;
 
             const documentationText = this.getDocumentationTextFromNode(constructorElements.$cstNode);
-
+            
             const option = SignatureInformation.create(label, documentationText, ParameterInformation.create([constructorCall.type.$refText.length + 1, label.length - 1]));
             signatureHelp.signatures.push(option);
-        });
+        }
+  
         return signatureHelp;
     }
 
     generateSignatureHelpFromMemberCall(element: AstNode): MaybePromise<SignatureHelp | undefined> {
         const signatureHelp: SignatureHelp = { signatures: [], activeSignature: undefined, activeParameter: undefined };
         const memberCall = element as MemberCall;
-        const documentationText = this.getDocumentationTextFromNode(memberCall.element?.ref?.$cstNode);
+        
         const methodMember = memberCall.element?.ref as MethodMember;
+        if (!methodMember) return signatureHelp;
 
         const parametersString = methodMember.parameters.map(p => `${p.type.$refText} ${p.name}`).join(', ');
-        const label = `${methodMember.name}(` + parametersString + `)`; 
+        const label = `${methodMember.name}(${parametersString})`;
+        
+        const documentationText = this.getDocumentationTextFromNode(methodMember.$cstNode);
 
         let start = methodMember.name.length + 1;
         let end = start + parametersString.length;
