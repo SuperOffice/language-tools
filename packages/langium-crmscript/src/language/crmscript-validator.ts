@@ -1,8 +1,8 @@
 import { MultiMap, NamedAstNode, stream, Stream, type AstNode, type ValidationAcceptor, type ValidationChecks } from 'langium';
-import { ConstructorCall, Enum, Grammar, isClass, MemberCall, MethodMember, type BinaryExpression, type CrmscriptAstType, type VariableDeclaration } from './generated/ast.js';
+import { ConstructorCall, Grammar, isClass, MemberCall, MethodMember, type BinaryExpression, type CrmscriptAstType, type VariableDeclaration } from './generated/ast.js';
 import type { CrmscriptServices } from './crmscript-module.js';
 import { inferType } from './type-system/infer.js';
-import { isAssignable } from './type-system/assigment.js';
+import { isAssignable } from './type-system/assignment.js';
 import { TypeDescription, typeToString } from './type-system/descriptions.js';
 
 /**

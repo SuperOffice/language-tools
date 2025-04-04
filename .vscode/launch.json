@@ -18,21 +18,7 @@
 			],
 		},
 		{
-			"name": "TSFSO extension",
-			"type": "extensionHost",
-			"request": "launch",
-			"args": [
-				"--extensionDevelopmentPath=${workspaceFolder}/packages/superofficedx-vscode-tsfso/",
-				"--folder-uri=${workspaceRoot}/test"
-			],
-			"outFiles": [
-				"${workspaceFolder}/packages/superofficedx-vscode-tsfso/dist/**/*.js"
-			],
-			"preLaunchTask": "npm: build:vscode-tsfso",
-			"autoAttachChildProcesses": false
-		},
-		{
-			"name": "TSFSO extension (disable others)",
+			"name": "superofficedx-vscode-tsfso",
 			"type": "extensionHost",
 			"request": "launch",
 			"args": [
@@ -47,7 +33,7 @@
 			"autoAttachChildProcesses": false
 		},
 		{
-			"name": "Core Extension",
+			"name": "superofficedx-vscode-core",
 			"type": "extensionHost",
 			"request": "launch",
 			"args": [
@@ -62,7 +48,7 @@
 			"autoAttachChildProcesses": false
 		},
 		{
-			"name": "crmscript extension (disable others)",
+			"name": "superofficedx-vscode-crmscript",
 			"type": "extensionHost",
 			"request": "launch",
 			"args": [
@@ -75,21 +61,7 @@
                 "${workspaceFolder}/packages/langium-crmscript/node_modules/langium"
 			],
 			"preLaunchTask": "npm: build:vscode-crmscript",
-			"autoAttachChildProcesses": false
-		},
-		{
-            "name": "Attach to Language Server",
-            "type": "node",
-            "port": 6009,
-            "request": "attach",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "sourceMaps": true,
-            "outFiles": [
-                "${workspaceFolder}/packages/superofficedx-vscode-crmscript/out/**/*.js",
-                "${workspaceFolder}/packages/langium-crmscript/node_modules/langium"
-            ]
-        }
+			"autoAttachChildProcesses": true
+		}
 	]
 }
