@@ -1,6 +1,7 @@
 
 NSSaleEntity saleEntity;
-saleEntity.SetStatus(NSSaleStatus.Sold);
+saleEntity.SetStatus(NSSaleStatus.Open);
+
 
 // Map m2 = Map();
 // m2.insert("123", "123");
