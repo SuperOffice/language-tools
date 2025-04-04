@@ -1,0 +1,22 @@
+export const NSPhoneListItem = `class NSPhoneListItem {
+    Integer GetId();
+    String GetName();
+    String GetPersonCellPhone();
+    String GetPersonDirectPhone();
+    String GetPersonEmail();
+    String GetPersonFaxNumber();
+    String GetPersonPagerNumber();
+    String GetPersonPrivatePhone();
+    String GetTooltip();
+    String GetUniqueId();
+    Void SetId(Integer id);
+    Void SetName(String name);
+    Void SetPersonCellPhone(String personCellPhone);
+    Void SetPersonDirectPhone(String personDirectPhone);
+    Void SetPersonEmail(String personEmail);
+    Void SetPersonFaxNumber(String personFaxNumber);
+    Void SetPersonPagerNumber(String personPagerNumber);
+    Void SetPersonPrivatePhone(String personPrivatePhone);
+    Void SetTooltip(String tooltip);
+    Void SetUniqueId(String uniqueId);
+}`;

@@ -1,0 +1,48 @@
+export const NSContact = `/** 
+Carrier object for Contact.n*/
+class NSContact {
+    Integer GetActiveErpLinks();
+    NSAddress GetAddress();
+    String GetAssociateFullName();
+    Integer GetAssociateId();
+    String GetBusinessName();
+    String GetCategoryName();
+    String GetCity();
+    Integer GetContactId();
+    Integer GetCountryId();
+    String GetCountryName();
+    String GetDepartment();
+    String GetDirectPhone();
+    String GetEmailAddress();
+    String GetEmailAddressName();
+    String GetFormattedAddress();
+    String GetFullName();
+    Bool GetIsOwnerContact();
+    String GetKananame();
+    String GetName();
+    String GetOrgNr();
+    String GetURL();
+    String GetURLName();
+    Void SetActiveErpLinks(Integer activeErpLinks);
+    Void SetAddress(NSAddress address);
+    Void SetAssociateFullName(String associateFullName);
+    Void SetAssociateId(Integer associateId);
+    Void SetBusinessName(String businessName);
+    Void SetCategoryName(String categoryName);
+    Void SetCity(String city);
+    Void SetContactId(Integer contactId);
+    Void SetCountryId(Integer countryId);
+    Void SetCountryName(String countryName);
+    Void SetDepartment(String department);
+    Void SetDirectPhone(String directPhone);
+    Void SetEmailAddress(String emailAddress);
+    Void SetEmailAddressName(String emailAddressName);
+    Void SetFormattedAddress(String formattedAddress);
+    Void SetFullName(String fullName);
+    Void SetIsOwnerContact(Bool isOwnerContact);
+    Void SetKananame(String kananame);
+    Void SetName(String name);
+    Void SetOrgNr(String orgNr);
+    Void SetURL(String uRL);
+    Void SetURLName(String uRLName);
+}`;

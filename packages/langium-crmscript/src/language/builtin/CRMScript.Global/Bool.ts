@@ -1,5 +1,4 @@
-export const Bool = `
-/** 
+export const Bool = `/** 
 Represents booleans as objects. True/false.<p></p>
 Variables of this type are commonly used in comparisons and conditional statements.
 */
@@ -10,7 +9,7 @@ class Bool {
     */
     Integer toInteger();
     /** 
-    Converts a boolean value to its string representation (&quot;true&quot; or &quot;false&quot;).
+    Converts a boolean value to its string representation ("true" or "false").
     */
     String toString();
 }`;

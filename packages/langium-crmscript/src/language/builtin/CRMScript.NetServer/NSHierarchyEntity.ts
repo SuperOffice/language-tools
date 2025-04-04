@@ -1,0 +1,22 @@
+export const NSHierarchyEntity = `class NSHierarchyEntity {
+    NSHierarchyEntity[] GetChildren();
+    Integer GetDomain();
+    String GetFullname();
+    Integer GetHierarchyId();
+    String GetName();
+    Integer GetParentId();
+    DateTime GetRegistered();
+    Integer GetRegisteredAssociateId();
+    DateTime GetUpdated();
+    Integer GetUpdatedAssociateId();
+    Void SetChildren(NSHierarchyEntity[] children);
+    Void SetDomain(Integer domain);
+    Void SetFullname(String fullname);
+    Void SetHierarchyId(Integer hierarchyId);
+    Void SetName(String name);
+    Void SetParentId(Integer parentId);
+    Void SetRegistered(DateTime registered);
+    Void SetRegisteredAssociateId(Integer registeredAssociateId);
+    Void SetUpdated(DateTime updated);
+    Void SetUpdatedAssociateId(Integer updatedAssociateId);
+}`;

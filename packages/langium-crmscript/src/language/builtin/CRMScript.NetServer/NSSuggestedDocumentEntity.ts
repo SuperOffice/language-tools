@@ -1,0 +1,24 @@
+export const NSSuggestedDocumentEntity = `class NSSuggestedDocumentEntity {
+    Bool GetDeleted();
+    NSDocumentTemplate GetDocTmpl();
+    Integer GetDoctmplId();
+    String GetHeader();
+    String GetName();
+    String GetOurRef();
+    NSProjectTypeStatusLink GetProjectTypeStatusLink();
+    Integer GetRank();
+    NSSaleTypeStageLink GetSaleTypeStageLink();
+    Integer GetSuggestedDocumentId();
+    String GetTooltip();
+    Void SetDeleted(Bool deleted);
+    Void SetDocTmpl(NSDocumentTemplate docTmpl);
+    Void SetDoctmplId(Integer doctmplId);
+    Void SetHeader(String header);
+    Void SetName(String name);
+    Void SetOurRef(String ourRef);
+    Void SetProjectTypeStatusLink(NSProjectTypeStatusLink projectTypeStatusLink);
+    Void SetRank(Integer rank);
+    Void SetSaleTypeStageLink(NSSaleTypeStageLink saleTypeStageLink);
+    Void SetSuggestedDocumentId(Integer suggestedDocumentId);
+    Void SetTooltip(String tooltip);
+}`;

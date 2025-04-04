@@ -1,5 +1,4 @@
-export const Integer = `
-/** 
+export const Integer = `/** 
 Integers are positive and negative whole 32-bit unsigned numbers without decimals. If you need to work with decimals, use the Float data type.
 */
 class Integer {
@@ -38,5 +37,4 @@ class Integer {
     Returns true if it has no value and false if it does.
     */
     Bool isNull();
-}
-`;
+}`;

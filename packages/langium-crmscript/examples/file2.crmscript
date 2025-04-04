@@ -4,6 +4,8 @@ m2.insert(123, "123");
 m2.insert(123, 123);
 m2.insert("123", "123", "123");
 
+NSContact nsContact;
+
 String myString = "123";
 myString = "123";
 myString = 123;
@@ -48,4 +50,5 @@ myInteger = myClass.reference().toInteger();
 My2ndClass my2ndClass = My2ndClass();
 
 Customer c;
+c.load(123);
 c.load();

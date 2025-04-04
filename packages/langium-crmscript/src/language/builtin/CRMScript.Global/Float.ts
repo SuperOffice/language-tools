@@ -1,5 +1,4 @@
-export const Float = `
-/** 
+export const Float = `/** 
 A class for representing floating point numbers as objects. Floats are approximations of real numbers written with decimals. If you don't need to work with decimals, use the Integer data type.
 */
 class Float {

@@ -1,5 +1,4 @@
-export const Customer = `
-/** 
+export const Customer = `/** 
 Represents a customer.
 */
 class Customer {
@@ -88,8 +87,7 @@ class Customer {
     */
     Void setValue(String field, String value);
     /** 
-    Fills a Parser object with a Customer's values, including extra fields. The fields are prefixed with &quot;customer.&quot;.
+    Fills a Parser object with a Customer's values, including extra fields. The fields are prefixed with "customer.".
     */
     Void toParser(Parser parser);
-}
-`;
+}`;

@@ -1,5 +1,4 @@
-export const NSSale = `
-class NSSale {
+export const NSSale = `class NSSale {
     Integer GetActiveErpLinks();
     Float GetAmount();
     String GetAssociateFullName();
@@ -56,5 +55,4 @@ class NSSale {
     Void SetStatus(Integer status);
     Void SetTitle(String title);
     Void SetWeightedAmount(Float weightedAmount);
-}
-`;
+}`;

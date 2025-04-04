@@ -1,5 +1,4 @@
-export const String = `
-/** 
+export const String = `/** 
 A text string is a sequence of characters written with quotes.<p></p>
 You can use single or double quotes, but they must always come in pairs. Quotes can also be nested, by alternating between single and double quotes.
 */
@@ -152,11 +151,11 @@ class String {
     */
     Bool isNull();
     /** 
-    Returns true if the string is empty (&quot;&quot;) or NULL/NUL/NIL, meaning it contains no characters.
+    Returns true if the string is empty ("") or NULL/NUL/NIL, meaning it contains no characters.
     */
     Bool isEmpty();
     /** 
-    Converts a String to its boolean representation. Returns false if the String &quot;1&quot; or &quot;True&quot;, otherwise true.
+    Converts a String to its boolean representation. Returns false if the String "1" or "True", otherwise true.
     */
     Bool toBool();
     /** 
@@ -213,7 +212,7 @@ class String {
     String htmlEncode();
     /** 
     Returns an array of the names and email addresses in a String.<p></p>
-    Format: a comma-separated list of &quot;name&quot;&gt;emailAddr>
+    Format: a comma-separated list of "name"&gt;emailAddr>
     */
     Vector getEmails();
     /** 
@@ -298,5 +297,4 @@ class String {
     This function will wrap the String in lines of wanted length
     */
     Void wrap(Integer length, Bool ignoreQuote);
-}
-`;
+}`;

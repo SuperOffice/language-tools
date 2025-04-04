@@ -1,0 +1,51 @@
+export const NSChatWidgetSettings = `/** 
+Defines the look of the chat widget. Carrier object for ChatWidgetSettings.
+*/
+class NSChatWidgetSettings {
+    NSKbCategory GetAutoFaqCategory();
+    Bool GetAutoFaqEnabled();
+    String GetColor();
+    String GetFont();
+    String GetLanguageIsoCode();
+    Integer GetLogoBlobId();
+    Bool GetLogoEnabled();
+    String GetLogoName();
+    Integer GetOfflineFields();
+    String GetOfflineHeader();
+    String GetOfflineMessage();
+    Bool GetPostFormEnabled();
+    String GetPostFormHeader();
+    String GetPostFormMessage();
+    Bool GetPostTranscriptEnabled();
+    Bool GetPreFormEnabled();
+    String GetPreFormMessage();
+    Integer GetRequiredFields();
+    Bool GetShowAgentPhoto();
+    Integer GetSize();
+    Integer GetTheme();
+    String GetWelcomeMessage();
+    String GetWelcomeTitle();
+    Void SetAutoFaqCategory(NSKbCategory autoFaqCategory);
+    Void SetAutoFaqEnabled(Bool autoFaqEnabled);
+    Void SetColor(String color);
+    Void SetFont(String font);
+    Void SetLanguageIsoCode(String languageIsoCode);
+    Void SetLogoBlobId(Integer logoBlobId);
+    Void SetLogoEnabled(Bool logoEnabled);
+    Void SetLogoName(String logoName);
+    undefined SetOfflineFields(Integer offlineFields);
+    Void SetOfflineHeader(String offlineHeader);
+    Void SetOfflineMessage(String offlineMessage);
+    Void SetPostFormEnabled(Bool postFormEnabled);
+    Void SetPostFormHeader(String postFormHeader);
+    Void SetPostFormMessage(String postFormMessage);
+    Void SetPostTranscriptEnabled(Bool postTranscriptEnabled);
+    Void SetPreFormEnabled(Bool preFormEnabled);
+    Void SetPreFormMessage(String preFormMessage);
+    Void SetRequiredFields(Integer requiredFields);
+    Void SetShowAgentPhoto(Bool showAgentPhoto);
+    Void SetSize(Integer size);
+    Void SetTheme(Integer theme);
+    Void SetWelcomeMessage(String welcomeMessage);
+    Void SetWelcomeTitle(String welcomeTitle);
+}`;

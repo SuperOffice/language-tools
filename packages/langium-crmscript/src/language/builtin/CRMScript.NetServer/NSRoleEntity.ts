@@ -1,0 +1,26 @@
+export const NSRoleEntity = `class NSRoleEntity {
+    DateTime GetCreated();
+    NSAssociate GetCreatedBy();
+    NSDataRights GetDataRights();
+    Integer GetDeleted();
+    String GetName();
+    Integer GetRank();
+    Integer GetRoleId();
+    Integer GetRoleType();
+    String GetTooltip();
+    DateTime GetUpdated();
+    NSAssociate GetUpdatedBy();
+    Integer GetUseCategories();
+    Void SetCreated(DateTime created);
+    Void SetCreatedBy(NSAssociate createdBy);
+    Void SetDataRights(NSDataRights dataRights);
+    Void SetDeleted(Integer deleted);
+    Void SetName(String name);
+    Void SetRank(Integer rank);
+    Void SetRoleId(Integer roleId);
+    Void SetRoleType(Integer roleType);
+    Void SetTooltip(String tooltip);
+    Void SetUpdated(DateTime updated);
+    Void SetUpdatedBy(NSAssociate updatedBy);
+    Void SetUseCategories(Integer useCategories);
+}`;
