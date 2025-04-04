@@ -1,47 +1,46 @@
 Map m2 = Map();
+// String myString = "123";
+// myString = "123";
+// myString = 123;
+// myString = nsContact;
+// myString = String(); // TODO
 
-String myString = "123";
-myString = "123";
-myString = 123;
-myString = nsContact;
-myString = String(); // TODO
+// //Integer logic
+// Integer myInteger = 123;
+// myInteger = 123; //Valid assignment
+// myInteger = "123";
+// myInteger = 123.12;
+// myInteger = nsContact;
+// Integer i = Integer(123);
 
-//Integer logic
-Integer myInteger = 123;
-myInteger = 123; //Valid assignment
-myInteger = "123";
-myInteger = 123.12;
-myInteger = nsContact;
-Integer i = Integer(123);
+// //Bool logic
+// Bool isWellFormed = true; //Valid assignment
+// isWellFormed = "123";
+// isWellFormed = 123;
+// isWellFormed = nsContact;
 
-//Bool logic
-Bool isWellFormed = true; //Valid assignment
-isWellFormed = "123";
-isWellFormed = 123;
-isWellFormed = nsContact;
+// //Float logic
+// Float f = 3.14; //Valid assignment
+// f = "123";
+// f = 123;
+// f = nsContact;
 
-//Float logic
-Float f = 3.14; //Valid assignment
-f = "123";
-f = 123;
-f = nsContact;
+// // //Map logic
+// Map m;
+// m.insert("Super", "Office");
 
-// //Map logic
-Map m;
-m.insert("Super", "Office");
+// String stringConstructor = String("123");
+// Integer integerConstructor = Integer(123);
 
-String stringConstructor = String("123");
-Integer integerConstructor = Integer(123);
+// MyClass myClass;
+// myClass = "123";
+// myClass = 123;
+// myClass = nsContact;
 
-MyClass myClass;
-myClass = "123";
-myClass = 123;
-myClass = nsContact;
+// //Duplicate variable name
+// myInteger = myClass.reference().toInteger();
 
-//Duplicate variable name
-myInteger = myClass.reference().toInteger();
+// My2ndClass my2ndClass = My2ndClass();
 
-My2ndClass my2ndClass = My2ndClass();
-
-Customer c;
-c.load();
+// Customer c;
+// c.load();
