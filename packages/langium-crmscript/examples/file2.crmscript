@@ -1,54 +1,59 @@
-Map m2 = Map();
-m2.insert("123", "123");
-m2.insert(123, "123");
-m2.insert(123, 123);
-m2.insert("123", "123", "123");
 
-NSContact nsContact;
+NSSaleEntity saleEntity;
+saleEntity.SetStatus(NSSaleStatus.Sold);
 
-String myString = "123";
-myString = "123";
-myString = 123;
-myString = nsContact;
-myString = String(); // TODO
+// Map m2 = Map();
+// m2.insert("123", "123");
+// m2.insert(123, "123");
+// m2.insert(123, 123);
+// m2.insert("123", "123", "123");
 
-//Integer logic
-Integer myInteger = 123;
-myInteger = 123; //Valid assignment
-myInteger = "123";
-myInteger = 123.12;
-myInteger = nsContact;
-Integer i = Integer(123);
+// NSContact nsContact;
+// NSSale nsSale;
 
-//Bool logic
-Bool isWellFormed = true; //Valid assignment
-isWellFormed = "123";
-isWellFormed = 123;
-isWellFormed = nsContact;
+// String myString = "123";
+// myString = "123";
+// myString = 123;
+// myString = nsContact;
+// myString = String(); // TODO
 
-//Float logic
-Float f = 3.14; //Valid assignment
-f = "123";
-f = 123;
-f = nsContact;
+// //Integer logic
+// Integer myInteger = 123;
+// myInteger = 123; //Valid assignment
+// myInteger = "123";
+// myInteger = 123.12;
+// myInteger = nsContact;
+// Integer i = Integer(123);
 
-// //Map logic
-Map m;
-m.insert("Super", "Office");
+// //Bool logic
+// Bool isWellFormed = true; //Valid assignment
+// isWellFormed = "123";
+// isWellFormed = 123;
+// isWellFormed = nsContact;
 
-String stringConstructor = String("123");
-Integer integerConstructor = Integer(123);
+// //Float logic
+// Float f = 3.14; //Valid assignment
+// f = "123";
+// f = 123;
+// f = nsContact;
 
-MyClass myClass;
-myClass = "123";
-myClass = 123;
-myClass = nsContact;
+// // //Map logic
+// Map m;
+// m.insert("Super", "Office");
 
-//Duplicate variable name
-myInteger = myClass.reference().toInteger();
+// String stringConstructor = String("123");
+// Integer integerConstructor = Integer(123);
 
-My2ndClass my2ndClass = My2ndClass();
+// MyClass myClass;
+// myClass = "123";
+// myClass = 123;
+// myClass = nsContact;
 
-Customer c;
-c.load(123);
-c.load();
+// //Duplicate variable name
+// myInteger = myClass.reference().toInteger();
+
+// My2ndClass my2ndClass = My2ndClass();
+
+// Customer c;
+// c.load(123);
+// c.load();

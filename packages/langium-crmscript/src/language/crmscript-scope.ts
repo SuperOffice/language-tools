@@ -1,7 +1,7 @@
 import { DefaultScopeProvider, EMPTY_SCOPE, ReferenceInfo, Scope } from "langium";
-import { Class, MemberCall } from "./generated/ast.js";
-import { isClassType } from "./type-system/descriptions.js";
-import { getClassChain, inferType } from "./type-system/infer.js";
+import { Class, Enum, MemberCall } from "./generated/ast.js";
+import { isClassType, isEnumType } from "./type-system/descriptions.js";
+import { getClassChain, getEnumChain, inferType } from "./type-system/infer.js";
 import { LangiumServices } from "langium/lsp";
 
 export class CrmscriptScopeProvider extends DefaultScopeProvider {
@@ -21,6 +21,9 @@ export class CrmscriptScopeProvider extends DefaultScopeProvider {
             const previousType = inferType(previous, new Map());
             if (isClassType(previousType)) {
                 return this.scopeClassMembers(previousType.literal);
+            }
+            if (isEnumType(previousType)) {
+                return this.scopeEnumMembers(previousType.literal);
             }
             return EMPTY_SCOPE;
         }
@@ -49,6 +52,11 @@ export class CrmscriptScopeProvider extends DefaultScopeProvider {
 
     private scopeClassMembers(classItem: Class): Scope {
         const allMembers = getClassChain(classItem).flatMap(e => e.members);
+        return this.createScopeForNodes(allMembers);
+    }
+
+    private scopeEnumMembers(enumItem: Enum): Scope {
+        const allMembers = getEnumChain(enumItem).flatMap(e => e.enumMembers);
         return this.createScopeForNodes(allMembers);
     }
 }

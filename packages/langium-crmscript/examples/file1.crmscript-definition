@@ -16,6 +16,13 @@ class MyClass {
     My2ndClass reference();
  }
 
+enum NSSaleStatus {
+    Sold,
+    Closed,
+    Lost
+}
+ 
+
 
 
 

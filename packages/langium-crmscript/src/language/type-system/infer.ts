@@ -1,6 +1,6 @@
 import { AstNode } from "langium";
-import { BinaryExpression, Class, isBinaryExpression, isBooleanExpression, isClass, isConstructorCall, isFieldMember, isFunctionDeclaration, isMemberCall, isMethodMember, isNumberExpression, isParameter, isPrintStatement, isReturnStatement, isStringExpression, isUnaryExpression, isVariableDeclaration, MemberCall } from "../generated/ast.js";
-import { createBooleanType, createClassType, createErrorType, createIntegerType, createStringType, isFunctionType, isStringType, TypeDescription, createVoidType, createFloatType, createFunctionType } from "./descriptions.js";
+import { BinaryExpression, Class, Enum, isBinaryExpression, isBooleanExpression, isClass, isConstructorCall, isEnum, isEnumMember, isFieldMember, isFunctionDeclaration, isMemberCall, isMethodMember, isNumberExpression, isParameter, isPrintStatement, isReturnStatement, isStringExpression, isUnaryExpression, isVariableDeclaration, MemberCall } from "../generated/ast.js";
+import { createBooleanType, createClassType, createErrorType, createIntegerType, createStringType, isFunctionType, isStringType, TypeDescription, createVoidType, createFloatType, createFunctionType, createEnumType, createEnumMemberType } from "./descriptions.js";
 
 export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDescription>): TypeDescription {
     let type: TypeDescription | undefined;
@@ -78,6 +78,12 @@ export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDes
             type = createClassType(node.type.ref);
         }
     }
+    else if(isEnum(node)){
+        type = createEnumType(node);
+    }
+    else if(isEnumMember(node)){
+        type = createEnumMemberType(node);
+    }
     if (!type) {
         type = createErrorType('Could not infer type for ' + node.$type, node);
     }
@@ -127,6 +133,17 @@ function inferBinaryExpression(expr: BinaryExpression, cache: Map<AstNode, TypeD
 export function getClassChain(classItem: Class): Class[] {
     const set = new Set<Class>();
     const value: Class | undefined = classItem;
+    while (value && !set.has(value)) {
+        set.add(value);
+        //value = value.superClass?.ref;
+    }
+    // Sets preserve insertion order
+    return Array.from(set);
+}
+
+export function getEnumChain(enumItem: Enum): Enum[] {
+    const set = new Set<Enum>();
+    const value: Enum | undefined = enumItem;
     while (value && !set.has(value)) {
         set.add(value);
         //value = value.superClass?.ref;

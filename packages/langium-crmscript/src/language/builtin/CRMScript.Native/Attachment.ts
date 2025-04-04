@@ -3,7 +3,12 @@ Handles Service attachments.
 */
 class Attachment {
     /** 
-    Dumps the attachment file to output.
+     * A string type
+     * 
+     * @returns {string}
+     * @memberof Attachment
+     * @description Dumps the attachment file to output.
+     * 
     */
     Bool dump();
     /** 

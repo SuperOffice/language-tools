@@ -1,5 +1,5 @@
 import { MultiMap, NamedAstNode, stream, Stream, type AstNode, type ValidationAcceptor, type ValidationChecks } from 'langium';
-import { ConstructorCall, Grammar, isClass, MemberCall, MethodMember, type BinaryExpression, type CrmscriptAstType, type VariableDeclaration } from './generated/ast.js';
+import { ConstructorCall, Enum, Grammar, isClass, MemberCall, MethodMember, type BinaryExpression, type CrmscriptAstType, type VariableDeclaration } from './generated/ast.js';
 import type { CrmscriptServices } from './crmscript-module.js';
 import { inferType } from './type-system/infer.js';
 import { isAssignable } from './type-system/assigment.js';
@@ -89,10 +89,18 @@ export class CrmscriptValidator {
             for(let i = 0; i < memberCall.arguments.length; i++){ {
                 const map = this.getTypeCache();
 
-                //const inferredParameterType = inferType(methodMember.parameters[i].type.ref?.name, map);
                 const inferredArgumentType = inferType(memberCall.arguments[i], map);
-
-                if (methodMember.parameters[i].type.$refText != inferredArgumentType.$type) {
+                
+                //Override the validation, as enums always is an integer
+                if(inferredArgumentType.$type == 'enumMember'){
+                    if(methodMember.parameters[i].type.$refText != 'Integer'){
+                        accept('error', `Type Integer is not assignable to type '${methodMember.parameters[i].type.$refText}'.`, {
+                            node: memberCall.arguments[i],
+                            property: 'arguments'
+                        });
+                    }
+                }
+                else if (methodMember.parameters[i].type.$refText != inferredArgumentType.$type) {
                     accept('error', `Type '${typeToString(inferredArgumentType)}' is not assignable to type '${methodMember.parameters[i].type.$refText}'.`, {
                         node: memberCall.arguments[i],
                         property: 'arguments'

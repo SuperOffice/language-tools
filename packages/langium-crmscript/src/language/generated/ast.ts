@@ -44,6 +44,7 @@ export type CrmscriptKeywordNames =
     | "class"
     | "constructor"
     | "else"
+    | "enum"
     | "false"
     | "for"
     | "if"
@@ -83,7 +84,7 @@ export function isExpression(item: unknown): item is Expression {
     return reflection.isInstance(item, Expression);
 }
 
-export type NamedElement = Class | FieldMember | FunctionDeclaration | MethodMember | VariableDeclaration;
+export type NamedElement = Class | Enum | EnumMember | FieldMember | FunctionDeclaration | MethodMember | VariableDeclaration;
 
 export const NamedElement = 'NamedElement';
 
@@ -181,6 +182,31 @@ export const DefinitionUnit = 'DefinitionUnit';
 
 export function isDefinitionUnit(item: unknown): item is DefinitionUnit {
     return reflection.isInstance(item, DefinitionUnit);
+}
+
+export interface Enum extends AstNode {
+    readonly $container: DefinitionUnit | ExpressionBlock | ForStatement | Grammar;
+    readonly $type: 'Enum';
+    enumMembers: Array<EnumMember>;
+    name: string;
+}
+
+export const Enum = 'Enum';
+
+export function isEnum(item: unknown): item is Enum {
+    return reflection.isInstance(item, Enum);
+}
+
+export interface EnumMember extends AstNode {
+    readonly $container: DefinitionUnit | Enum | ExpressionBlock | ForStatement | Grammar;
+    readonly $type: 'EnumMember';
+    name: string;
+}
+
+export const EnumMember = 'EnumMember';
+
+export function isEnumMember(item: unknown): item is EnumMember {
+    return reflection.isInstance(item, EnumMember);
 }
 
 export interface ExpressionBlock extends AstNode {
@@ -417,6 +443,8 @@ export type CrmscriptAstType = {
     ConstructorCall: ConstructorCall
     DefinitionElement: DefinitionElement
     DefinitionUnit: DefinitionUnit
+    Enum: Enum
+    EnumMember: EnumMember
     Expression: Expression
     ExpressionBlock: ExpressionBlock
     FieldMember: FieldMember
@@ -443,7 +471,7 @@ export type CrmscriptAstType = {
 export class CrmscriptAstReflection extends AbstractAstReflection {
 
     getAllTypes(): string[] {
-        return [BinaryExpression, BooleanExpression, Class, ClassMember, Constructor, ConstructorCall, DefinitionElement, DefinitionUnit, Expression, ExpressionBlock, FieldMember, ForStatement, FunctionDeclaration, Grammar, IfStatement, MemberCall, MethodMember, NamedElement, NilExpression, NumberExpression, Parameter, PrintStatement, ReturnStatement, Statement, StringExpression, Type, UnaryExpression, VariableDeclaration, WhileStatement];
+        return [BinaryExpression, BooleanExpression, Class, ClassMember, Constructor, ConstructorCall, DefinitionElement, DefinitionUnit, Enum, EnumMember, Expression, ExpressionBlock, FieldMember, ForStatement, FunctionDeclaration, Grammar, IfStatement, MemberCall, MethodMember, NamedElement, NilExpression, NumberExpression, Parameter, PrintStatement, ReturnStatement, Statement, StringExpression, Type, UnaryExpression, VariableDeclaration, WhileStatement];
     }
 
     protected override computeIsSubtype(subtype: string, supertype: string): boolean {
@@ -458,6 +486,8 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                 return this.isSubtype(Expression, supertype);
             }
             case Class:
+            case Enum:
+            case EnumMember:
             case VariableDeclaration: {
                 return this.isSubtype(NamedElement, supertype);
             }
@@ -558,6 +588,23 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                     name: DefinitionUnit,
                     properties: [
                         { name: 'definitionelements', defaultValue: [] }
+                    ]
+                };
+            }
+            case Enum: {
+                return {
+                    name: Enum,
+                    properties: [
+                        { name: 'enumMembers', defaultValue: [] },
+                        { name: 'name' }
+                    ]
+                };
+            }
+            case EnumMember: {
+                return {
+                    name: EnumMember,
+                    properties: [
+                        { name: 'name' }
                     ]
                 };
             }

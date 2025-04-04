@@ -7,7 +7,8 @@ entry DefinitionUnit:
 
 DefinitionElement:
     Class |
-    FunctionDeclaration
+    FunctionDeclaration | 
+    Enum
     ;
 
 Class returns NamedElement:
@@ -29,4 +30,12 @@ Parameter: type=[Class:ID] name=ID
 
 FieldMember:
     type=[Class:ID] name=ID ';'
+;
+
+Enum returns NamedElement:
+    {infer Enum} 'enum' name=ID '{' (enumMembers+=EnumMember (',' enumMembers+=EnumMember)*)? '}'
+    ;
+
+EnumMember:
+    name=ID
 ;

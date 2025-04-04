@@ -129,7 +129,7 @@ FunctionDeclaration:
     returnType=[Class:ID] name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' body=ExpressionBlock
 ;
 
-type NamedElement = VariableDeclaration | FunctionDeclaration | Class | MethodMember | FieldMember;
+type NamedElement = VariableDeclaration | FunctionDeclaration | Class | MethodMember | FieldMember | Enum | EnumMember;
 
 hidden terminal WS: /\s+/;
 terminal ID: /[_a-zA-Z][\w_]*/;

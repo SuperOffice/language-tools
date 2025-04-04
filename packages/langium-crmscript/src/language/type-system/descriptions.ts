@@ -3,6 +3,8 @@ import { AstNode } from "langium";
 import {
     BooleanExpression,
     Class,
+    Enum,
+    EnumMember,
     NumberExpression,
     StringExpression
 } from "../generated/ast.js"
@@ -16,6 +18,8 @@ export type TypeDescription =
     | FloatTypeDescription
     | FunctionTypeDescription
     | ClassTypeDescription
+    | EnumTypeDescription
+    | EnumMemberTypeDescription
     | ErrorType
     ;
 
@@ -138,6 +142,39 @@ export function createClassType(literal: Class): ClassTypeDescription {
 
 export function isClassType(item: TypeDescription): item is ClassTypeDescription {
     return item.$type === "class";
+}
+
+export interface EnumTypeDescription {
+    readonly $type: "enum"
+    readonly literal: Enum
+}
+
+export function createEnumType(literal: Enum): EnumTypeDescription {
+    return {
+        $type: "enum",
+        literal
+    };
+}
+
+export function isEnumType(item: TypeDescription): item is EnumTypeDescription {
+    return item.$type === "enum";
+}
+
+
+
+export interface EnumMemberTypeDescription {
+    readonly $type: "enumMember"
+    readonly literal: EnumMember
+}
+export function createEnumMemberType(literal: EnumMember): EnumMemberTypeDescription {
+    return {
+        $type: "enumMember",
+        literal
+    };
+}
+
+export function isEnumMemberType(item: TypeDescription): item is EnumMemberTypeDescription {
+    return item.$type === "enumMember";
 }
 export interface ErrorType {
     readonly $type: "error"
