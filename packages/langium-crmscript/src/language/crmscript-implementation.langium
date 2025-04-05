@@ -17,7 +17,7 @@ Statement:
 
 Type:
     VariableDeclaration ';' |
-    FunctionDeclaration
+    FunctionDeclaration 
 ;
 
 IfStatement: 
@@ -30,8 +30,11 @@ WhileStatement:
 ;
 
 ForStatement:
-    'for' '(' counter=VariableDeclaration? ';' condition=Expression? ';' execution=Expression? ')' block=ExpressionBlock
+    'for' '(' counter=VariableDeclaration? ';' condition=Expression? ';' execution=ForExecution? ')' block=ExpressionBlock
 ;
+
+ForExecution:
+    Expression | type=[VariableDeclaration:ID] '++';
 
 PrintStatement: 'print' '(' value=StringExpression ')'
 ;

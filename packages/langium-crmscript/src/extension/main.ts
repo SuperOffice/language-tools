@@ -2,7 +2,6 @@ import type { LanguageClientOptions, ServerOptions} from 'vscode-languageclient/
 import type * as vscode from 'vscode';
 import * as path from 'node:path';
 import { LanguageClient, TransportKind } from 'vscode-languageclient/node.js';
-import { DslLibraryFileSystemProvider } from './DslLibraryFileSystemProvider';
 
 let client: LanguageClient;
 
@@ -20,9 +19,7 @@ export function deactivate(): Thenable<void> | undefined {
 }
 
 function startLanguageClient(context: vscode.ExtensionContext): LanguageClient {
-    DslLibraryFileSystemProvider.register(context);
-
-    const serverModule = context.asAbsolutePath(path.join('out', 'langium-crmscript', 'src', 'language', 'main.cjs'));
+    const serverModule = context.asAbsolutePath(path.join('out', 'language', 'main.cjs'));
     // The debug options for the server
     // --inspect=6009: runs the server in Node's Inspector mode so VS Code can attach to the server for debugging.
     // By setting `process.env.DEBUG_BREAK` to a truthy value, the language server will wait until a debugger is attached.
@@ -38,15 +35,14 @@ function startLanguageClient(context: vscode.ExtensionContext): LanguageClient {
     // Options to control the language client
     const clientOptions: LanguageClientOptions = {
         documentSelector: [
-            { scheme: 'file', language: 'crmscript' },
             { scheme: 'file', language: 'crmscript-definition' },
-        ]
-    };
+            { scheme: 'file', language: 'crmscript' }
+    ]};
 
     // Create the language client and start the client.
     const client = new LanguageClient(
         'crmscript',
-        'Crmscript',
+        'crmscript',
         serverOptions,
         clientOptions
     );

@@ -9,7 +9,7 @@ class NSChatAgent {
     /** 
     Adds a new message to a chat session
     */
-    NSChatMessage AddChatMessage(Integer chatSessionId, NSChatMessage message));
+    NSChatMessage AddChatMessage(Integer chatSessionId, NSChatMessage message);
     /** 
     Adds a user to a chat topic
     */

@@ -8,7 +8,7 @@ class NSDepartment {
     /** 
     Gets the tooltip description for the Department list item.
     */
-    String' GetTooltip();
+    String GetTooltip();
     /** 
     Gets the name of the Department.
     */

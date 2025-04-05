@@ -7,8 +7,8 @@ entry DefinitionUnit:
 
 DefinitionElement:
     Class |
-    FunctionDeclaration | 
-    Enum
+    Enum |
+    Globals ';'
     ;
 
 Class returns NamedElement:
@@ -20,12 +20,13 @@ Class returns NamedElement:
 Constructor:
     'constructor' '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' ';' ;
 
-ClassMember: MethodMember | FieldMember;
+ClassMember: MethodMember | FieldMember ;
 
 MethodMember:
-    returnType=[Class:ID] name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' ';';
+    returnType=[Class:ID] name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' ';'
+;
 
-Parameter: type=[Class:ID] name=ID
+Parameter: type=[Class:ID] (array?='[]')? name=ID
 ;
 
 FieldMember:
@@ -38,4 +39,8 @@ Enum returns NamedElement:
 
 EnumMember:
     name=ID
+;
+
+Globals:
+    returnType=[Class:ID] (array?='[]')? name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')'
 ;

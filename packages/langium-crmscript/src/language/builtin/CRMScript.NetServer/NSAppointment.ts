@@ -90,7 +90,7 @@ class NSAppointment {
     Void SetPersonFullName(String personFullName);
     Void SetPersonId(Integer personId);
     Void SetPriorityId(Integer priorityId);
-    Void' SetPriorityName(String priorityName);
+    Void SetPriorityName(String priorityName);
     /** 
     Obsolete, but still maintained field for appointment privacy.
     */

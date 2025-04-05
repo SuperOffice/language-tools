@@ -159,7 +159,7 @@ Void exitWithMessage(String message);
 /** 
 Searches FAQ using the same search engine as the customer pages do and fills the parser with the result.
 */
-" faqSearch(Integer root, Integer access, String message, Parser null, Integer max);
+faqSearch(Integer root, Integer access, String message, Parser null, Integer max);
 /** 
 If you have configured any categories to use specified ReplyTemplates, use this method to calculate the ReplyTemplate ID.
 */
@@ -257,7 +257,7 @@ String getEnvVariable(String name);
 /** 
 Returns an EventData object connected to the current event.
 */
-" getEventData();
+getEventData();
 /** 
 Returns the executable with the full path that the current script is running in.
 */
@@ -589,11 +589,11 @@ Integer modulo(Integer a, Integer b);
 /** 
 Parses a JSON document and generate a tree of XMLNode's.
 */
-" parseJSON(String jsonDocument);
+parseJSON(String jsonDocument);
 /** 
 Parses a JSON document and generate a tree of XMLNode's.
 */
-" parseJSON2(String jsonDocument);
+parseJSON2(String jsonDocument);
 /** 
 Parses an XML document and generate a tree of XMLNode's.
 */

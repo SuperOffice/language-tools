@@ -25,10 +25,6 @@ class HTTP {
     /** 
     Supports both HTTP and HTTPS.
     */
-    " deleteAsStream(String url);
-    /** 
-    Supports both HTTP and HTTPS.
-    */
     Byte[] get(String url);
     /** 
     Supports both HTTP and HTTPS.
@@ -62,10 +58,6 @@ class HTTP {
     Opens a URL and returns the result as a Byte array.
     */
     Byte[] open(String url);
-    /** 
-    Opens a URL and returns the result as an NSStream.
-    */
-    " openAsStream(String url);
     /** 
     Supports both HTTP and HTTPS.
     */

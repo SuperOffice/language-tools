@@ -2,7 +2,7 @@ export const NSLocalizedText = `class NSLocalizedText {
     Bool GetIsBuiltIn();
     Integer GetLanguageId();
     Integer GetLocalizedTextId();
-    Integer' GetResourceId();
+    Integer GetResourceId();
     String GetText();
     Integer GetType();
     Void SetIsBuiltIn(Bool isBuiltIn);

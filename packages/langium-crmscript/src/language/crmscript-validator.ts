@@ -1,9 +1,9 @@
 import { MultiMap, NamedAstNode, stream, Stream, type AstNode, type ValidationAcceptor, type ValidationChecks } from 'langium';
-import { ConstructorCall, Grammar, isClass, MemberCall, MethodMember, type BinaryExpression, type CrmscriptAstType, type VariableDeclaration } from './generated/ast.js';
+import { ConstructorCall, Grammar, IfStatement, isClass, isEnum, MemberCall, MethodMember, WhileStatement, type BinaryExpression, type CrmscriptAstType, type VariableDeclaration } from './generated/ast.js';
 import type { CrmscriptServices } from './crmscript-module.js';
 import { inferType } from './type-system/infer.js';
 import { isAssignable } from './type-system/assignment.js';
-import { TypeDescription, typeToString } from './type-system/descriptions.js';
+import { isBooleanType, isEnumMemberType, TypeDescription, typeToString } from './type-system/descriptions.js';
 
 /**
  * Register custom validation checks.
@@ -15,10 +15,13 @@ export function registerValidationChecks(services: CrmscriptServices) {
         VariableDeclaration: validator.checkVariableDeclaration,
         BinaryExpression: validator.checkBinaryExpression,
         Grammar: [
-            validator.checkUniqueVariableName,
+            validator.checkUniqueVariableName
         ],
         ConstructorCall: validator.checkConstructorCallType,
-        MemberCall: validator.checkMemberCallParameters
+        MemberCall: validator.checkMemberCallParameters,
+        IfStatement: validator.checkIfStatement,
+        WhileStatement: validator.checkWhileStatement,
+        Globals: validator.checkGlobals
     };
     registry.register(checks, validator);
 }
@@ -32,13 +35,16 @@ export class CrmscriptValidator {
         const left = inferType(expr.left, map);
         const right = inferType(expr.right, map);
         if (!isAssignable(right, left)) {
-            accept('error', `Type '${typeToString(right)}' is not assignable to type '${typeToString(left)}'.`, {
+            accept('error', `BinaryExpression: Type '${typeToString(right)}' is not assignable to type '${typeToString(left)}'.`, {
                 node: expr,
                 property: 'right'
             });
         }
     }
 
+    checkGlobals(globals: Global, accept: ValidationAcceptor): void {
+        const map = this.getTypeCache();
+    }
     checkVariableDeclaration(decl: VariableDeclaration, accept: ValidationAcceptor): void {    
     if (decl.type && decl.value) {
             const map = this.getTypeCache();
@@ -46,7 +52,7 @@ export class CrmscriptValidator {
             const right = inferType(decl.value, map);
 
             if (!isAssignable(right, left)) {
-                accept('error', `Type '${typeToString(right)}' is not assignable to type '${typeToString(left)}'.`, {
+                accept('error', `VariableDeclaration: Type '${typeToString(right)}' is not assignable to type '${typeToString(left)}'.`, {
                     node: decl,
                     property: 'value'
                 });
@@ -91,8 +97,16 @@ export class CrmscriptValidator {
 
                 const inferredArgumentType = inferType(memberCall.arguments[i], map);
                 
+                const inferParameterType = inferType(methodMember.parameters[i].type.$nodeDescription?.node, map);
+
+                if(isEnum(inferParameterType)){ 
+                    accept('error', `Type '${typeToString(inferredArgumentType)}' is not assignable to type '${typeToString(inferParameterType)}'.`, {
+                        node: memberCall.arguments[i],
+                        property: 'arguments'
+                    });
+                 } //Enum is a valid type, so we skip it
                 //Override the validation, as enums always is an integer
-                if(inferredArgumentType.$type == 'enumMember'){
+                else if(isEnumMemberType(inferredArgumentType)){
                     if(methodMember.parameters[i].type.$refText != 'Integer'){
                         accept('error', `Type Integer is not assignable to type '${methodMember.parameters[i].type.$refText}'.`, {
                             node: memberCall.arguments[i],
@@ -100,7 +114,8 @@ export class CrmscriptValidator {
                         });
                     }
                 }
-                else if (methodMember.parameters[i].type.$refText != inferredArgumentType.$type) {
+                //else if (methodMember.parameters[i].type.$refText != inferredArgumentType.$type) {
+                else if(!isAssignable(inferredArgumentType, inferParameterType)) {
                     accept('error', `Type '${typeToString(inferredArgumentType)}' is not assignable to type '${methodMember.parameters[i].type.$refText}'.`, {
                         node: memberCall.arguments[i],
                         property: 'arguments'
@@ -110,7 +125,31 @@ export class CrmscriptValidator {
             }    
         }    
     }
-}
+    }
+
+    checkIfStatement(ifStatement: IfStatement, accept: ValidationAcceptor): void {
+        const map = this.getTypeCache();
+        const conditionType = inferType(ifStatement.condition, map);
+
+        if (!isBooleanType(conditionType)) {
+            accept('error', `Condition must be of type 'Bool'.`, {
+                node: ifStatement,
+                property: 'condition'
+            });
+        }
+    }
+
+    checkWhileStatement(whileStatement: WhileStatement, accept: ValidationAcceptor): void {
+        const map = this.getTypeCache();
+        const conditionType = inferType(whileStatement.condition, map);
+
+        if (!isBooleanType(conditionType)) {
+            accept('error', `Condition must be of type 'Bool'.`, {
+                node: whileStatement,
+                property: 'condition'
+            });
+        }
+    }
 
     private getTypeCache(): Map<AstNode, TypeDescription> {
         return new Map();

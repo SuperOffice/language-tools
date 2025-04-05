@@ -1,6 +1,27 @@
 
 NSSaleEntity saleEntity;
-saleEntity.SetStatus(NSSaleStatus.Open);
+saleEntity.SetStatus(NSSaleStatus.);
+
+//  Map myClass;
+
+// // Statements
+
+// //Valid if
+// if(true){}
+// else{}
+
+// //Invalid if
+// if(123){}
+// if("123"){}
+
+// Integer i = 1;
+
+// while(i < 10){}
+
+// for(Integer i = 0; i < 10;i++){
+//     printLine(i.toString());
+// }
+
 
 
 // Map m2 = Map();

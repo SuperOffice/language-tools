@@ -10,14 +10,14 @@ import { AbstractAstReflection } from 'langium';
 export const CrmscriptTerminals = {
     WS: /\s+/,
     ID: /[_a-zA-Z][\w_]*/,
-    NUMBER: /[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?/,
-    STRING: /"[^"]*"|'[^']*'/,
     EJSCRIPT_START: /%EJSCRIPT_START%/,
     EJSCRIPT_END: /%EJSCRIPT_END%/,
     SCRIPT_END: /%>/,
     SCRIPT_START: /<%/,
     ML_COMMENT: /\/\*[\s\S]*?\*\//,
     SL_COMMENT: /\/\/[^\n\r]*/,
+    NUMBER: /[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?/,
+    STRING: /"[^"]*"|'[^']*'/,
 };
 
 export type CrmscriptTerminalNames = keyof typeof CrmscriptTerminals;
@@ -29,6 +29,7 @@ export type CrmscriptKeywordNames =
     | ")"
     | "*"
     | "+"
+    | "++"
     | ","
     | "-"
     | "."
@@ -40,6 +41,7 @@ export type CrmscriptKeywordNames =
     | "=="
     | ">"
     | ">="
+    | "[]"
     | "and"
     | "class"
     | "constructor"
@@ -68,7 +70,7 @@ export function isClassMember(item: unknown): item is ClassMember {
     return reflection.isInstance(item, ClassMember);
 }
 
-export type DefinitionElement = FunctionDeclaration | NamedElement;
+export type DefinitionElement = Globals | NamedElement;
 
 export const DefinitionElement = 'DefinitionElement';
 
@@ -235,13 +237,25 @@ export function isFieldMember(item: unknown): item is FieldMember {
     return reflection.isInstance(item, FieldMember);
 }
 
+export interface ForExecution extends AstNode {
+    readonly $container: ForStatement;
+    readonly $type: 'BinaryExpression' | 'BooleanExpression' | 'Expression' | 'ForExecution' | 'MemberCall' | 'NilExpression' | 'NumberExpression' | 'StringExpression' | 'UnaryExpression';
+    type: Reference<VariableDeclaration>;
+}
+
+export const ForExecution = 'ForExecution';
+
+export function isForExecution(item: unknown): item is ForExecution {
+    return reflection.isInstance(item, ForExecution);
+}
+
 export interface ForStatement extends AstNode {
     readonly $container: ExpressionBlock | Grammar;
     readonly $type: 'ForStatement';
     block: ExpressionBlock;
     condition?: Expression;
     counter?: NamedElement;
-    execution?: Expression;
+    execution?: ForExecution;
 }
 
 export const ForStatement = 'ForStatement';
@@ -263,6 +277,21 @@ export const FunctionDeclaration = 'FunctionDeclaration';
 
 export function isFunctionDeclaration(item: unknown): item is FunctionDeclaration {
     return reflection.isInstance(item, FunctionDeclaration);
+}
+
+export interface Globals extends AstNode {
+    readonly $container: DefinitionUnit;
+    readonly $type: 'Globals';
+    array: boolean;
+    name: string;
+    parameters: Array<Parameter>;
+    returnType: Reference<Class>;
+}
+
+export const Globals = 'Globals';
+
+export function isGlobals(item: unknown): item is Globals {
+    return reflection.isInstance(item, Globals);
 }
 
 export interface Grammar extends AstNode {
@@ -345,8 +374,9 @@ export function isNumberExpression(item: unknown): item is NumberExpression {
 }
 
 export interface Parameter extends AstNode {
-    readonly $container: Constructor | ConstructorCall | FunctionDeclaration | MethodMember;
+    readonly $container: Constructor | ConstructorCall | FunctionDeclaration | Globals | MethodMember;
     readonly $type: 'Parameter';
+    array: boolean;
     name: string;
     type: Reference<Class>;
 }
@@ -448,8 +478,10 @@ export type CrmscriptAstType = {
     Expression: Expression
     ExpressionBlock: ExpressionBlock
     FieldMember: FieldMember
+    ForExecution: ForExecution
     ForStatement: ForStatement
     FunctionDeclaration: FunctionDeclaration
+    Globals: Globals
     Grammar: Grammar
     IfStatement: IfStatement
     MemberCall: MemberCall
@@ -471,7 +503,7 @@ export type CrmscriptAstType = {
 export class CrmscriptAstReflection extends AbstractAstReflection {
 
     getAllTypes(): string[] {
-        return [BinaryExpression, BooleanExpression, Class, ClassMember, Constructor, ConstructorCall, DefinitionElement, DefinitionUnit, Enum, EnumMember, Expression, ExpressionBlock, FieldMember, ForStatement, FunctionDeclaration, Grammar, IfStatement, MemberCall, MethodMember, NamedElement, NilExpression, NumberExpression, Parameter, PrintStatement, ReturnStatement, Statement, StringExpression, Type, UnaryExpression, VariableDeclaration, WhileStatement];
+        return [BinaryExpression, BooleanExpression, Class, ClassMember, Constructor, ConstructorCall, DefinitionElement, DefinitionUnit, Enum, EnumMember, Expression, ExpressionBlock, FieldMember, ForExecution, ForStatement, FunctionDeclaration, Globals, Grammar, IfStatement, MemberCall, MethodMember, NamedElement, NilExpression, NumberExpression, Parameter, PrintStatement, ReturnStatement, Statement, StringExpression, Type, UnaryExpression, VariableDeclaration, WhileStatement];
     }
 
     protected override computeIsSubtype(subtype: string, supertype: string): boolean {
@@ -491,7 +523,9 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
             case VariableDeclaration: {
                 return this.isSubtype(NamedElement, supertype);
             }
-            case Expression:
+            case Expression: {
+                return this.isSubtype(ForExecution, supertype) || this.isSubtype(Statement, supertype);
+            }
             case ExpressionBlock:
             case ForStatement:
             case IfStatement:
@@ -505,7 +539,10 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                 return this.isSubtype(ClassMember, supertype) || this.isSubtype(NamedElement, supertype);
             }
             case FunctionDeclaration: {
-                return this.isSubtype(DefinitionElement, supertype) || this.isSubtype(NamedElement, supertype) || this.isSubtype(Type, supertype);
+                return this.isSubtype(NamedElement, supertype) || this.isSubtype(Type, supertype);
+            }
+            case Globals: {
+                return this.isSubtype(DefinitionElement, supertype);
             }
             case NamedElement: {
                 return this.isSubtype(DefinitionElement, supertype) || this.isSubtype(Type, supertype);
@@ -522,10 +559,14 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
             case 'ConstructorCall:type':
             case 'FieldMember:type':
             case 'FunctionDeclaration:returnType':
+            case 'Globals:returnType':
             case 'MethodMember:returnType':
             case 'Parameter:type':
             case 'VariableDeclaration:type': {
                 return Class;
+            }
+            case 'ForExecution:type': {
+                return VariableDeclaration;
             }
             case 'MemberCall:element': {
                 return NamedElement;
@@ -626,6 +667,14 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                     ]
                 };
             }
+            case ForExecution: {
+                return {
+                    name: ForExecution,
+                    properties: [
+                        { name: 'type' }
+                    ]
+                };
+            }
             case ForStatement: {
                 return {
                     name: ForStatement,
@@ -642,6 +691,17 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                     name: FunctionDeclaration,
                     properties: [
                         { name: 'body' },
+                        { name: 'name' },
+                        { name: 'parameters', defaultValue: [] },
+                        { name: 'returnType' }
+                    ]
+                };
+            }
+            case Globals: {
+                return {
+                    name: Globals,
+                    properties: [
+                        { name: 'array', defaultValue: false },
                         { name: 'name' },
                         { name: 'parameters', defaultValue: [] },
                         { name: 'returnType' }
@@ -708,6 +768,7 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                 return {
                     name: Parameter,
                     properties: [
+                        { name: 'array', defaultValue: false },
                         { name: 'name' },
                         { name: 'type' }
                     ]

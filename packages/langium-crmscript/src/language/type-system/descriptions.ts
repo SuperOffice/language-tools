@@ -93,6 +93,12 @@ export function createIntegerType(literal?: NumberExpression): IntegerTypeDescri
         literal
     };
 }
+
+export function isIntegerType(item: TypeDescription): item is IntegerTypeDescription {
+    return item.$type === "Integer";
+}
+
+
 export interface FloatTypeDescription {
     readonly $type: "Float",
     readonly literal?: NumberExpression

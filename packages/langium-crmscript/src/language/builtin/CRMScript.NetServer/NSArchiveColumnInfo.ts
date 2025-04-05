@@ -6,7 +6,7 @@ class NSArchiveColumnInfo {
     Bool GetCanRestrictBy();
     String GetDisplayName();
     String GetDisplayTooltip();
-    String' GetDisplayType();
+    String GetDisplayType();
     String GetHeadingIconHint();
     String GetIconHint();
     Bool GetIsVisible();

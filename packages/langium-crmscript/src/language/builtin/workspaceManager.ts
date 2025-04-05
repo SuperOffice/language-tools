@@ -7,10 +7,7 @@ import {
 } from "langium";
 import { WorkspaceFolder } from 'vscode-languageserver';
 import { URI } from "vscode-uri";
-import { CRMScriptGlobal } from './CRMScriptGlobal.js';
-import { CRMScriptNetServer } from './CRMScriptNetServer.js';
-import { CRMScriptNative } from './CRMScriptNative.js';
-import { Enums } from './Enums.js';
+import { builtins } from './builtins.js';
 export class CrmscriptWorkspaceManager extends DefaultWorkspaceManager {
 
     private documentFactory: LangiumDocumentFactory;
@@ -26,9 +23,6 @@ export class CrmscriptWorkspaceManager extends DefaultWorkspaceManager {
     ): Promise<void> {
         await super.loadAdditionalDocuments(folders, collector);
         // Load our library using the `builtin` URI schema
-        collector(this.documentFactory.fromString(CRMScriptGlobal, URI.parse('CRMScriptGlobal:///library.crmscript-definition')));
-        collector(this.documentFactory.fromString(CRMScriptNetServer, URI.parse('CRMScriptNetServer:///library.crmscript-definition')));
-        collector(this.documentFactory.fromString(CRMScriptNative, URI.parse('CRMScriptNative:///library.crmscript-definition')));
-        collector(this.documentFactory.fromString(Enums, URI.parse('Enums:///library.crmscript-definition')));
+        collector(this.documentFactory.fromString(builtins, URI.parse('builtins:///library.crmscript-definition')));
     }
 }
