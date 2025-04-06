@@ -1,1 +1,1 @@
-packages/**/*.ts linguist-language=TypeScript
+packages/** linguist-vendored=false
