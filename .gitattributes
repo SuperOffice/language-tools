@@ -1,10 +1,1 @@
-packages/node_app/bundle/RTL.js linguist-ignore
-packages/node_app/* linguist-ignore
-eslint.config.mjs linguist-ignore
-packages/node_app/maincluster.js linguist-ignore
-packages/superofficedx-vscode-core/scripts/build.js linguist-ignore
-packages/superofficedx-vscode-crmscript/scripts/esbuild.mjs linguist-ignore
-packages/node_app/mainworker.cjs linguist-ignore
-packages/superofficedx-vscode-tsfso/scripts/build.js linguist-ignore
-.vscode-test.mjs linguist-ignore
-packages/superofficedx-vscode-core/.vscode-test.mjs linguist-ignore
+
