@@ -1,3 +1,4 @@
+packages/node_app/bundle/RTL.js linguist-ignore
 packages/node_app/* linguist-ignore
 eslint.config.mjs linguist-ignore
 packages/node_app/maincluster.js linguist-ignore
