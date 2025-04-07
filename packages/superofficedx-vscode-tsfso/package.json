@@ -19,7 +19,7 @@
     "Other"
   ],
   "activationEvents": [],
-  "main": "./out/superofficedx-vscode-crmscript/src/main.cjs",
+  "main": "./dist/extension.js",
   "contributes": {
     "languages": [
       {
