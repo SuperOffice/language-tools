@@ -5,7 +5,7 @@ class NSCheckLicenseStatusResult {
     Integer GetLicenseStatus();
     String GetMessage();
     String GetUrl();
-    undefined SetLicenseStatus(Integer licenseStatus);
+    Void SetLicenseStatus(Integer licenseStatus);
     Void SetMessage(String message);
     Void SetUrl(String url);
 }`;

@@ -37,7 +37,7 @@ class NSActivitySummaryItem {
     /** 
     Start/Document date
     */
-    undefined SetDate();
+    Void SetDate(DateTime date);
     /** 
     Sets the appointment's textbox; document title
     */

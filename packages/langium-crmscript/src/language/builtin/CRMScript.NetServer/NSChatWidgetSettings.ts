@@ -33,7 +33,7 @@ class NSChatWidgetSettings {
     Void SetLogoBlobId(Integer logoBlobId);
     Void SetLogoEnabled(Bool logoEnabled);
     Void SetLogoName(String logoName);
-    undefined SetOfflineFields(Integer offlineFields);
+    Void SetOfflineFields(Integer offlineFields);
     Void SetOfflineHeader(String offlineHeader);
     Void SetOfflineMessage(String offlineMessage);
     Void SetPostFormEnabled(Bool postFormEnabled);

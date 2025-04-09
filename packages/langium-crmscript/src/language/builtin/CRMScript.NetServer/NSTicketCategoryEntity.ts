@@ -29,13 +29,13 @@ class NSTicketCategoryEntity {
     /** 
     Sets the user-defined and extra fields on an NSTicketCategoryEntity with a map.
     */
-    undefined SetCustomFields(Map udefs);
+    Void SetCustomFields(Map udefs);
     Void SetDelegateMethod(Integer delegateMethod);
     Void SetExternalName(String externalName);
     /** 
     Sets the extra field values on NSTicketCategoryEntity with a map.
     */
-    undefined SetExtraFields(Map extras);
+    Void SetExtraFields(Map extras);
     Void SetFlags(Integer flags);
     Void SetFullname(String fullname);
     Void SetMsgClosingStatus(Integer msgClosingStatus);

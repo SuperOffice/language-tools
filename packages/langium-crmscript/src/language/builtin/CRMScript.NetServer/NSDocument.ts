@@ -20,7 +20,7 @@ class NSDocument {
     String GetProjectName();
     Integer GetSnum();
     String GetYourRef();
-    undefined SetAssociateFullName(String associateFullName);
+    Void SetAssociateFullName(String associateFullName);
     Void SetAssociateId(Integer associateId);
     Void SetAttention(String attention);
     Void SetContactId(Integer contactId);

@@ -7,5 +7,5 @@ class NSDataRights {
     NSEntityName[] GetRowsInfo();
     Void SetColumnsInfo(NSRelationToOwner[] columnsInfo);
     Void SetRights(NSDataRight[][] rights);
-    undefined SetRowsInfo(NSEntityName[] rowsInfo);
+    Void SetRowsInfo(NSEntityName[] rowsInfo);
 }`;

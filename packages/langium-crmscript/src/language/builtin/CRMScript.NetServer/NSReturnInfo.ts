@@ -11,7 +11,7 @@ class NSReturnInfo {
     Void SetAdditionalInfo(String additionalInfo);
     Void SetExternalReference(String externalReference);
     Void SetSuccess(Bool success);
-    undefined SetType(Integer type);
+    Void SetType(Integer type);
     Void SetValue(String value);
     Void SetVersionId(String versionId);
 }`;

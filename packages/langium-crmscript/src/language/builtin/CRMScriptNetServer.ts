@@ -352,6 +352,7 @@ import { NSWebhookAgent } from './CRMScript.NetServer/NSWebhookAgent.js';
 import { NSWebhookResult } from './CRMScript.NetServer/NSWebhookResult.js';
 import { NSWebPanelEntity } from './CRMScript.NetServer/NSWebPanelEntity.js';
 import { NSWindowPosSize } from './CRMScript.NetServer/NSWindowPosSize.js';
+import { Enums } from './CRMScript.NetServer/Enums.js';
 
 export const CRMScriptNetServer = [
     NSAccessGatewayInfo,
@@ -707,5 +708,6 @@ export const CRMScriptNetServer = [
     NSWebhookAgent,
     NSWebhookResult,
     NSWebPanelEntity,
-    NSWindowPosSize
+    NSWindowPosSize,
+    Enums
 ].join('\n');

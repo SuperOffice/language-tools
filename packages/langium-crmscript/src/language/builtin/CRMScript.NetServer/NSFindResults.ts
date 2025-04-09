@@ -5,6 +5,7 @@ class NSFindResults {
     NSArchiveColumnInfo[] GetArchiveColumns();
     NSArchiveListItem[] GetArchiveRows();
     Integer GetRowCount();
+    Void SetArchiveColumns(NSArchiveColumnInfo[] archiveColumns);
     Void SetArchiveRows(NSArchiveListItem[] archiveRows);
     Void SetRowCount(Integer rowCount);
 }`;

@@ -29,5 +29,5 @@ class Cache {
     /** 
     Sorts the cached data by given field in given order.
     */
-    undefined sort(String field, Bool order);
+    Void sort(String field, Bool order);
 }`;

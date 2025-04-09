@@ -18,15 +18,15 @@ class Time {
     /** 
     Overwrites the current time and sets hours to the given number [0-23].
     */
-    undefined setHour(Integer hour);
+    Void setHour(Integer hour);
     /** 
     Overwrites the current time and sets minutes to the given number [0-59].
     */
-    undefined setMin(Integer min);
+    Void setMin(Integer min);
     /** 
     Overwrites the current time and sets seconds to the given number [0-59].
     */
-    undefined setSec(Integer sec);
+    Void setSec(Integer sec);
     /** 
     Returns the hour portion of the time as an Integer.
     */

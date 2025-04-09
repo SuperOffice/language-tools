@@ -23,10 +23,10 @@ Constructor:
 ClassMember: MethodMember | FieldMember ;
 
 MethodMember:
-    returnType=[Class:ID] name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' ';'
+    returnType=[Class:ID] (array?='[]')? (arrayOfArray?='[]')? name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' ';'
 ;
 
-Parameter: type=[Class:ID] (array?='[]')? name=ID
+Parameter: type=[Class:ID] (array?='[]')? (arrayOfArray?='[]')? name=ID
 ;
 
 FieldMember:
@@ -38,9 +38,9 @@ Enum returns NamedElement:
     ;
 
 EnumMember:
-    name=ID
+    name=ID '=' value=NUMBER
 ;
 
 Globals:
-    returnType=[Class:ID] (array?='[]')? name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')'
+    returnType=[Class:ID] (array?='[]')? (arrayOfArray?='[]')? name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')'
 ;

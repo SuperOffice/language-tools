@@ -136,13 +136,22 @@ export function isFunctionType(item: TypeDescription): item is FunctionTypeDescr
 
 export interface ClassTypeDescription {
     readonly $type: "class"
-    readonly literal: Class
+    readonly literal: Class,
+    readonly isArray?: boolean
 }
 
 export function createClassType(literal: Class): ClassTypeDescription {
     return {
         $type: "class",
         literal
+    };
+}
+
+export function createClassArrayType(literal: Class): ClassTypeDescription {
+    return {
+        $type: "class",
+        literal,
+        isArray: true
     };
 }
 

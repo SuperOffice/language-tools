@@ -5,7 +5,7 @@ class AppointmentSlicer {
     /** 
     Adds an appointment to the class.
     */
-    undefined addAppointment(Integer id, DateTime title, DateTime start, String stop);
+    Void addAppointment(Integer id, DateTime title, DateTime start, String stop);
     /** 
     Clears all the added appointments from the instance.
     */

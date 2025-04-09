@@ -28,5 +28,5 @@ export const NSPreviewMailing = `class NSPreviewMailing {
     Void SetShipmentDescription(String shipmentDescription);
     Void SetShipmentId(Integer shipmentId);
     Void SetShipmentType(String shipmentType);
-    undefined SetStatus(Integer status);
+    Void SetStatus(Integer status);
 }`;

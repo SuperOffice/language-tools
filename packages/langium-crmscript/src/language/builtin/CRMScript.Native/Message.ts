@@ -77,5 +77,5 @@ class Message {
     /** 
     This function loads many fields of the message to the input parser.
     */
-    undefined toParser(Parser parser);
+    Void toParser(Parser parser);
 }`;

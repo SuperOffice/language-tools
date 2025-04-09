@@ -21,7 +21,7 @@ class NSMailMergeTask {
     Void SetProjectId(Integer projectId);
     Void SetSaleId(Integer saleId);
     Void SetSingleEntryOnEachCompany(Bool singleEntryOnEachCompany);
-    undefined SetStartDate(DateTime startDate);
+    Void SetStartDate(DateTime startDate);
     Void SetTypeId(Integer typeId);
     Void SetVisibleFor(NSVisibleFor visibleFor);
 }`;

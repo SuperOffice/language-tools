@@ -37,7 +37,7 @@ class DateTime {
     /** 
     A variant of toString() that takes codes for mode and language as Integers and a boolean indicator for 12- or 24-hour clock.
     */
-    String toString(Integer mode, Integer language, Bool 24HourMode);
+    String toString(Integer mode, Integer language, Bool mode);
     /** 
     Adjusts the currently set date with the given number of days.
     */

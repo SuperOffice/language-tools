@@ -7,7 +7,7 @@ class NSCategorizationStatusResponse {
     NSCategorizationModelDetails GetPreviousModel();
     String GetStatus();
     Void SetContextIdentifier(String contextIdentifier);
-    undefined SetCurrentModel(NSCategorizationModelDetails currentModel);
+    Void SetCurrentModel(NSCategorizationModelDetails currentModel);
     Void SetPreviousModel(NSCategorizationModelDetails previousModel);
     Void SetStatus(String status);
 }`;

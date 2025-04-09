@@ -112,7 +112,7 @@ class SearchEngine {
     /** 
     Executes the query and returns the result in the matrix.
     */
-    undefined executeInto(StringMatrix matrix);
+    Void executeInto(StringMatrix matrix);
     /** 
     Executes the query and return the result as a JSON formatted text.
     */

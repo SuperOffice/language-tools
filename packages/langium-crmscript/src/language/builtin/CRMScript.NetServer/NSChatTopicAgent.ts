@@ -16,5 +16,5 @@ class NSChatTopicAgent {
     Void SetCanNotify(Bool canNotify);
     Void SetCanRespond(Bool canRespond);
     Void SetTopicId(Integer topicId);
-    undefined SetUser(NSAssociate user);
+    Void SetUser(NSAssociate user);
 }`;

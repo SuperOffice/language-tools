@@ -23,6 +23,6 @@ export const NSTaskListItem = `class NSTaskListItem {
     Void SetRank(Integer rank);
     Void SetTaskListItemId(Integer taskListItemId);
     Void SetTooltip(String tooltip);
-    undefined SetType(Integer type);
+    Void SetType(Integer type);
     Void SetValue(String value);
 }`;

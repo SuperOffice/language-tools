@@ -31,7 +31,7 @@ class NSArchiveRestrictionInfo {
     Activates or deactivates a restriction.
     */
     Void SetIsActive(Bool isActive);
-    undefined SetName(String name);
+    Void SetName(String name);
     Void SetOperator(String operator);
     Void SetParenthesis(Integer p);
     Void SetSubRestrictions(NSArchiveRestrictionInfo[] subRestrictions);

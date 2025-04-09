@@ -283,6 +283,26 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
           },
           {
             "$type": "Assignment",
+            "feature": "array",
+            "operator": "?=",
+            "terminal": {
+              "$type": "Keyword",
+              "value": "[]"
+            },
+            "cardinality": "?"
+          },
+          {
+            "$type": "Assignment",
+            "feature": "arrayOfArray",
+            "operator": "?=",
+            "terminal": {
+              "$type": "Keyword",
+              "value": "[]"
+            },
+            "cardinality": "?"
+          },
+          {
+            "$type": "Assignment",
             "feature": "name",
             "operator": "=",
             "terminal": {
@@ -382,6 +402,16 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
           {
             "$type": "Assignment",
             "feature": "array",
+            "operator": "?=",
+            "terminal": {
+              "$type": "Keyword",
+              "value": "[]"
+            },
+            "cardinality": "?"
+          },
+          {
+            "$type": "Assignment",
+            "feature": "arrayOfArray",
             "operator": "?=",
             "terminal": {
               "$type": "Keyword",
@@ -553,16 +583,37 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
       "$type": "ParserRule",
       "name": "EnumMember",
       "definition": {
-        "$type": "Assignment",
-        "feature": "name",
-        "operator": "=",
-        "terminal": {
-          "$type": "RuleCall",
-          "rule": {
-            "$ref": "#/rules@39"
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "Assignment",
+            "feature": "name",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$ref": "#/rules@39"
+              },
+              "arguments": []
+            }
           },
-          "arguments": []
-        }
+          {
+            "$type": "Keyword",
+            "value": "="
+          },
+          {
+            "$type": "Assignment",
+            "feature": "value",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$ref": "#/rules@40"
+              },
+              "arguments": []
+            }
+          }
+        ]
       },
       "definesHiddenTokens": false,
       "entry": false,
@@ -599,6 +650,16 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
           {
             "$type": "Assignment",
             "feature": "array",
+            "operator": "?=",
+            "terminal": {
+              "$type": "Keyword",
+              "value": "[]"
+            },
+            "cardinality": "?"
+          },
+          {
+            "$type": "Assignment",
+            "feature": "arrayOfArray",
             "operator": "?=",
             "terminal": {
               "$type": "Keyword",
@@ -1262,6 +1323,26 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
               },
               "deprecatedSyntax": false
             }
+          },
+          {
+            "$type": "Assignment",
+            "feature": "array",
+            "operator": "?=",
+            "terminal": {
+              "$type": "Keyword",
+              "value": "[]"
+            },
+            "cardinality": "?"
+          },
+          {
+            "$type": "Assignment",
+            "feature": "arrayOfArray",
+            "operator": "?=",
+            "terminal": {
+              "$type": "Keyword",
+              "value": "[]"
+            },
+            "cardinality": "?"
           },
           {
             "$type": "Assignment",
@@ -2348,6 +2429,26 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
           },
           {
             "$type": "Assignment",
+            "feature": "array",
+            "operator": "?=",
+            "terminal": {
+              "$type": "Keyword",
+              "value": "[]"
+            },
+            "cardinality": "?"
+          },
+          {
+            "$type": "Assignment",
+            "feature": "arrayOfArray",
+            "operator": "?=",
+            "terminal": {
+              "$type": "Keyword",
+              "value": "[]"
+            },
+            "cardinality": "?"
+          },
+          {
+            "$type": "Assignment",
             "feature": "name",
             "operator": "=",
             "terminal": {
@@ -3185,6 +3286,26 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
               },
               "deprecatedSyntax": false
             }
+          },
+          {
+            "$type": "Assignment",
+            "feature": "array",
+            "operator": "?=",
+            "terminal": {
+              "$type": "Keyword",
+              "value": "[]"
+            },
+            "cardinality": "?"
+          },
+          {
+            "$type": "Assignment",
+            "feature": "arrayOfArray",
+            "operator": "?=",
+            "terminal": {
+              "$type": "Keyword",
+              "value": "[]"
+            },
+            "cardinality": "?"
           },
           {
             "$type": "Assignment",
@@ -4271,6 +4392,26 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
           },
           {
             "$type": "Assignment",
+            "feature": "array",
+            "operator": "?=",
+            "terminal": {
+              "$type": "Keyword",
+              "value": "[]"
+            },
+            "cardinality": "?"
+          },
+          {
+            "$type": "Assignment",
+            "feature": "arrayOfArray",
+            "operator": "?=",
+            "terminal": {
+              "$type": "Keyword",
+              "value": "[]"
+            },
+            "cardinality": "?"
+          },
+          {
+            "$type": "Assignment",
             "feature": "name",
             "operator": "=",
             "terminal": {
@@ -4724,6 +4865,26 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
           },
           {
             "$type": "Assignment",
+            "feature": "array",
+            "operator": "?=",
+            "terminal": {
+              "$type": "Keyword",
+              "value": "[]"
+            },
+            "cardinality": "?"
+          },
+          {
+            "$type": "Assignment",
+            "feature": "arrayOfArray",
+            "operator": "?=",
+            "terminal": {
+              "$type": "Keyword",
+              "value": "[]"
+            },
+            "cardinality": "?"
+          },
+          {
+            "$type": "Assignment",
             "feature": "name",
             "operator": "=",
             "terminal": {
@@ -4823,6 +4984,16 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
           {
             "$type": "Assignment",
             "feature": "array",
+            "operator": "?=",
+            "terminal": {
+              "$type": "Keyword",
+              "value": "[]"
+            },
+            "cardinality": "?"
+          },
+          {
+            "$type": "Assignment",
+            "feature": "arrayOfArray",
             "operator": "?=",
             "terminal": {
               "$type": "Keyword",
@@ -4994,16 +5165,37 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
       "$type": "ParserRule",
       "name": "EnumMember",
       "definition": {
-        "$type": "Assignment",
-        "feature": "name",
-        "operator": "=",
-        "terminal": {
-          "$type": "RuleCall",
-          "rule": {
-            "$ref": "#/rules@28"
+        "$type": "Group",
+        "elements": [
+          {
+            "$type": "Assignment",
+            "feature": "name",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$ref": "#/rules@28"
+              },
+              "arguments": []
+            }
           },
-          "arguments": []
-        }
+          {
+            "$type": "Keyword",
+            "value": "="
+          },
+          {
+            "$type": "Assignment",
+            "feature": "value",
+            "operator": "=",
+            "terminal": {
+              "$type": "RuleCall",
+              "rule": {
+                "$ref": "#/rules@29"
+              },
+              "arguments": []
+            }
+          }
+        ]
       },
       "definesHiddenTokens": false,
       "entry": false,
@@ -5040,6 +5232,16 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
           {
             "$type": "Assignment",
             "feature": "array",
+            "operator": "?=",
+            "terminal": {
+              "$type": "Keyword",
+              "value": "[]"
+            },
+            "cardinality": "?"
+          },
+          {
+            "$type": "Assignment",
+            "feature": "arrayOfArray",
             "operator": "?=",
             "terminal": {
               "$type": "Keyword",

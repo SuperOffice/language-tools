@@ -13,5 +13,5 @@ class NSPersonSummary {
     Void SetFollowups(NSActivitySummaryItem[] followups);
     Void SetPerson(NSPerson person);
     Void SetSales(NSSaleSummaryItem[] sales);
-    undefined SetTickets(NSTicketSummaryItem[] tickets);
+    Void SetTickets(NSTicketSummaryItem[] tickets);
 }`;

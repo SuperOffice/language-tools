@@ -48,7 +48,7 @@ ExpressionBlock: '{'
 ;
 
 VariableDeclaration returns NamedElement:
-    {infer VariableDeclaration} type=[Class:ID] name=ID (assignment?='=' value=(ConstructorCall | Expression))? 
+    {infer VariableDeclaration} type=[Class:ID] (array?='[]')? (arrayOfArray?='[]')? name=ID (assignment?='=' value=(ConstructorCall | Expression))? 
 ;
 
 ConstructorCall:
@@ -129,7 +129,7 @@ NilExpression: value='nil';
 
 
 FunctionDeclaration:
-    returnType=[Class:ID] name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' body=ExpressionBlock
+    returnType=[Class:ID] (array?='[]')? (arrayOfArray?='[]')? name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' body=ExpressionBlock
 ;
 
 type NamedElement = VariableDeclaration | FunctionDeclaration | Class | MethodMember | FieldMember | Enum | EnumMember;

@@ -1,6 +1,22 @@
 
-NSSaleEntity saleEntity;
-saleEntity.SetStatus(NSSaleStatus.);
+// NSSaleEntity saleEntity;
+// saleEntity.SetStatus(NSSaleStatus.Open);
+// String myString;
+
+// //ToFix
+myString = String();
+
+// Array assignments
+Company[] c;
+String[] stringArray;
+String[] stringArray2;
+String myString;
+Integer[] integerArray;
+stringArray = stringArray2;
+stringArray = myString;
+stringArray = integerArray;
+stringArray = c;
+
 
 //  Map myClass;
 

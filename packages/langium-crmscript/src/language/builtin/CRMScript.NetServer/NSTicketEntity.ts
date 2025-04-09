@@ -197,7 +197,7 @@ class NSTicketEntity {
     /** 
     Sets the user-defined and extra fields on a TicketEntity with a map.
     */
-    undefined SetCustomFields();
+    Void SetCustomFields(Map udefs);
     Void SetDeadline(DateTime deadline);
     /** 
     Sets the extra field values on TicketEntity with a map.

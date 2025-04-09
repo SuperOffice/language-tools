@@ -98,7 +98,7 @@ class NSSaleEntity {
     /** 
      Maintained by the system, but very convenient for searching.
     */
-    undefined SetNextDueDate(DateTime nextDueDate);
+    Void SetNextDueDate(DateTime nextDueDate);
     Void SetNumber(String number);
     /** 
     A sale may also be connected to a person. This must be a contact person registered on the current contact. This does not mean that a person is required.

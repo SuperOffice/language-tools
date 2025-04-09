@@ -35,7 +35,7 @@ class NSChatSessionEntity {
     Void SetAlertLevel(Integer alertLevel);
     Void SetChatbotIsActive(Bool chatbotIsActive);
     Void SetChatSessionId(Integer chatSessionId);
-    undefined SetContact(NSContact contact);
+    Void SetContact(NSContact contact);
     Void SetCustomerAlias(String customerAlias);
     Void SetCustomerCompanyName(String customerCompanyName);
     Void SetCustomerConsented(Bool customerConsented);
@@ -52,7 +52,7 @@ class NSChatSessionEntity {
     Void SetRank(Integer rank);
     Void SetSale(NSSale sale);
     Void SetSessionKey(String sessionKey);
-    undefined SetStatus(Integer status);
+    Void SetStatus(Integer status);
     Void SetTicket(NSTicket ticket);
     Void SetTopicId(Integer topicId);
     Void SetTransferTo(NSAssociate transferTo);

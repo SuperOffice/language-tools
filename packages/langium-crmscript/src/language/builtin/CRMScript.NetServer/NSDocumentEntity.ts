@@ -91,7 +91,7 @@ export const NSDocumentEntity = `class NSDocumentEntity {
     /** 
     Sets the user-defined fields on the NSDocumentEntity as a map.
     */
-    undefined SSetUserDefinedFields(Map udefs);
+    Void SetUserDefinedFields(Map udefs);
     /** 
     Sets the user groups and/or users the NSDocumentEntity item is visible for.
     */

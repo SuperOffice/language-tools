@@ -49,5 +49,5 @@ class SpmShipment {
     /** 
     Sets the date and time when the shipment will be started.
     */
-    undefined setStartDate(DateTime start);
+    Void setStartDate(DateTime start);
 }`;

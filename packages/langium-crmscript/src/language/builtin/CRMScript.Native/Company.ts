@@ -45,5 +45,5 @@ class Company {
     /** 
     Puts a lot of fields into the input parser.
     */
-    undefined toParser(Parser parser);
+    Void toParser(Parser parser);
 }`;

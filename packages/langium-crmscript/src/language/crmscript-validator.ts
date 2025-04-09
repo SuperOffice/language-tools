@@ -2,7 +2,7 @@ import { MultiMap, NamedAstNode, stream, Stream, type AstNode, type ValidationAc
 import { ConstructorCall, Grammar, IfStatement, isClass, isEnum, MemberCall, MethodMember, WhileStatement, type BinaryExpression, type CrmscriptAstType, type VariableDeclaration } from './generated/ast.js';
 import type { CrmscriptServices } from './crmscript-module.js';
 import { inferType } from './type-system/infer.js';
-import { isAssignable } from './type-system/assignment.js';
+import { isAssignable, setErrorMessage } from './type-system/assignment.js';
 import { isBooleanType, isEnumMemberType, TypeDescription, typeToString } from './type-system/descriptions.js';
 
 /**
@@ -21,7 +21,6 @@ export function registerValidationChecks(services: CrmscriptServices) {
         MemberCall: validator.checkMemberCallParameters,
         IfStatement: validator.checkIfStatement,
         WhileStatement: validator.checkWhileStatement,
-        Globals: validator.checkGlobals
     };
     registry.register(checks, validator);
 }
@@ -32,24 +31,43 @@ export function registerValidationChecks(services: CrmscriptServices) {
 export class CrmscriptValidator {
     checkBinaryExpression(expr: BinaryExpression, accept: ValidationAcceptor): void {
         const map = this.getTypeCache();
+        
         const left = inferType(expr.left, map);
         const right = inferType(expr.right, map);
+
         if (!isAssignable(right, left)) {
-            accept('error', `BinaryExpression: Type '${typeToString(right)}' is not assignable to type '${typeToString(left)}'.`, {
-                node: expr,
-                property: 'right'
-            });
+            setErrorMessage(right, left, expr, accept);
         }
+        // else {
+        //     if(isMemberCall(expr.right) && isMemberCall(expr.left)){
+                
+        //         const leftMemberCall = expr.left as MemberCall;
+        //         const leftVariableDeclaration = leftMemberCall.element?.ref as VariableDeclaration;
+
+        //         const rightMemberCall = expr.right as MemberCall;
+        //         const rightVariableDeclaration = rightMemberCall.element?.ref as VariableDeclaration;
+
+        //         if(leftVariableDeclaration.array != rightVariableDeclaration.array){
+        //             accept('error', `BinaryExpression: Type '${typeToString(right)}${rightVariableDeclaration.array ? '[]' : ''}' is not assignable to type '${typeToString(left)}${leftVariableDeclaration.array ? '[]' : ''}'.`, {
+        //                 node: expr.right,
+        //                 property: 'element'
+        //             });
+        //         }
+        //         else if(leftVariableDeclaration.arrayOfArray != rightVariableDeclaration.arrayOfArray){
+        //             accept('error', `BinaryExpression: Type '${typeToString(right)}${rightVariableDeclaration.arrayOfArray ? 'ArrayOfArray' : ''}' is not assignable to type '${typeToString(left)}${leftVariableDeclaration.arrayOfArray ? 'ArrayOfArray' : ''}'.`, {
+        //                 node: expr.right,
+        //                 property: 'element'
+        //             });
+        //         }
+        //     }
+        // }
     }
 
-    checkGlobals(globals: Global, accept: ValidationAcceptor): void {
-        const map = this.getTypeCache();
-    }
     checkVariableDeclaration(decl: VariableDeclaration, accept: ValidationAcceptor): void {    
     if (decl.type && decl.value) {
             const map = this.getTypeCache();
             const left = inferType(decl.type.$nodeDescription?.node, map);
-            const right = inferType(decl.value, map);
+            const right = inferType(decl.value, map);           
 
             if (!isAssignable(right, left)) {
                 accept('error', `VariableDeclaration: Type '${typeToString(right)}' is not assignable to type '${typeToString(left)}'.`, {
@@ -82,6 +100,7 @@ export class CrmscriptValidator {
     checkMemberCallParameters(memberCall: MemberCall, accept: ValidationAcceptor) {
 
         const methodMember = memberCall.element?.ref as MethodMember;
+        if(!methodMember) return;
         if(!methodMember.parameters) return;
 
         if(methodMember.parameters.length != memberCall.arguments.length){

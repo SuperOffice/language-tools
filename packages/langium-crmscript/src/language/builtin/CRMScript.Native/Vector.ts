@@ -9,11 +9,11 @@ class Vector {
     /** 
     Parses a text into a vector. The fields in the string are separated by the given delimiter.
     */
-    undefined parseString(String text, String delimiter);
+    Void parseString(String text, String delimiter);
     /** 
     Removes an element at the specified index.
     */
-    undefined removeAt(Integer index);
+    Void removeAt(Integer index);
     /** 
     Returns an element in the vector at the given position.
     */
@@ -21,7 +21,7 @@ class Vector {
     /** 
     Sets the value at the specified index.
     */
-    undefined set(Integer index, String value);
+    Void set(Integer index, String value);
     /** 
     Returns the size of the vector.
     */
@@ -41,5 +41,5 @@ class Vector {
     /** 
     Pushes a string object to the end of the vector.
     */
-    undefined pushBack(String element);
+    Void pushBack(String element);
 }`;

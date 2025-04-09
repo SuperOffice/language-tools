@@ -1,11 +1,16 @@
-import { isClassType, isFunctionType, isNilType, TypeDescription, typeToString } from "./descriptions.js";
+import { ValidationAcceptor } from "langium";
+import { isClassType, isErrorType, isFunctionType, isNilType, TypeDescription, typeToString } from "./descriptions.js";
 import { getClassChain } from "./infer.js";
+import { BinaryExpression } from "../generated/ast.js";
 
 export function isAssignable(from: TypeDescription, to: TypeDescription): boolean {
     if (isClassType(from)) {
         if (!isClassType(to)) {
             return false;
         }
+        if(from.isArray != to.isArray)
+            return false;
+
         const fromLit = from.literal;
         const fromChain = getClassChain(fromLit);
         const toClass = to.literal;
@@ -42,4 +47,22 @@ export function isAssignable(from: TypeDescription, to: TypeDescription): boolea
         return typeToString(from) === typeToString(to);
     }
     return from.$type === to.$type;
+}
+
+export function setErrorMessage(from: TypeDescription, to: TypeDescription, expr: BinaryExpression, accept: ValidationAcceptor): void {
+    if (isClassType(from)) {
+        if (!isClassType(to)) {
+            return;
+        }
+        accept('error', `BinaryExpression: Type '${typeToString(from)}${from.isArray ? '[]' : ''}' is not assignable to type '${typeToString(to)}${to.isArray ? '[]' : ''}'.`, {
+            node: expr,
+            property: 'right'
+        });
+    }
+    else{
+        // accept('error', `BinaryExpression: Type '${isErrorType(from) ? 'undefined' : typeToString(from)}' is not assignable to type '${isErrorType(to) ? 'undefined' : typeToString(to)}'.`, {
+        //     node: expr,
+        //     property: 'right'
+        // });
+    }
 }

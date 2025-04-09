@@ -29,5 +29,5 @@ class Parser {
     /** 
     Copies all values in the input parser to the original parser.
     */
-    undefined toParser(Parser parser);
+    Void toParser(Parser parser);
 }`;

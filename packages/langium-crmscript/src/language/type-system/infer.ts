@@ -1,6 +1,6 @@
 import { AstNode } from "langium";
 import { BinaryExpression, Class, Enum, isBinaryExpression, isBooleanExpression, isClass, isConstructorCall, isEnum, isEnumMember, isFieldMember, isFunctionDeclaration, isMemberCall, isMethodMember, isNumberExpression, isParameter, isPrintStatement, isReturnStatement, isStringExpression, isUnaryExpression, isVariableDeclaration, MemberCall } from "../generated/ast.js";
-import { createBooleanType, createClassType, createErrorType, createIntegerType, createStringType, isFunctionType, isStringType, TypeDescription, createVoidType, createFloatType, createFunctionType, createEnumType, createEnumMemberType } from "./descriptions.js";
+import { createBooleanType, createClassType, createErrorType, createIntegerType, createStringType, isFunctionType, isStringType, TypeDescription, createVoidType, createFloatType, createFunctionType, createEnumType, createEnumMemberType, createClassArrayType } from "./descriptions.js";
 
 export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDescription>): TypeDescription {
     let type: TypeDescription | undefined;
@@ -97,6 +97,9 @@ function inferMemberCall(node: MemberCall, cache: Map<AstNode, TypeDescription>)
     const element = node.element?.ref;
     if (element) {
         if(isVariableDeclaration(element)){
+            if(element.array && isClass(element.type.$nodeDescription?.node)){
+                return createClassArrayType(element.type.$nodeDescription?.node);
+            }
             return inferType(element.type.$nodeDescription?.node, cache);
         }
         return inferType(element, cache);

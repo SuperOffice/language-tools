@@ -10,13 +10,13 @@ import { AbstractAstReflection } from 'langium';
 export const CrmscriptTerminals = {
     WS: /\s+/,
     ID: /[_a-zA-Z][\w_]*/,
+    NUMBER: /[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?/,
     EJSCRIPT_START: /%EJSCRIPT_START%/,
     EJSCRIPT_END: /%EJSCRIPT_END%/,
     SCRIPT_END: /%>/,
     SCRIPT_START: /<%/,
     ML_COMMENT: /\/\*[\s\S]*?\*\//,
     SL_COMMENT: /\/\/[^\n\r]*/,
-    NUMBER: /[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?/,
     STRING: /"[^"]*"|'[^']*'/,
 };
 
@@ -203,6 +203,7 @@ export interface EnumMember extends AstNode {
     readonly $container: DefinitionUnit | Enum | ExpressionBlock | ForStatement | Grammar;
     readonly $type: 'EnumMember';
     name: string;
+    value: number;
 }
 
 export const EnumMember = 'EnumMember';
@@ -267,6 +268,8 @@ export function isForStatement(item: unknown): item is ForStatement {
 export interface FunctionDeclaration extends AstNode {
     readonly $container: DefinitionUnit | ExpressionBlock | ForStatement | Grammar;
     readonly $type: 'FunctionDeclaration';
+    array: boolean;
+    arrayOfArray: boolean;
     body: ExpressionBlock;
     name: string;
     parameters: Array<Parameter>;
@@ -283,6 +286,7 @@ export interface Globals extends AstNode {
     readonly $container: DefinitionUnit;
     readonly $type: 'Globals';
     array: boolean;
+    arrayOfArray: boolean;
     name: string;
     parameters: Array<Parameter>;
     returnType: Reference<Class>;
@@ -338,6 +342,8 @@ export function isMemberCall(item: unknown): item is MemberCall {
 export interface MethodMember extends AstNode {
     readonly $container: Class | DefinitionUnit | ExpressionBlock | ForStatement | Grammar;
     readonly $type: 'MethodMember';
+    array: boolean;
+    arrayOfArray: boolean;
     name: string;
     parameters: Array<Parameter>;
     returnType: Reference<Class>;
@@ -377,6 +383,7 @@ export interface Parameter extends AstNode {
     readonly $container: Constructor | ConstructorCall | FunctionDeclaration | Globals | MethodMember;
     readonly $type: 'Parameter';
     array: boolean;
+    arrayOfArray: boolean;
     name: string;
     type: Reference<Class>;
 }
@@ -439,6 +446,8 @@ export function isUnaryExpression(item: unknown): item is UnaryExpression {
 export interface VariableDeclaration extends AstNode {
     readonly $container: DefinitionUnit | ExpressionBlock | ForStatement | Grammar;
     readonly $type: 'VariableDeclaration';
+    array: boolean;
+    arrayOfArray: boolean;
     assignment: boolean;
     name: string;
     type: Reference<Class>;
@@ -645,7 +654,8 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                 return {
                     name: EnumMember,
                     properties: [
-                        { name: 'name' }
+                        { name: 'name' },
+                        { name: 'value' }
                     ]
                 };
             }
@@ -690,6 +700,8 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                 return {
                     name: FunctionDeclaration,
                     properties: [
+                        { name: 'array', defaultValue: false },
+                        { name: 'arrayOfArray', defaultValue: false },
                         { name: 'body' },
                         { name: 'name' },
                         { name: 'parameters', defaultValue: [] },
@@ -702,6 +714,7 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                     name: Globals,
                     properties: [
                         { name: 'array', defaultValue: false },
+                        { name: 'arrayOfArray', defaultValue: false },
                         { name: 'name' },
                         { name: 'parameters', defaultValue: [] },
                         { name: 'returnType' }
@@ -742,6 +755,8 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                 return {
                     name: MethodMember,
                     properties: [
+                        { name: 'array', defaultValue: false },
+                        { name: 'arrayOfArray', defaultValue: false },
                         { name: 'name' },
                         { name: 'parameters', defaultValue: [] },
                         { name: 'returnType' }
@@ -769,6 +784,7 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                     name: Parameter,
                     properties: [
                         { name: 'array', defaultValue: false },
+                        { name: 'arrayOfArray', defaultValue: false },
                         { name: 'name' },
                         { name: 'type' }
                     ]
@@ -811,6 +827,8 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                 return {
                     name: VariableDeclaration,
                     properties: [
+                        { name: 'array', defaultValue: false },
+                        { name: 'arrayOfArray', defaultValue: false },
                         { name: 'assignment', defaultValue: false },
                         { name: 'name' },
                         { name: 'type' },

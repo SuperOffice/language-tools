@@ -149,7 +149,7 @@ class NSAppointmentEntity {
     Void SetRejectCounter(Integer rejectCounter);
     Void SetRejectReason(String rejectReason);
     Void SetSale(NSSale sale);
-    undefined SetStartDate(DateTime startDate);
+    Void SetStartDate(DateTime startDate);
     Void SetSuggestedAppointmentId(Integer suggestedAppointmentId);
     Void SetTitle(String agenda);
     Void SetTask(NSTaskListItem task);

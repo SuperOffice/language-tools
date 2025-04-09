@@ -66,7 +66,7 @@ export const NSSelectionEntity = `class NSSelectionEntity {
     Void SetLastLoaded(DateTime lastLoaded);
     Void SetLastLoadedBy(Integer lastLoadedBy);
     Void SetLastLoadedByAssociate(NSAssociate lastLoadedByAssociate);
-    undefined SetLastMembershipChange(DateTime lastMembershipChange);
+    Void SetLastMembershipChange(DateTime lastMembershipChange);
     Void SetLastMembershipChangeBy(Integer lastMembershipChangeBy);
     Void SetLastMembershipChangeByAssociate(NSAssociate lastMembershipChangeByAssociate);
     /** 
