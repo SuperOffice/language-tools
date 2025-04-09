@@ -38,29 +38,6 @@ export class CrmscriptValidator {
         if (!isAssignable(right, left)) {
             setErrorMessage(right, left, expr, accept);
         }
-        // else {
-        //     if(isMemberCall(expr.right) && isMemberCall(expr.left)){
-                
-        //         const leftMemberCall = expr.left as MemberCall;
-        //         const leftVariableDeclaration = leftMemberCall.element?.ref as VariableDeclaration;
-
-        //         const rightMemberCall = expr.right as MemberCall;
-        //         const rightVariableDeclaration = rightMemberCall.element?.ref as VariableDeclaration;
-
-        //         if(leftVariableDeclaration.array != rightVariableDeclaration.array){
-        //             accept('error', `BinaryExpression: Type '${typeToString(right)}${rightVariableDeclaration.array ? '[]' : ''}' is not assignable to type '${typeToString(left)}${leftVariableDeclaration.array ? '[]' : ''}'.`, {
-        //                 node: expr.right,
-        //                 property: 'element'
-        //             });
-        //         }
-        //         else if(leftVariableDeclaration.arrayOfArray != rightVariableDeclaration.arrayOfArray){
-        //             accept('error', `BinaryExpression: Type '${typeToString(right)}${rightVariableDeclaration.arrayOfArray ? 'ArrayOfArray' : ''}' is not assignable to type '${typeToString(left)}${leftVariableDeclaration.arrayOfArray ? 'ArrayOfArray' : ''}'.`, {
-        //                 node: expr.right,
-        //                 property: 'element'
-        //             });
-        //         }
-        //     }
-        // }
     }
 
     checkVariableDeclaration(decl: VariableDeclaration, accept: ValidationAcceptor): void {    

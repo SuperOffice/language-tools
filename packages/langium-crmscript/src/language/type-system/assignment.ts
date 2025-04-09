@@ -1,5 +1,5 @@
 import { ValidationAcceptor } from "langium";
-import { isClassType, isErrorType, isFunctionType, isNilType, TypeDescription, typeToString } from "./descriptions.js";
+import { isClassType, isFunctionType, isNilType, TypeDescription, typeToString } from "./descriptions.js";
 import { getClassChain } from "./infer.js";
 import { BinaryExpression } from "../generated/ast.js";
 
@@ -58,11 +58,5 @@ export function setErrorMessage(from: TypeDescription, to: TypeDescription, expr
             node: expr,
             property: 'right'
         });
-    }
-    else{
-        // accept('error', `BinaryExpression: Type '${isErrorType(from) ? 'undefined' : typeToString(from)}' is not assignable to type '${isErrorType(to) ? 'undefined' : typeToString(to)}'.`, {
-        //     node: expr,
-        //     property: 'right'
-        // });
     }
 }
