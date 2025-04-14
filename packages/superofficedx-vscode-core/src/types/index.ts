@@ -4,3 +4,4 @@ export * from './state';
 export * from './userClaims';
 export * from './authSession';
 export * from './node';
+export * from './futuresHandle';

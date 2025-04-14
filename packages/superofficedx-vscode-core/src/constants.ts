@@ -1,3 +1,5 @@
+import * as vscode from 'vscode';
+
 export const Core = {
     EXTENSION_NAME: 'superoffice.superofficedx-vscode-core',
 } as const;
@@ -12,7 +14,7 @@ export const AuthFlow = {
     ENVIRONMENT: ['sod', 'online'],
     getDiscoveryUrl: (environment: string) => 
         `https://${environment}.superoffice.com/login/.well-known/openid-configuration`,
-    REDIRECT_URI: 'http://127.0.0.1:8000',
+    REDIRECT_URI: vscode.Uri.parse(`${vscode.env.uriScheme}://superoffice.superofficedx-vscode-core/auth`).toString(),
     CLIENT_ID: '1a5764a8090f136cc9d30f381626d5fa',
     getStateUrl: (environment: string, contextIdentifier: string) => 
         `https://${environment}.superoffice.com/api/state/${contextIdentifier}`,
