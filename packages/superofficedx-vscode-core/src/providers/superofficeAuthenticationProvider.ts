@@ -9,18 +9,19 @@ import {
     commands,
     Uri,
     env,
+    ProviderResult,
+    UriHandler
 } from 'vscode';
 
 import { v4 as uuid } from 'uuid';
-import { State, SuoFile, SuperOfficeAuthenticationSession, UserClaims } from '../types/index';
+import { State, SuoFile, SuperOfficeAuthenticationSession, UserClaims, FuturesHandle } from '../types/index';
 import { AuthFlow, AuthProvider } from '../constants';
 import { IFileSystemService } from '../services/fileSystemService';
-import { IAuthenticationService } from '../services/authenticationService';
 import { IHttpService } from '../services/httpService';
-import { TokenSet } from 'openid-client';
+import { TokenSet, Client, ClientMetadata, generators, Issuer } from 'openid-client';
 
 
-export class SuperofficeAuthenticationProvider implements AuthenticationProvider, Disposable {
+export class SuperofficeAuthenticationProvider implements AuthenticationProvider, Disposable, UriHandler {
     private readonly id = AuthProvider.ID;
     private readonly label = AuthProvider.LABEL;
     private currentSession: SuperOfficeAuthenticationSession | undefined;
@@ -29,16 +30,19 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
     private _onDidChangeSessions = new EventEmitter<AuthenticationProviderAuthenticationSessionsChangeEvent>();
     public readonly onDidChangeSessions = this._onDidChangeSessions.event;
 
+    private _pendingAuthentications: Map<string, FuturesHandle>;
+
+
     constructor(
         private readonly context: ExtensionContext,
         private fileSystemService: IFileSystemService,
-        private authenticationService: IAuthenticationService,
         private httpService: IHttpService
     ) {
         const disposableProvider = authentication.registerAuthenticationProvider(this.id, this.label, this, {
             supportsMultipleAccounts: false
         });
         this.disposables.push(disposableProvider);
+        this._pendingAuthentications = new Map<string,FuturesHandle>();
     }
 
     // Session Management Methods
@@ -102,10 +106,44 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
 
     // Authentication Methods
     private async authenticateWithPKCE(environment: typeof AuthFlow.ENVIRONMENT[number]): Promise<TokenSet> {
-        const url = await this.authenticationService.generateAuthorizeUrl(environment);
-        await env.openExternal(Uri.parse(url));
-        const tokenSet = await this.authenticationService.startServer(30000);
-        //const tokenSet = await this.authenticationService.authenticate(environment);
+
+        const issuer = await Issuer.discover(AuthFlow.getDiscoveryUrl(environment));
+        const clientMetadata: ClientMetadata = {
+            client_id:  process.env.CLIENT_ID || AuthFlow.CLIENT_ID,
+            redirect_uri:  process.env.REDIRECT_URI || AuthFlow.REDIRECT_URI, 
+            response_types: ['code'],
+            token_endpoint_auth_method: 'none',
+        };
+
+        const client: Client = new issuer.Client(clientMetadata);
+        const state: string = generators.state();
+        const codeVerifier: string = generators.codeVerifier();
+        const codeChallenge: string = generators.codeChallenge(codeVerifier);
+
+        const authURL: string = client.authorizationUrl({
+            scope: 'openid',
+            state,
+            code_challenge: codeChallenge,
+            code_challenge_method: 'S256',
+        });
+
+        await env.openExternal(Uri.parse(authURL));
+
+        const authenticationCode: string = await this.createPendingAuthentication(state);
+
+        let tokenSet: TokenSet;
+
+        try {
+            tokenSet = await client.callback(
+                AuthFlow.REDIRECT_URI,
+                { code: authenticationCode },
+                { code_verifier: codeVerifier }
+            ) as TokenSet;
+            
+        } catch (error) {
+            throw new Error("Error obtaining token: " + (error instanceof Error ? error.message : String(error)));
+        }
+
         return tokenSet;
     }
 
@@ -202,5 +240,61 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
         this.disposables.forEach(d => d.dispose());
         this.disposables = [];
         this._onDidChangeSessions.dispose();
+    }
+
+    public handleUri(uri: Uri): ProviderResult<void>
+    {
+        window.showInformationMessage(`URI handler called: ${uri.toString()}`);
+
+        if (uri.path !== "/auth")
+        {
+            throw new Error("URI path not supported " + uri.path);
+        }
+
+        const searchParams = new URLSearchParams(uri.query);
+        const state = searchParams.get('state');
+        const code = searchParams.get('code');
+
+        if (!state)
+        {      
+            throw  new Error("Redirect url did not contain a state variable");
+        }
+
+        let pendingAuthenticationFutureHandle: FuturesHandle | undefined = this._pendingAuthentications.get(state);
+        
+        if (!pendingAuthenticationFutureHandle)
+        {
+            throw  new Error("No pending session authorization was found for redirect url");
+        }
+
+        this.removePendingAuthentication(state);
+
+        if (!code)
+        {
+            pendingAuthenticationFutureHandle.rejectHandle("Authorization response by SuperOffice did not provide a code");
+        }
+        else
+        {
+            pendingAuthenticationFutureHandle.resolveHandle(code);
+        }
+
+        return;
+    }
+
+    private removePendingAuthentication(state: string)
+    {
+        this._pendingAuthentications.delete(state);
+    }
+
+    private createPendingAuthentication(state: string): Promise<string>
+    {
+        return new Promise( (resolveHandle, rejectHandle) => { 
+            let futureHandles: FuturesHandle =
+            {
+                resolveHandle: resolveHandle,
+                rejectHandle: rejectHandle, // maybe instead attach a time out to the reject handle such that it gets cleaned up after a while
+            }
+            this._pendingAuthentications.set(state, futureHandles);
+         });
     }
 }

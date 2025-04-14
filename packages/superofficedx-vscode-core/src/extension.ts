@@ -9,7 +9,6 @@ import { FileSystemHandler } from './handlers/fileSystemHandler';
 import { HttpHandler } from './handlers/httpHandler';
 
 import { FileSystemService } from './services/fileSystemService';
-import { AuthenticationService } from './services/authenticationService';
 import { HttpService } from './services/httpService';
 import { NodeService } from './services/nodeService';
 
@@ -31,9 +30,7 @@ export async function activate(context: vscode.ExtensionContext) {
     const httpHandler = new HttpHandler();
     const httpService = new HttpService(httpHandler, fileSystemService);
   
-    // Authentication provider
-    const authenticationService = new AuthenticationService();
-    const authProvider = new SuperofficeAuthenticationProvider(context, fileSystemService, authenticationService, httpService);
+    const authProvider = new SuperofficeAuthenticationProvider(context, fileSystemService, httpService);
     context.subscriptions.push(authProvider);
     
     // Instantiate TreeViewDataProvider with the authentication provider
@@ -49,6 +46,9 @@ export async function activate(context: vscode.ExtensionContext) {
     const nodeService = new NodeService(httpHandler);
 
     registerCommands(context, authProvider, httpService, vfsProvider, nodeService);
+
+    const uriHandler = vscode.window.registerUriHandler(authProvider);
+    context.subscriptions.push(uriHandler);
 }
 
 export function deactivate() {}
