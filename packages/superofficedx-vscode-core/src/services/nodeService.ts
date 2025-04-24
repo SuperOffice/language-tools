@@ -1,20 +1,17 @@
 import { ChildProcess, spawn, SpawnOptions } from "child_process";
 import { IHttpHandler } from "../handlers/httpHandler";
-import * as vscode from 'vscode'
-import { Core } from "../constants";
+import { ExtensionContext, workspace, window, debug } from 'vscode'
 import { NodeRequest, SuperOfficeAuthenticationSession, NodeResponse } from "../types";
 
 export interface INodeService {
-    executeScriptLocallyAsync(session: SuperOfficeAuthenticationSession, script: string): Promise<string>
+    executeScriptLocally(session: SuperOfficeAuthenticationSession, script: string): Promise<string>
 }
 
 export class NodeService implements INodeService {
-    
-    constructor(private httpHandler: IHttpHandler) { }
 
-    private extensionRootAbsPath: string = this.getExtensionAbsPath();
+    constructor(private readonly context: ExtensionContext, private httpHandler: IHttpHandler) {}
 
-    async executeScriptLocallyAsync(session: SuperOfficeAuthenticationSession, script: string): Promise<string> {       
+    async executeScriptLocally(session: SuperOfficeAuthenticationSession, script: string): Promise<string> {       
         const childProcess = this.createChildProcess();
         
         // Wait for 1 second before proceeding. This is the wait-time for the node to get started.
@@ -31,7 +28,7 @@ export class NodeService implements INodeService {
 
     private createChildProcess(): ChildProcess {
         const options: SpawnOptions = {
-            cwd: this.extensionRootAbsPath,
+            cwd: this.context.extensionPath,
             stdio: 'pipe',
         };
     
@@ -45,8 +42,8 @@ export class NodeService implements INodeService {
     private startDebugger() {
 
         // Check if there is a folder open in the workspace
-        if (!vscode.workspace.workspaceFolders) {
-            vscode.window.showErrorMessage('No folder is open in the workspace.');
+        if (!workspace.workspaceFolders) {
+            window.showErrorMessage('No folder is open in the workspace.');
             return;
         }
     
@@ -61,7 +58,7 @@ export class NodeService implements INodeService {
         };
     
         // Start the debugging session with the specified configuration
-        vscode.debug.startDebugging(vscode.workspace.workspaceFolders[0], config);
+        debug.startDebugging(workspace.workspaceFolders[0], config);
     }
 
     private processHandler(session: SuperOfficeAuthenticationSession, childProcess: ChildProcess, script: string): Promise<string> {
@@ -104,13 +101,13 @@ export class NodeService implements INodeService {
         });
     }
 
-    getExtensionAbsPath(): string {
-        const extensionPath = vscode.extensions.getExtension(Core.EXTENSION_NAME)?.extensionPath;
-        if (!extensionPath) {
-            throw new Error(`Could not find extensionPath by extension ID: "${Core.EXTENSION_NAME}"`);
-        }
-        return extensionPath;
-    }
+    // private getExtensionAbsPath(): string {
+    //     const extensionPath = this.context.extensionPath;
+    //     if (!extensionPath) {
+    //         throw new Error(`Could not find extensionPath by extension ID: "${getPackageExtensionName(this.context)}"`);
+    //     }
+    //     return extensionPath;
+    // }
 
 }
 

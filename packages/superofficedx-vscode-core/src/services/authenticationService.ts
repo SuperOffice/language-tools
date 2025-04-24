@@ -1,71 +1,138 @@
-import { Client, ClientMetadata, generators, Issuer, TokenSet } from 'openid-client';
-import { AuthFlow } from '../constants';
 import * as http from 'http';
+import { env, ProgressLocation, Uri, window } from 'vscode';
+import { v4 as uuid } from 'uuid';
+import * as crypto from 'crypto';
+import { Token, UserClaims } from '../types';
+import { promiseFromEvent } from '../utils';
+
+const CLIENT_ID = `1a5764a8090f136cc9d30f381626d5fa`;
+const CALLBACK_HOSTNAME = '127.0.0.1';
+const CALLBACK_PORT = 8000;
+const CALLBACK_URI = `http://${CALLBACK_HOSTNAME}:${CALLBACK_PORT}/callback`;
 
 export interface IAuthenticationService {
-    generateAuthorizeUrl(environment: typeof AuthFlow.ENVIRONMENT[number]): Promise<string>;
-    startServer(timeout: number): Promise<TokenSet>;
+    login(environment: string): Promise<Token>;
+    getClaimsFromToken(token: string): UserClaims;
 }
 
 export class AuthenticationService implements IAuthenticationService {
-    private issuer: Issuer | undefined;
-    private client: Client | undefined;
     private server: http.Server | null = null;
-    private codeVerifier: string | null = null;
-    private parsedUri: URL = new URL(AuthFlow.REDIRECT_URI);
 
-    public async generateAuthorizeUrl(environment: typeof AuthFlow.ENVIRONMENT[number]): Promise<string> {
-        try {
-            this.issuer = await Issuer.discover(AuthFlow.getDiscoveryUrl(environment));
-            const clientMetadata: ClientMetadata = {
-                client_id: process.env.CLIENT_ID || AuthFlow.CLIENT_ID,
-                redirect_uri: process.env.REDIRECT_URI || AuthFlow.REDIRECT_URI,
-                response_types: ['code'],
-                token_endpoint_auth_method: 'none',
-            };
+    private _pendingStates: string[] = [];
+    private _codeVerifiers = new Map<string, string>();
+    private _scopes = new Map<string, string[]>();
+    private _environment: string = "";
+    /**
+      * Log in to OpenId Connect
+      */
+    public async login(environment: string): Promise<Token> {
+        this._environment = environment;
 
-            this.client = new this.issuer.Client(clientMetadata);
-            const state = generators.state();
-            this.codeVerifier = generators.codeVerifier();
-            const codeChallenge = generators.codeChallenge(this.codeVerifier);
+        return await window.withProgress<Token>({
+            location: ProgressLocation.Notification,
+            title: "Signing in to SuperOffice...",
+            cancellable: true,
 
-            return this.client.authorizationUrl({
-                scope: 'openid',
-                state,
-                code_challenge: codeChallenge,
-                code_challenge_method: 'S256',
-            });
-        } catch (error) {
-            throw new Error("Error generating authorization URL: " + (error instanceof Error ? error.message : String(error)));
-        }
+        }, async (_, token) => {
+
+            const nonceId = uuid();
+
+            const scopes = ['openid']
+
+            const codeVerifier = this.toBase64UrlEncoding(crypto.randomBytes(32));
+            const codeChallenge = this.toBase64UrlEncoding(this.sha256(codeVerifier));
+
+            const callbackUri = await env.asExternalUri(Uri.parse(CALLBACK_URI));
+            const callbackQuery = new URLSearchParams(callbackUri.query);
+            const stateId = callbackQuery.get('state') || nonceId;
+
+            this._pendingStates.push(stateId);
+            this._codeVerifiers.set(stateId, codeVerifier);
+            this._scopes.set(stateId, scopes);
+
+            const searchParams = new URLSearchParams([
+                ['response_type', "code"],
+                ['client_id', CLIENT_ID],
+                ['redirect_uri', CALLBACK_URI],
+                ['state', stateId],
+                ['scope', scopes.join(' ')],
+                ['code_challenge_method', 'S256'],
+                ['code_challenge', codeChallenge],
+            ]);
+
+            const uri = Uri.parse(`https://${this._environment}.superoffice.com/login/common/oauth/authorize?${searchParams.toString()}`);
+
+            await env.openExternal(uri);
+
+            try {
+                return await Promise.race([
+                    await this.callback(60000),
+                    new Promise<string>((_, reject) => setTimeout(() => reject('Cancelled'), 60000)),
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    promiseFromEvent<any, any>(token.onCancellationRequested, (_, __, reject) => { reject('User Cancelled'); }).promise
+                ])
+            }
+            finally {
+                this._pendingStates = this._pendingStates.filter(n => n !== stateId);
+            }
+        });
     }
 
-    public async startServer(timeout: number): Promise<TokenSet> {
-        return new Promise<TokenSet>((resolve, reject) => {
+    private async callback(timeout: number): Promise<Token> {
+        return new Promise<Token>((resolve, reject) => {
             if (this.server) return reject(new Error('Server already started'));
-    
+
             this.server = http.createServer(async (req, res) => {
                 try {
+
                     if (!req.url) {
                         throw new Error('Request URL not provided during authentication callback.');
                     }
-    
-                    const url = new URL(req.url, `http://${this.parsedUri.hostname}:${this.parsedUri.port}`);
-                    
-                    if (url.pathname === '/favicon.ico') {
-                        res.writeHead(204); // Respond with "No Content" for favicon requests
-                        return res.end();
-                    }
-    
-                    if (url.pathname !== '/') {
+
+                    const url = new URL(req.url, `http://${CALLBACK_HOSTNAME}:${CALLBACK_PORT}`);
+
+                    if (url.pathname !== '/callback') {
                         throw new Error('Invalid callback path.');
                     }
-    
-                    const authorizationCode = url.searchParams.get('code');
-                    if (!authorizationCode) {
-                        throw new Error('Callback does not contain a code.');
+
+                    const query = url.searchParams;
+                    const code = query.get('code');
+                    const stateId = query.get('state');
+
+                    if (!code) {
+                        reject(new Error('Callback does not contain a code.'));
+                        return;
                     }
-    
+                    if (!stateId) {
+                        reject(new Error('Callback does not contain a state.'));
+                        return;
+                    }
+
+                    const codeVerifier = this._codeVerifiers.get(stateId);
+                    if (!codeVerifier) {
+                        reject(new Error('No code verifier'));
+                        return;
+                    }
+
+                    // Check if it is a valid auth request started by the extension
+                    if (!this._pendingStates.some(n => n === stateId)) {
+                        reject(new Error('State not found'));
+                        return;
+                    }
+
+                    const body = `client_id=${CLIENT_ID}&code=${code}&grant_type=authorization_code&redirect_uri=${CALLBACK_URI}&code_verifier=${codeVerifier}`;
+
+                    const response = await fetch(`https://${this._environment}.superoffice.com/login/common/oauth/tokens`, {
+                        method: 'POST',
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                            "Accept": "application/json"
+                        },
+                        body
+                    });
+
+                    const tokenInformation = await response.json() as Token;
+
                     // Send a confirmation page to the browser
                     res.writeHead(200, { 'Content-Type': 'text/html' });
                     res.end(`
@@ -76,10 +143,9 @@ export class AuthenticationService implements IAuthenticationService {
                         </body>
                         </html>
                     `);
-    
-                    // Exchange the authorization code for a token
-                    const token = await this.exchangeAuthorizationCode(authorizationCode);
-                    resolve(token);
+
+                    resolve(tokenInformation);
+
                 } catch (error) {
                     // Send error feedback to the browser if possible
                     res.writeHead(500, { 'Content-Type': 'text/html' });
@@ -96,16 +162,16 @@ export class AuthenticationService implements IAuthenticationService {
                     this.closeServer();
                 }
             });
-    
+
             this.server.on('error', (error) => {
                 reject(new Error(`Server error: ${error.message}`));
                 this.closeServer();
             });
-    
-            this.server.listen(parseInt(this.parsedUri.port, 10), this.parsedUri.hostname, () => {
-                console.log(`Server listening on ${this.parsedUri.hostname}:${this.parsedUri.port}`);
+
+            this.server.listen(CALLBACK_PORT, CALLBACK_HOSTNAME, () => {
+                console.log(`Server listening on ${CALLBACK_HOSTNAME}:${CALLBACK_PORT}`);
             });
-    
+
             // Timeout to reject the promise if no callback is received within the specified time
             setTimeout(() => {
                 reject(new Error('Authorization timed out'));
@@ -114,28 +180,27 @@ export class AuthenticationService implements IAuthenticationService {
         });
     }
 
-    private async exchangeAuthorizationCode(authorizationCode: string): Promise<TokenSet> {
-        if (!this.client || !this.codeVerifier) {
-            throw new Error("Client or codeVerifier not initialized");
-        }
-
-        try {
-            const token = await this.client.callback(
-                AuthFlow.REDIRECT_URI,
-                { code: authorizationCode },
-                { code_verifier: this.codeVerifier }
-            ) as TokenSet;
-            this.codeVerifier = null; // Clear code verifier after use
-            return token;
-        } catch (error) {
-            throw new Error("Error obtaining token: " + (error instanceof Error ? error.message : String(error)));
-        }
-    }
-
     private closeServer(): void {
         if (this.server) {
             this.server.close();
             this.server = null;
         }
+    }
+
+    private toBase64UrlEncoding(buffer: Buffer) {
+        return buffer.toString('base64')
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=/g, '');
+    }
+
+    private sha256(buffer: string | Uint8Array): Buffer {
+        return crypto.createHash('sha256').update(buffer).digest();
+    }
+
+    public getClaimsFromToken(token: string): UserClaims {
+        const arrayToken = token.split('.');
+        const userClaims = JSON.parse(atob(arrayToken[1])) as UserClaims;
+        return userClaims;
     }
 }

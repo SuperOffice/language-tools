@@ -1,28 +1,29 @@
-import * as vscode from 'vscode';
-import { SuperofficeAuthenticationProvider } from "../../providers/superofficeAuthenticationProvider";
+import { Uri, workspace, window, authentication, ExtensionContext } from 'vscode';
 import { IHttpService } from "../../services/httpService";
+import { SuperOfficeAuthenticationSession } from '../../types';
+import { getPackagePublisher } from '../../utils';
 
-export async function executeAsync(fileUri: vscode.Uri, authProvider: SuperofficeAuthenticationProvider, httpService: IHttpService) {
+export async function execute(fileUri: Uri, context: ExtensionContext, httpService: IHttpService) {
     try {
-        const session = await authProvider.getCurrentSession();
+        const session = await authentication.getSession(getPackagePublisher(context), [], { createIfNone: true }) as SuperOfficeAuthenticationSession;
 
-        if(!session) {
-            throw new Error ('No active session');
+        if (!session) {
+            throw new Error('No active session');
         }
 
         if (fileUri && fileUri.fsPath) {
-            const fileContent = await vscode.workspace.fs.readFile(fileUri);
+            const fileContent = await workspace.fs.readFile(fileUri);
             const decodedContent = new TextDecoder().decode(fileContent);
 
             // Send the script content to the server for execution
-            const result = await httpService.executeScriptAsync(session, decodedContent);
-            vscode.window.showInformationMessage(result.Output);
+            const result = await httpService.executeScript(session, decodedContent);
+            window.showInformationMessage(result.Output);
         }
         else {
-            vscode.window.showErrorMessage('No file selected!');
+            window.showErrorMessage('No file selected!');
         }
 
     } catch (err) {
-        vscode.window.showErrorMessage(`Failed to execute script: ${err}`);
+        window.showErrorMessage(`Failed to execute script: ${err}`);
     }
 }

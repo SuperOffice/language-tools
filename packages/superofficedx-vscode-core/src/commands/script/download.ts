@@ -1,34 +1,34 @@
-import * as vscode from 'vscode';
-import { SuperofficeAuthenticationProvider } from "../../providers/superofficeAuthenticationProvider";
+import { workspace, window, authentication, ExtensionContext } from 'vscode';
 import { IHttpService } from "../../services/httpService";
 import { Node } from '../../providers/treeViewDataProvider';
-import { ScriptInfo } from "../../types/index";
+import { ScriptInfo, SuperOfficeAuthenticationSession } from "../../types/index";
+import { getPackagePublisher } from '../../utils';
 
-export async function downloadAsync(node: Node, authProvider: SuperofficeAuthenticationProvider, httpService: IHttpService) {
+export async function download(node: Node, context: ExtensionContext, httpService: IHttpService) {
     if (node?.scriptInfo) {
         try {
-            const session = await authProvider.getCurrentSession();
+            const session = await authentication.getSession(getPackagePublisher(context), [], { createIfNone: true }) as SuperOfficeAuthenticationSession;
 
-            if(!session) {
-                throw new Error ('No active session');
+            if (!session) {
+                throw new Error('No active session');
             }
 
             const scriptInfo: ScriptInfo = node.scriptInfo;
-            if (vscode.workspace.workspaceFolders !== undefined) {
+            if (workspace.workspaceFolders !== undefined) {
                 try {
-                    const fullPath = await httpService.downloadScriptAsync(session, scriptInfo.uniqueIdentifier);
-                    const document = await vscode.workspace.openTextDocument(fullPath);
-                    vscode.window.showTextDocument(document);
+                    const fullPath = await httpService.downloadScript(session, scriptInfo.uniqueIdentifier);
+                    const document = await workspace.openTextDocument(fullPath);
+                    window.showTextDocument(document);
                 } catch (err) {
                     throw new Error(`Failed to download script: ${err}`);
                 }
             }
             else {
-                vscode.window.showErrorMessage("superoffice-vscode: Working folder not found, open a folder an try again");
+                window.showErrorMessage("superoffice-vscode: Working folder not found, open a folder an try again");
             }
 
         } catch (err) {
-            vscode.window.showErrorMessage(`Failed to preview script: ${err}`);
+            window.showErrorMessage(`Failed to preview script: ${err}`);
         }
     }
 }

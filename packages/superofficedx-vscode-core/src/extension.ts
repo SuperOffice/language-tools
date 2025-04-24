@@ -1,9 +1,7 @@
-import * as vscode from 'vscode';
-import { FileExtensions } from './constants';
+import { ExtensionContext, workspace, window } from 'vscode';
 
 import { TreeViewDataProvider } from './providers/treeViewDataProvider';
 import { SuperofficeAuthenticationProvider } from './providers/superofficeAuthenticationProvider';
-import { VirtualFileSystemProvider } from './providers/virtualFileSystemProvider';
 
 import { FileSystemHandler } from './handlers/fileSystemHandler';
 import { HttpHandler } from './handlers/httpHandler';
@@ -14,14 +12,11 @@ import { HttpService } from './services/httpService';
 import { NodeService } from './services/nodeService';
 
 import { registerCommands } from './commands/registerCommands';
+import { getCustomScheme } from './utils';
+import { CustomTextDocumentContentProvider } from './providers/textDocumentContentProvider';
 
-export async function activate(context: vscode.ExtensionContext) {
+export async function activate(context: ExtensionContext) {
     console.log('"vscode-superoffice" extension is now active.');
-
-    // Virtual filesystem provider
-    const vfsProvider = new VirtualFileSystemProvider();
-    const vfsProviderRegistration = vscode.workspace.registerFileSystemProvider(FileExtensions.VFS_SCHEME, vfsProvider, { isCaseSensitive: true });
-    context.subscriptions.push(vfsProviderRegistration);
 
     // Filesystem handler
     const fileSystemHandler = new FileSystemHandler();
@@ -30,25 +25,29 @@ export async function activate(context: vscode.ExtensionContext) {
     // Http handler
     const httpHandler = new HttpHandler();
     const httpService = new HttpService(httpHandler, fileSystemService);
-  
+
+    // TextDocumentContentProvider
+    const textContentProvider = new CustomTextDocumentContentProvider();
+    context.subscriptions.push(workspace.registerTextDocumentContentProvider(getCustomScheme(), textContentProvider));
+
     // Authentication provider
     const authenticationService = new AuthenticationService();
     const authProvider = new SuperofficeAuthenticationProvider(context, fileSystemService, authenticationService, httpService);
     context.subscriptions.push(authProvider);
-    
-    // Instantiate TreeViewDataProvider with the authentication provider
-    const treeViewDataProvider = new TreeViewDataProvider(authProvider, httpService);
-    const treeviewProvider = vscode.window.registerTreeDataProvider(TreeViewDataProvider.viewId, treeViewDataProvider);
+
+    // Instantiate TreeViewDataProvider
+    const treeViewDataProvider = new TreeViewDataProvider(context, authProvider, httpService);
+    const treeviewProvider = window.registerTreeDataProvider(TreeViewDataProvider.viewId, treeViewDataProvider);
     context.subscriptions.push(treeviewProvider);
-    
+
     // Listen for authentication session changes to refresh the tree view
     authProvider.onDidChangeSessions(() => {
         treeViewDataProvider.refresh();
     });
 
-    const nodeService = new NodeService(httpHandler);
+    const nodeService = new NodeService(context, httpHandler);
 
-    registerCommands(context, authProvider, httpService, vfsProvider, nodeService);
+    registerCommands(context, httpService, nodeService);
 }
 
-export function deactivate() {}
+export function deactivate() { }

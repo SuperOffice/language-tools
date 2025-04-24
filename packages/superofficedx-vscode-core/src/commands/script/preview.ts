@@ -1,36 +1,26 @@
 
-import * as vscode from 'vscode';
-import { SuperofficeAuthenticationProvider } from '../../providers/superofficeAuthenticationProvider';
+import { Uri, workspace, window, authentication, ExtensionContext } from 'vscode';
 import { Node } from '../../providers/treeViewDataProvider';
 import { IHttpService } from '../../services/httpService';
-import { ScriptInfo } from '../../types/index';
-import { FileExtensions } from '../../constants';
-import { VirtualFileSystemProvider } from '../../providers/virtualFileSystemProvider';
+import { ScriptInfo, SuperOfficeAuthenticationSession } from '../../types/index';
+import { getCustomScheme, getPackagePublisher } from '../../utils';
 
-export async function previewAsync(node: Node, authProvider: SuperofficeAuthenticationProvider, httpService: IHttpService, vfsProvider: VirtualFileSystemProvider) {
+export async function preview(node: Node, context: ExtensionContext, httpService: IHttpService) {
     if (node?.scriptInfo) {
         const scriptInfo: ScriptInfo = node.scriptInfo;
         try {
-            const session = await authProvider.getCurrentSession();
+            const session = await authentication.getSession(getPackagePublisher(context), [], { createIfNone: true }) as SuperOfficeAuthenticationSession;
 
-            if(!session) {
-                throw new Error ('No active session');
+            if (!session) {
+                throw new Error('No active session');
             }
-            const scriptEntity = await httpService.getScriptEntityAsync(session, scriptInfo.uniqueIdentifier);
-            
-            // Create a virtual URI for the file based on the desired filename
-            const filename = `${scriptInfo.name}.js`;
-            const virtualUri = vscode.Uri.parse(`${FileExtensions.VFS_SCHEME}:/scripts/${filename}`);
+            const scriptEntity = await httpService.getScriptEntity(session, scriptInfo.uniqueIdentifier);
 
-            // "Write" the content to the virtual file
-            vfsProvider.writeFile(virtualUri, Buffer.from(scriptEntity.Source, 'utf8'));
-
-            // Open the virtual file in VSCode
-            const document = await vscode.workspace.openTextDocument(virtualUri);
-            vscode.window.showTextDocument(document);
-
+            const uri = Uri.parse(getCustomScheme() + ':' + scriptEntity.Source);
+            const doc = await workspace.openTextDocument(uri); // calls back into the provider
+            await window.showTextDocument(doc, { preview: false });
         } catch (err) {
-            vscode.window.showErrorMessage(`Failed to preview script: ${err}`);
+            window.showErrorMessage(`Failed to preview script: ${err}`);
         }
     }
 }

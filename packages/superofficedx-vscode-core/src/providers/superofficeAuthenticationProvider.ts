@@ -6,28 +6,23 @@ import {
     EventEmitter,
     ExtensionContext,
     window,
-    commands,
-    Uri,
-    env,
+    commands
 } from 'vscode';
 
 import { v4 as uuid } from 'uuid';
-import { State, SuoFile, SuperOfficeAuthenticationSession, UserClaims } from '../types/index';
-import { AuthFlow, AuthProvider } from '../constants';
+import { State, SuoFile, SuperOfficeAuthenticationSession, Token, UserClaims } from '../types/index';
 import { IFileSystemService } from '../services/fileSystemService';
 import { IAuthenticationService } from '../services/authenticationService';
 import { IHttpService } from '../services/httpService';
-import { TokenSet } from 'openid-client';
-
+import { getPackagePublisher } from '../utils';
 
 export class SuperofficeAuthenticationProvider implements AuthenticationProvider, Disposable {
-    private readonly id = AuthProvider.ID;
-    private readonly label = AuthProvider.LABEL;
     private currentSession: SuperOfficeAuthenticationSession | undefined;
     private disposables: Disposable[] = [];
-
     private _onDidChangeSessions = new EventEmitter<AuthenticationProviderAuthenticationSessionsChangeEvent>();
     public readonly onDidChangeSessions = this._onDidChangeSessions.event;
+
+    private displayName: string;
 
     constructor(
         private readonly context: ExtensionContext,
@@ -35,7 +30,9 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
         private authenticationService: IAuthenticationService,
         private httpService: IHttpService
     ) {
-        const disposableProvider = authentication.registerAuthenticationProvider(this.id, this.label, this, {
+        this.displayName = getPackagePublisher(context);
+
+        const disposableProvider = authentication.registerAuthenticationProvider(this.displayName.toLowerCase(), this.displayName, this, {
             supportsMultipleAccounts: false
         });
         this.disposables.push(disposableProvider);
@@ -47,12 +44,12 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
     }
 
     private async getAllSessions(): Promise<SuperOfficeAuthenticationSession[]> {
-        const allSessions = await this.context.secrets.get(`${this.id}.sessions`);
+        const allSessions = await this.context.secrets.get(`${this.displayName.toLowerCase()}.sessions`);
         return allSessions ? JSON.parse(allSessions) : [];
     }
 
     private async retrieveSessionData(): Promise<SuperOfficeAuthenticationSession[] | null> {
-        const sessionData = await this.context.secrets.get(`${this.id}.sessions`);
+        const sessionData = await this.context.secrets.get(`${this.displayName.toLowerCase()}.sessions`);
         return sessionData ? JSON.parse(sessionData) : null;
     }
 
@@ -71,7 +68,7 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
     }
 
     private async updateStoredSessions(sessions: SuperOfficeAuthenticationSession[]): Promise<void> {
-        await this.context.secrets.store(`${this.id}.sessions`, JSON.stringify(sessions));
+        await this.context.secrets.store(`${this.displayName.toLowerCase()}.sessions`, JSON.stringify(sessions));
     }
 
     public async getSessions(): Promise<SuperOfficeAuthenticationSession[]> {
@@ -100,51 +97,41 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
         }
     }
 
-    // Authentication Methods
-    private async authenticateWithPKCE(environment: typeof AuthFlow.ENVIRONMENT[number]): Promise<TokenSet> {
-        const url = await this.authenticationService.generateAuthorizeUrl(environment);
-        await env.openExternal(Uri.parse(url));
-        const tokenSet = await this.authenticationService.startServer(30000);
-        //const tokenSet = await this.authenticationService.authenticate(environment);
-        return tokenSet;
-    }
-
-    private async verifyTenantState(environment: typeof AuthFlow.ENVIRONMENT[number], contextIdentifier: string): Promise<State> {
-        const state = await this.httpService.getTenantStateAsync(environment, contextIdentifier);
+    private async verifyTenantState(claims: UserClaims): Promise<State> {
+        const state = await this.httpService.getTenantState(claims);
         if (!state.IsRunning) {
             throw new Error('The tenant is not running');
         }
         return state;
     }
 
-    private createSessionObject(tokenSet: TokenSet, state: State, contextIdentifier: string): SuperOfficeAuthenticationSession {
+    private createSessionObject(claims: UserClaims, tokenInformation: Token, state: State): SuperOfficeAuthenticationSession {
         return {
             id: uuid(),
-            contextIdentifier: contextIdentifier,
-            accessToken: tokenSet.access_token!,
-            refreshToken: tokenSet.refresh_token,
+            contextIdentifier: claims['http://schemes.superoffice.net/identity/ctx'],
+            accessToken: tokenInformation.access_token!,
+            refreshToken: tokenInformation.refresh_token,
             webApiUri: state.Api,
             expiresAt: Date.now() + 3600 * 1000,
-            claims: tokenSet.claims() as UserClaims,
-            account: { label: contextIdentifier, id: contextIdentifier },
+            claims: claims,
+            account: { label: claims['http://schemes.superoffice.net/identity/ctx'], id: claims['http://schemes.superoffice.net/identity/ctx'] },
             scopes: []
         };
     }
 
     private async storeSessionData(session: SuperOfficeAuthenticationSession): Promise<void> {
-        await this.context.secrets.store(`${this.id}.sessions`, JSON.stringify([session]));
+        await this.context.secrets.store(`${this.displayName.toLowerCase()}.sessions`, JSON.stringify([session]));
         await this.fileSystemService.writeSuoFile(JSON.stringify({ contextIdentifier: session.contextIdentifier }));
     }
 
     public async createSession(): Promise<SuperOfficeAuthenticationSession> {
         const environment = await this.selectEnvironment();
-        const tokenSet = await this.authenticateWithPKCE(environment);
 
-        const claims = tokenSet.claims() as UserClaims;
-        const contextIdentifier = `${claims['http://schemes.superoffice.net/identity/ctx']}`;
+        const tokenInformation = await this.authenticationService.login(environment) as Token;
+        const userClaims = this.authenticationService.getClaimsFromToken(tokenInformation.id_token) as UserClaims;
 
-        const state = await this.verifyTenantState(environment, contextIdentifier);
-        const session = this.createSessionObject(tokenSet, state, contextIdentifier);
+        const state = await this.verifyTenantState(userClaims);
+        const session = this.createSessionObject(userClaims, tokenInformation, state);
 
         await this.storeSessionData(session);
         this.setSession(session);
@@ -177,8 +164,8 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
     }
 
     // Utilities
-    async selectEnvironment(): Promise<typeof AuthFlow.ENVIRONMENT[number]> {
-        const environment = await window.showQuickPick(AuthFlow.ENVIRONMENT, {
+    async selectEnvironment(): Promise<string> {
+        const environment = await window.showQuickPick(['sod', 'online'], {
             placeHolder: 'Select an environment',
             canPickMany: false
         });
@@ -187,7 +174,7 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
             throw new Error('Environment selection was canceled by the user.');
         }
 
-        return environment as typeof AuthFlow.ENVIRONMENT[number];
+        return environment
     }
 
     getCurrentSession(): SuperOfficeAuthenticationSession | undefined {

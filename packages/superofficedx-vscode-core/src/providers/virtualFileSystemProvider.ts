@@ -1,55 +1,55 @@
-import * as vscode from 'vscode';
+import { FileSystemProvider, EventEmitter, FileChangeEvent, Event, Disposable, FileType, FileChangeType, FileStat, FileSystemError, Uri } from 'vscode';
 
-export class VirtualFileSystemProvider implements vscode.FileSystemProvider {
-    private _onDidChangeFile: vscode.EventEmitter<vscode.FileChangeEvent[]> = new vscode.EventEmitter();
-    readonly onDidChangeFile: vscode.Event<vscode.FileChangeEvent[]> = this._onDidChangeFile.event;
+export class VirtualFileSystemProvider implements FileSystemProvider {
+    private _onDidChangeFile: EventEmitter<FileChangeEvent[]> = new EventEmitter();
+    readonly onDidChangeFile: Event<FileChangeEvent[]> = this._onDidChangeFile.event;
 
     private files = new Map<string, Uint8Array>();
 
     // Required methods
-    watch(): vscode.Disposable {
+    public watch(): Disposable {
         // Just a stub. You might want to implement actual watching logic if needed.
-        return new vscode.Disposable(() => { });
+        return new Disposable(() => { });
     }
 
-    stat(uri: vscode.Uri): vscode.FileStat | Thenable<vscode.FileStat> {
+    public stat(uri: Uri): FileStat | Thenable<FileStat> {
         if (this.files.has(uri.toString())) {
             return {
-                type: vscode.FileType.File,
+                type: FileType.File,
                 ctime: Date.now(),
                 mtime: Date.now(),
                 size: this.files.get(uri.toString())?.length || 0
             };
         }
-        throw vscode.FileSystemError.FileNotFound();
+        throw FileSystemError.FileNotFound();
     }
 
-    readDirectory(): [string, vscode.FileType][] | Thenable<[string, vscode.FileType][]> {
+    public readDirectory(): [string, FileType][] | Thenable<[string, FileType][]> {
         return []; // Stub
     }
 
-    createDirectory(): void | Thenable<void> {
+    public createDirectory(): void | Thenable<void> {
         // Stub
     }
 
-    readFile(uri: vscode.Uri): Uint8Array | Thenable<Uint8Array> {
+    public readFile(uri: Uri): Uint8Array | Thenable<Uint8Array> {
         const data = this.files.get(uri.toString());
         if (data) {
             return data;
         }
-        throw vscode.FileSystemError.FileNotFound();
+        throw FileSystemError.FileNotFound();
     }
 
-    writeFile(uri: vscode.Uri, content: Uint8Array): void | Thenable<void> {
+    public writeFile(uri: Uri, content: Uint8Array): void | Thenable<void> {
         this.files.set(uri.toString(), content);
-        this._onDidChangeFile.fire([{ type: vscode.FileChangeType.Created, uri }]);
+        this._onDidChangeFile.fire([{ type: FileChangeType.Created, uri }]);
     }
 
-    delete(): void | Thenable<void> {
+    public delete(): void | Thenable<void> {
         // Implement delete logic if necessary
     }
 
-    rename(): void | Thenable<void> {
+    public rename(): void | Thenable<void> {
         // Implement rename logic if necessary
     }
 }

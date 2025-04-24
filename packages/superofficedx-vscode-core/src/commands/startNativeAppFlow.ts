@@ -1,10 +1,9 @@
-import * as vscode from 'vscode';
-import { AuthProvider } from '../constants';
+import { authentication, window } from 'vscode';
 
-export async function startNativeAppFlowAsync() {
+export async function startNativeAppFlow() {
     try {
-        await vscode.authentication.getSession(AuthProvider.ID, [], { createIfNone: true });
+        await authentication.getSession('superoffice', [], { createIfNone: true });
     } catch (error) {
-        vscode.window.showInformationMessage(`StartNativeAppFlow failed: ${error instanceof Error ? error.message : String(error)}`);
+        window.showInformationMessage(`StartNativeAppFlow failed: ${error instanceof Error ? error.message : String(error)}`);
     }
 }
