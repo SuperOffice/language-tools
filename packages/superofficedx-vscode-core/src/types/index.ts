@@ -5,3 +5,4 @@ export * from './userClaims';
 export * from './authSession';
 export * from './node';
 export * from './token';
+export * from './hierarchy';

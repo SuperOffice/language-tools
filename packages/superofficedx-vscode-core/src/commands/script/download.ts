@@ -16,7 +16,7 @@ export async function download(node: Node, context: ExtensionContext, httpServic
             const scriptInfo: ScriptInfo = node.scriptInfo;
             if (workspace.workspaceFolders !== undefined) {
                 try {
-                    const fullPath = await httpService.downloadScript(session, scriptInfo.uniqueIdentifier);
+                    const fullPath = await httpService.downloadScript(session, scriptInfo.ejscriptId);
                     const document = await workspace.openTextDocument(fullPath);
                     window.showTextDocument(document);
                 } catch (err) {

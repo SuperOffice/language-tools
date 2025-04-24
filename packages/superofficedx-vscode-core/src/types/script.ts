@@ -23,11 +23,12 @@ export interface ScriptInfo {
     htmlOutput: boolean;
     extraMenuId: number;
     uniqueIdentifier: string;
+    type: number;
     registeredBy: string;
-    registeredDate: Date;  // You might want to consider using Date if you're going to parse and use this as a date
-    path: string;
+    registeredDate: Date; 
     updatedBy: string;
-    updatedDate: Date; // Similarly, consider using Date here as well
+    updatedDate: Date;
+    path: string;
     screenChooserId: number;
     screenType: string;
     enabled: boolean;
@@ -53,6 +54,7 @@ export interface ScriptEntity {
     Description: string;
     IncludeId: string;
     Source: string;
+    SourceCode: string;
     Registered: Date;
     RegisteredBy: string;
     Updated: Date;

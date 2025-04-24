@@ -3,6 +3,7 @@ export interface IHttpHandler {
     post<T>(url: string, body: unknown, headers?: Record<string, string>): Promise<T>;
     put<T>(url: string, body: unknown, headers?: Record<string, string>): Promise<T>;
     delete<T>(url: string, headers?: Record<string, string>): Promise<T>;
+    patch<T>(url: string, body: unknown, headers?: Record<string, string>): Promise<T>;
 }
 
 export class HttpHandler implements IHttpHandler {
@@ -44,5 +45,9 @@ export class HttpHandler implements IHttpHandler {
 
     public async delete<T>(url: string, headers: Record<string, string> = {}): Promise<T> {
         return await this.request<T>('DELETE', url, undefined, headers);
+    }
+
+    public async patch<T>(url: string, body: unknown, headers: Record<string, string> = {}): Promise<T> {
+        return await this.request<T>('PATCH', url, body, headers);
     }
 }

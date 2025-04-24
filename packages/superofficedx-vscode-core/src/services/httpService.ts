@@ -1,15 +1,17 @@
 import { Uri } from "vscode";
 import { IHttpHandler } from "../handlers/httpHandler";
-import { DynamicScriptOdata, ExecuteScriptResponse, ScriptEntity, Scripts, State, SuperOfficeAuthenticationSession, UserClaims } from "../types/index";
+import { DynamicScriptOdata, ExecuteScriptResponse, Hierarchy, ScriptEntity, Scripts, State, SuperOfficeAuthenticationSession, UserClaims } from "../types/index";
 import { IFileSystemService } from "./fileSystemService";
 
 export interface IHttpService {
-    getTenantState(claims: UserClaims): Promise<State>
-    getScriptList(session: SuperOfficeAuthenticationSession): Promise<Scripts>
-    getScriptEntity(session: SuperOfficeAuthenticationSession, uniqueIdentifier: string): Promise<ScriptEntity>
-    executeScript(session: SuperOfficeAuthenticationSession, script: string): Promise<ExecuteScriptResponse>
-    downloadScript(session: SuperOfficeAuthenticationSession, uniqueIdentifier: string): Promise<Uri>
-    getDynamicScriptInfo(session: SuperOfficeAuthenticationSession, uniqueIdentifier: string): Promise<DynamicScriptOdata>
+    getTenantState(claims: UserClaims): Promise<State>;
+    getScriptList(session: SuperOfficeAuthenticationSession): Promise<Scripts>;
+    getCrmScriptEntity(session: SuperOfficeAuthenticationSession, ejscriptId: number): Promise<ScriptEntity>;
+    executeScript(session: SuperOfficeAuthenticationSession, script: string): Promise<ExecuteScriptResponse>;
+    downloadScript(session: SuperOfficeAuthenticationSession,  ejscriptId: number): Promise<Uri>;
+    getDynamicScriptInfo(session: SuperOfficeAuthenticationSession,  ejscriptId: number): Promise<DynamicScriptOdata>;
+    patchScript(session: SuperOfficeAuthenticationSession, fileUri: Uri, ejscriptId: number): Promise<ScriptEntity>;
+    getHierarchy(session: SuperOfficeAuthenticationSession): Promise<Hierarchy[]>;
 }
 
 export class HttpService implements IHttpService {
@@ -24,8 +26,20 @@ export class HttpService implements IHttpService {
         return '/v1/Agents/CRMScript/ExecuteScriptByString';
     }
 
-    private getDynamicUrl(uniqueIdentifier: string) {
-        return `/v1/archive/dynamic?$select=ejscript.id,ejscript.type,ejscript.description,ejscript.include_id,ejscript.access_key,ejscript.unique_identifier&$filter=ejscript.unique_identifier eq '${uniqueIdentifier}'`;
+    get hierarchyUri() {
+        return '/v1/Hierarchy/Scripts';
+    }
+
+    private getDynamicUrl(ejscriptId: number) {
+        return `/v1/archive/dynamic?$select=ejscript.id,ejscript.type,ejscript.description,ejscript.include_id,ejscript.access_key,ejscript.unique_identifier&$filter=ejscript.id eq '${ejscriptId}'`;
+    }
+
+    private getCrmScriptUri(ejscriptId: number) {
+        return `/v1/CRMScript/${ejscriptId}`;
+    }
+
+    private getScriptUri(uniqueIdentifier: string) {
+        return `/v1/Script/${uniqueIdentifier}`;
     }
 
     public async getTenantState(claims: UserClaims): Promise<State> {
@@ -51,9 +65,23 @@ export class HttpService implements IHttpService {
         }
     }
 
-    public async getScriptEntity(session: SuperOfficeAuthenticationSession, uniqueIdentifier: string): Promise<ScriptEntity> {
+    public async getCrmScriptEntity(session: SuperOfficeAuthenticationSession, ejscriptId: number): Promise<ScriptEntity> {
         try {
-            return await this.httpHandler.get<ScriptEntity>(`${session.webApiUri}${this.scriptUri}${uniqueIdentifier}`,
+            return await this.httpHandler.get<ScriptEntity>(`${session.webApiUri}${this.getCrmScriptUri(ejscriptId)}`,
+                {
+                    Authorization: `Bearer ${session.accessToken}`,
+                    'Accept': 'application/json'
+                }
+            );
+        }
+        catch (error) {
+            throw new Error('Error getting script with : ' + error);
+        }
+    }
+
+    public async getScript(session: SuperOfficeAuthenticationSession, uniqueIdentifier: string): Promise<ScriptEntity> {
+        try {
+            return await this.httpHandler.get<ScriptEntity>(`${session.webApiUri}${this.getScriptUri(uniqueIdentifier)}`,
                 {
                     Authorization: `Bearer ${session.accessToken}`,
                     'Accept': 'application/json'
@@ -86,24 +114,27 @@ export class HttpService implements IHttpService {
         }
     }
 
-    public async downloadScript(session: SuperOfficeAuthenticationSession, uniqueIdentifier: string): Promise<Uri> {
+    public async downloadScript(session: SuperOfficeAuthenticationSession, ejscriptId: number): Promise<Uri> {
         try {
-            const scriptEntity = await this.getScriptEntity(session, uniqueIdentifier);
+            const crmScriptEntity = await this.getCrmScriptEntity(session, ejscriptId);
+            
+            // Workaround to get the ejscript.type and path.... should be returned in the scriptEntity in the future
+            const dynamicScriptOdata = await this.getDynamicScriptInfo(session, ejscriptId);
+            const script = await this.getScript(session, crmScriptEntity.UniqueIdentifier)
+            crmScriptEntity.Path = script.Path;
 
-            // Workaround to get the ejscript.type.. should be returned in the scriptEntity in the future
-            const dynamicScriptOdata = await this.getDynamicScriptInfo(session, uniqueIdentifier);
-            scriptEntity.Type = dynamicScriptOdata.value[0]["ejscript.type"];
+            crmScriptEntity.Type = dynamicScriptOdata.value[0]["ejscript.type"];
             //
-            return await this.fileSystemService.writeScriptToFile(scriptEntity);
+            return await this.fileSystemService.writeScriptToFile(crmScriptEntity);
         }
         catch (error) {
             throw new Error('Error downloading script with : ' + error);
         }
     }
 
-    public async getDynamicScriptInfo(session: SuperOfficeAuthenticationSession, uniqueIdentifier: string): Promise<DynamicScriptOdata> {
+    public async getDynamicScriptInfo(session: SuperOfficeAuthenticationSession, ejscriptId: number): Promise<DynamicScriptOdata> {
         try {
-            const dynamicUri = this.getDynamicUrl(uniqueIdentifier);
+            const dynamicUri = this.getDynamicUrl(ejscriptId);
             return await this.httpHandler.get<DynamicScriptOdata>(`${session.webApiUri}${dynamicUri}`,
                 {
                     Authorization: `Bearer ${session.accessToken}`,
@@ -115,4 +146,39 @@ export class HttpService implements IHttpService {
             throw new Error('Error getting All Script info: ' + error);
         }
     }
+
+    public async patchScript(session: SuperOfficeAuthenticationSession, fileUri: Uri, ejscriptId: number): Promise<ScriptEntity> {
+        try {
+
+            const scriptContent = await this.fileSystemService.readScriptFile(fileUri);
+
+            return await this.httpHandler.patch<ScriptEntity>(
+                `${session.webApiUri}${this.getCrmScriptUri(ejscriptId)}`,
+                {
+                    Source: scriptContent,
+                },
+                {
+                    Authorization: `Bearer ${session.accessToken}`,
+                    'Accept': 'application/json'
+                }
+            );
+        }
+        catch (error) {
+            throw new Error('Error patching script: ' + error);
+        }
+    }
+
+    public async getHierarchy(session: SuperOfficeAuthenticationSession): Promise<Hierarchy[]> {
+        try {
+            return await this.httpHandler.get<Hierarchy[]>(`${session.webApiUri}${this.hierarchyUri}`,
+                {
+                    Authorization: `Bearer ${session.accessToken}`,
+                    'Accept': 'application/json'
+                }
+            );
+        }
+        catch (error) {
+            throw new Error('Error getting script with : ' + error);
+        }
+    }    
 }

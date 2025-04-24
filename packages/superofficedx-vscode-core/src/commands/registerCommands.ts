@@ -10,6 +10,7 @@ import { downloadFolder } from './script/downloadFolder';
 import { execute } from './script/execute';
 import { executeLocally } from './script/executeLocally';
 import { INodeService } from '../services/nodeService';
+import { upload } from './script/upload';
 
 export function registerCommands(
     context: ExtensionContext,
@@ -24,5 +25,6 @@ export function registerCommands(
         commands.registerCommand('superOfficeDX.downloadScriptFolder', async (node: Node) => downloadFolder(node, context, httpService)),
         commands.registerCommand('superOfficeDX.executeTypeScript', async (fileUri: Uri) => execute(fileUri, context, httpService)),
         commands.registerCommand('superOfficeDX.executeTypeScriptLocally', async (fileUri: Uri) => executeLocally(fileUri, context, nodeService)),
+        commands.registerCommand('superOfficeDX.uploadScript', async (fileUri: Uri) => upload(fileUri, context, httpService)),
     );
 }

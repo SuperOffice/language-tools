@@ -14,9 +14,9 @@ export async function preview(node: Node, context: ExtensionContext, httpService
             if (!session) {
                 throw new Error('No active session');
             }
-            const scriptEntity = await httpService.getScriptEntity(session, scriptInfo.uniqueIdentifier);
+            const scriptEntity = await httpService.getCrmScriptEntity(session, scriptInfo.ejscriptId);
 
-            const uri = Uri.parse(getCustomScheme() + ':' + scriptEntity.Source);
+            const uri = Uri.parse(getCustomScheme() + ':' + scriptEntity.SourceCode);
             const doc = await workspace.openTextDocument(uri); // calls back into the provider
             await window.showTextDocument(doc, { preview: false });
         } catch (err) {

@@ -10,6 +10,7 @@ export interface IFileSystemService {
     readSuoFile(): Promise<SuoFile | undefined>;
     writeSuoFile(content: string): Promise<void>;
     writeScriptToFile(content: ScriptEntity): Promise<Uri>;
+    readScriptFile(fileUri: Uri): Promise<string | undefined>;
 }
 
 export class FileSystemService implements IFileSystemService {
@@ -79,20 +80,35 @@ export class FileSystemService implements IFileSystemService {
         try {
             const fileType = getFileType(scriptEntity);
 
-            const filePath = this.joinPaths(scriptEntity.Path, scriptEntity.Name + fileType);
+            const filePath = this.joinPaths(scriptEntity.Path, scriptEntity.IncludeId + fileType);
             const fileUri = this.getFileUriInWorkspace(filePath);
             const dirUri = fileUri.with({ path: fileUri.path.replace(/\/[^/]+$/, '') });
 
             await this.ensureDirectoryExists(dirUri);
 
-            await this.fileSystemHandler.writeFile(fileUri, scriptEntity.Source);
+            await this.fileSystemHandler.writeFile(fileUri, scriptEntity.SourceCode);
             return fileUri;
         }
         catch (error) {
             if (error instanceof FileSystemError) {
-                throw new Error(`Failed to write file: ${scriptEntity.Name}. Reason: ${error.message}`);
+                throw new Error(`Failed to write file: ${scriptEntity.IncludeId}. Reason: ${error.message}`);
             }
             throw new Error(`An unexpected error occurred while writing to file`);
+        }
+    }
+
+    public async readScriptFile(fileUri: Uri): Promise<string | undefined> {
+        const fileExists = await this.fileSystemHandler.exists(fileUri);
+        if (!fileExists) {
+            return undefined;
+        }
+
+        try {
+            const content = await this.fileSystemHandler.readFile(fileUri);
+            return content ? content : undefined;
+        } catch (error) {
+            window.showErrorMessage(`Failed to read file: ${error}`);
+            return undefined;
         }
     }
 

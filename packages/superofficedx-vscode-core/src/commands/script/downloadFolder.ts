@@ -21,7 +21,7 @@ export async function downloadFolder(node: Node, context: ExtensionContext, http
                     console.log(`superoffice-vscode: Could not find scriptInfo for ${childNode.label}`);
                     return;
                 }
-                await httpService.downloadScript(session, childNode.scriptInfo.uniqueIdentifier);
+                await httpService.downloadScript(session, childNode.scriptInfo.ejscriptId);
                 console.log(`superoffice-vscode: Downloaded script: ${childNode.scriptInfo.name}`);
             }
         });

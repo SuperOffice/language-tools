@@ -55,6 +55,12 @@
         "title": "ExecuteTypeScript",
         "category": "SuperOffice",
         "enablement": "resourceScheme == file"
+      },
+      {
+        "command": "superOfficeDX.uploadScript",
+        "title": "UploadScript",
+        "category": "SuperOffice",
+        "enablement": "resourceScheme == file"
       }
     ],
     "viewsContainers": {
@@ -121,6 +127,9 @@
         {
           "command": "superOfficeDX.executeTypeScript",
           "when": "resourceExtname == .tsfso"
+        },
+        {
+          "command": "superOfficeDX.uploadScript"
         }
       ]
     }
