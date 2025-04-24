@@ -45,14 +45,14 @@
         "title": "DownloadScriptFolder"
       },
       {
-        "command": "superOfficeDX.executeScriptLocally",
-        "title": "ExecuteScriptLocally",
+        "command": "superOfficeDX.executeTypeScriptLocally",
+        "title": "ExecuteTypeScriptLocally",
         "category": "SuperOffice",
         "enablement": "resourceScheme == file"
       },
       {
-        "command": "superOfficeDX.executeScript",
-        "title": "ExecuteScript",
+        "command": "superOfficeDX.executeTypeScript",
+        "title": "ExecuteTypeScript",
         "category": "SuperOffice",
         "enablement": "resourceScheme == file"
       }
@@ -70,7 +70,8 @@
       "superOfficeDX": [
         {
           "id": "superOfficeDX.scriptExplorer",
-          "name": "Scripts"
+          "name": "Scripts",
+          "icon": "/resources/logo.svg"
         }
       ]
     },
@@ -114,10 +115,12 @@
       ],
       "superofficedx.submenu": [
         {
-          "command": "superOfficeDX.executeScriptLocally"
+          "command": "superOfficeDX.executeTypeScriptLocally",
+          "when": "resourceExtname == .tsfso"
         },
         {
-          "command": "superOfficeDX.executeScript"
+          "command": "superOfficeDX.executeTypeScript",
+          "when": "resourceExtname == .tsfso"
         }
       ]
     }
@@ -145,8 +148,5 @@
     "sinon": "^19.0.2",
     "typescript": "*",
     "uuid": "^9.0.1"
-  },
-  "dependencies": {
-    "openid-client": "^5.5.0"
   }
 }
