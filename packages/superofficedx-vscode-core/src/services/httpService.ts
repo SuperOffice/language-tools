@@ -12,6 +12,7 @@ export interface IHttpService {
     getDynamicScriptInfo(session: SuperOfficeAuthenticationSession,  ejscriptId: number): Promise<DynamicScriptOdata>;
     patchScript(session: SuperOfficeAuthenticationSession, fileUri: Uri, ejscriptId: number): Promise<ScriptEntity>;
     getHierarchy(session: SuperOfficeAuthenticationSession): Promise<Hierarchy[]>;
+    createScript(session: SuperOfficeAuthenticationSession, fileUri: Uri, fileName: string): Promise<ScriptEntity>;
 }
 
 export class HttpService implements IHttpService {
@@ -19,7 +20,11 @@ export class HttpService implements IHttpService {
     constructor(private httpHandler: IHttpHandler, private fileSystemService: IFileSystemService) { }
 
     get scriptUri() {
-        return '/v1/Script/';
+        return '/v1/Script';
+    }
+
+    get getCrmScriptUri(){
+        return `/v1/CRMScript`;
     }
 
     get executeScriptUri() {
@@ -34,13 +39,19 @@ export class HttpService implements IHttpService {
         return `/v1/archive/dynamic?$select=ejscript.id,ejscript.type,ejscript.description,ejscript.include_id,ejscript.access_key,ejscript.unique_identifier&$filter=ejscript.id eq '${ejscriptId}'`;
     }
 
-    private getCrmScriptUri(ejscriptId: number) {
-        return `/v1/CRMScript/${ejscriptId}`;
-    }
 
-    private getScriptUri(uniqueIdentifier: string) {
-        return `/v1/Script/${uniqueIdentifier}`;
-    }
+
+    // private getCrmScriptByEjscriptId(ejscriptId: number) {
+    //     return `${this.getCrmScriptBaseUri}/${ejscriptId}`;
+    // }
+
+    // get getCrmScriptDefaultUri2(){
+    //     return `${this.getCrmScriptBaseUri}/default`;
+    // }
+
+    // private getScriptByUniqueIdentifier(uniqueIdentifier: string) {
+    //     return `${this.scriptBaseUri}/${uniqueIdentifier}`;
+    // }
 
     public async getTenantState(claims: UserClaims): Promise<State> {
         try {
@@ -67,7 +78,7 @@ export class HttpService implements IHttpService {
 
     public async getCrmScriptEntity(session: SuperOfficeAuthenticationSession, ejscriptId: number): Promise<ScriptEntity> {
         try {
-            return await this.httpHandler.get<ScriptEntity>(`${session.webApiUri}${this.getCrmScriptUri(ejscriptId)}`,
+            return await this.httpHandler.get<ScriptEntity>(`${session.webApiUri}${this.getCrmScriptUri}/${ejscriptId}`,
                 {
                     Authorization: `Bearer ${session.accessToken}`,
                     'Accept': 'application/json'
@@ -81,7 +92,7 @@ export class HttpService implements IHttpService {
 
     public async getScript(session: SuperOfficeAuthenticationSession, uniqueIdentifier: string): Promise<ScriptEntity> {
         try {
-            return await this.httpHandler.get<ScriptEntity>(`${session.webApiUri}${this.getScriptUri(uniqueIdentifier)}`,
+            return await this.httpHandler.get<ScriptEntity>(`${session.webApiUri}${this.scriptUri}/${uniqueIdentifier}`,
                 {
                     Authorization: `Bearer ${session.accessToken}`,
                     'Accept': 'application/json'
@@ -153,9 +164,9 @@ export class HttpService implements IHttpService {
             const scriptContent = await this.fileSystemService.readScriptFile(fileUri);
 
             return await this.httpHandler.patch<ScriptEntity>(
-                `${session.webApiUri}${this.getCrmScriptUri(ejscriptId)}`,
+                `${session.webApiUri}${this.getCrmScriptUri}/${ejscriptId}`,
                 {
-                    Source: scriptContent,
+                    SourceCode: scriptContent,
                 },
                 {
                     Authorization: `Bearer ${session.accessToken}`,
@@ -170,7 +181,8 @@ export class HttpService implements IHttpService {
 
     public async getHierarchy(session: SuperOfficeAuthenticationSession): Promise<Hierarchy[]> {
         try {
-            return await this.httpHandler.get<Hierarchy[]>(`${session.webApiUri}${this.hierarchyUri}`,
+            return await this.httpHandler.get<Hierarchy[]>(
+                `${session.webApiUri}${this.hierarchyUri}`,
                 {
                     Authorization: `Bearer ${session.accessToken}`,
                     'Accept': 'application/json'
@@ -180,5 +192,61 @@ export class HttpService implements IHttpService {
         catch (error) {
             throw new Error('Error getting script with : ' + error);
         }
-    }    
+    }
+
+    public async createScript(session: SuperOfficeAuthenticationSession, fileUri: Uri, fileName: string): Promise<ScriptEntity> {
+        try {
+            const scriptContent = await this.fileSystemService.readScriptFile(fileUri);
+            if(scriptContent){
+                let defaultScript = await this.createDefaultScript(session);
+
+                defaultScript = this.editDefaultScript(defaultScript, fileName, scriptContent);
+
+                const result = await this.httpHandler.post<ScriptEntity>(
+                    `${session.webApiUri}${this.getCrmScriptUri}`, 
+                    defaultScript,
+                    {
+                        Authorization: `Bearer ${session.accessToken}`,
+                        'Accept': 'application/json'
+                    }
+                );
+                if(!result.ValidationResult.Valid) {
+                    throw new Error('Validation of script failed : ' + result.ValidationResult.ErrorMessage);
+                }
+                else {
+                    return result;
+                }
+            }
+            throw new Error('scriptContent not found!');
+        }
+        catch (error) {
+            throw new Error('Error creating script : ' + error);
+        }
+    }
+
+    private async createDefaultScript(session: SuperOfficeAuthenticationSession): Promise<ScriptEntity> {
+        try {
+                return await this.httpHandler.get<ScriptEntity>(
+                    `${session.webApiUri}${this.getCrmScriptUri}/default`,
+                    {
+                        Authorization: `Bearer ${session.accessToken}`,
+                        'Accept': 'application/json'
+                    }
+                );
+        }
+        catch (error) {
+            throw new Error('Error createDefaultScript() : ' + error);
+        }
+    }
+
+    private editDefaultScript(defaultScript: ScriptEntity, fileName: string, scriptContent: string): ScriptEntity {
+        defaultScript.IncludeId = fileName.split('.')[0];
+        defaultScript.Name = fileName.split('.')[0];
+        defaultScript.SourceCode = scriptContent;
+        if(fileName.endsWith('.tsfso')){
+            // TODO: This currently has to be set to JavaScript, but this should be changed to be TypeScript in the future. It requires a change in the API, so we handle it like this for now.
+            defaultScript.ScriptType = 'JavaScript';
+        }
+        return defaultScript;
+    }
 }

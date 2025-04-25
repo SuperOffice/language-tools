@@ -55,6 +55,7 @@ export interface ScriptEntity {
     IncludeId: string;
     Source: string;
     SourceCode: string;
+    ScriptType: string;
     Registered: Date;
     RegisteredBy: string;
     Updated: Date;
@@ -63,6 +64,21 @@ export interface ScriptEntity {
     TableRight: null;
     FieldProperties: Record<string, unknown>;
     Type: number;
+    ValidationResult: ValidationResult;
+}
+
+interface ValidationResult{
+    Valid: boolean;
+    ErrorMessage: string;
+    LineNumber: number;
+    ErrorInformation: ErrorInformation;
+}
+
+interface ErrorInformation {
+    ErrorMessage: string;
+    IncludeId: unknown;
+    LineNumber: number;
+    CharacterPosition: number;
 }
 
 export interface ExecuteScriptResponse {

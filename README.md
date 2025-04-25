@@ -40,7 +40,7 @@ Input credentials in new browser-tab and close after completion
 
 ![Alt text](assets/getScriptsResult.png?raw=true "getScriptsResult")
 
-##### Option to preview the script (creates a file in virtual storage)
+##### Option to preview the script (creates a file with DocumentContentProvider)
 
 ##### Option to download the script (creates a file in local workspace, in the correct folder)
 
@@ -50,7 +50,7 @@ Input credentials in new browser-tab and close after completion
 
 ##### Option to download folder of scripts (creates all the folders and files in the local workspace)
 
-##### Option to execute the script (from local workspace), this utilizes the ExecuteScriptFromString-endpoint 
+##### Option to execute the script (from local workspace), this utilizes the ExecuteScriptFromString-endpoint
 
 Execute the script from right-click
 
@@ -63,6 +63,8 @@ ExampleScript
 Result is presented as informationmessage (down right)
 
 ![Alt text](assets/executeResult.png?raw=true "executeResult")
+
+NB: This option is only available for file extensions .tsfso (Typescript for SuperOffice).
 
 ### For TypeScript
 
@@ -100,7 +102,6 @@ In this case it will function as the LSP Server, providing these features to [`s
 
 1. `Run&debug` -> `superofficedx-vscode-tsfso`
 This will open up a new instance of vscode with the extension enabled. Note that all other extensions will be DISABLED, but you can enable them by removing `--disable-extensions` as an argument in `launch.json`.
-
 
 ## How to run `superofficedx-vscode-crmscript`
 
