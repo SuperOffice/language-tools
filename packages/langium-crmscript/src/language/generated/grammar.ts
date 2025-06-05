@@ -2578,7 +2578,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
       "name": "EJSCRIPT_START",
       "definition": {
         "$type": "RegexToken",
-        "regex": "/%EJSCRIPT_START%/"
+        "regex": "/%EJSCRIPT_START%(.*?)<%/"
       },
       "fragment": false
     },
@@ -2588,27 +2588,7 @@ export const CrmscriptDefinitionGrammar = (): Grammar => loadedCrmscriptDefiniti
       "name": "EJSCRIPT_END",
       "definition": {
         "$type": "RegexToken",
-        "regex": "/%EJSCRIPT_END%/"
-      },
-      "fragment": false
-    },
-    {
-      "$type": "TerminalRule",
-      "hidden": true,
-      "name": "SCRIPT_END",
-      "definition": {
-        "$type": "RegexToken",
-        "regex": "/%>/"
-      },
-      "fragment": false
-    },
-    {
-      "$type": "TerminalRule",
-      "hidden": true,
-      "name": "SCRIPT_START",
-      "definition": {
-        "$type": "RegexToken",
-        "regex": "/<%/"
+        "regex": "/%>(.*?)%EJSCRIPT_END%/"
       },
       "fragment": false
     },
@@ -3275,7 +3255,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
             "terminal": {
               "$type": "CrossReference",
               "type": {
-                "$ref": "#/rules@39/definition/elements@0/inferredType"
+                "$ref": "#/rules@37/definition/elements@0/inferredType"
               },
               "terminal": {
                 "$type": "RuleCall",
@@ -3380,7 +3360,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
             "terminal": {
               "$type": "CrossReference",
               "type": {
-                "$ref": "#/rules@39/definition/elements@0/inferredType"
+                "$ref": "#/rules@37/definition/elements@0/inferredType"
               },
               "terminal": {
                 "$type": "RuleCall",
@@ -3406,7 +3386,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@43"
+                    "$ref": "#/rules@41"
                   },
                   "arguments": []
                 }
@@ -3425,7 +3405,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                     "terminal": {
                       "$type": "RuleCall",
                       "rule": {
-                        "$ref": "#/rules@43"
+                        "$ref": "#/rules@41"
                       },
                       "arguments": []
                     }
@@ -4378,7 +4358,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
             "terminal": {
               "$type": "CrossReference",
               "type": {
-                "$ref": "#/rules@39/definition/elements@0/inferredType"
+                "$ref": "#/rules@37/definition/elements@0/inferredType"
               },
               "terminal": {
                 "$type": "RuleCall",
@@ -4436,7 +4416,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@43"
+                    "$ref": "#/rules@41"
                   },
                   "arguments": []
                 }
@@ -4455,7 +4435,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                     "terminal": {
                       "$type": "RuleCall",
                       "rule": {
-                        "$ref": "#/rules@43"
+                        "$ref": "#/rules@41"
                       },
                       "arguments": []
                     }
@@ -4541,7 +4521,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
       "name": "EJSCRIPT_START",
       "definition": {
         "$type": "RegexToken",
-        "regex": "/%EJSCRIPT_START%/"
+        "regex": "/%EJSCRIPT_START%(.*?)<%/"
       },
       "fragment": false
     },
@@ -4551,27 +4531,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
       "name": "EJSCRIPT_END",
       "definition": {
         "$type": "RegexToken",
-        "regex": "/%EJSCRIPT_END%/"
-      },
-      "fragment": false
-    },
-    {
-      "$type": "TerminalRule",
-      "hidden": true,
-      "name": "SCRIPT_END",
-      "definition": {
-        "$type": "RegexToken",
-        "regex": "/%>/"
-      },
-      "fragment": false
-    },
-    {
-      "$type": "TerminalRule",
-      "hidden": true,
-      "name": "SCRIPT_START",
-      "definition": {
-        "$type": "RegexToken",
-        "regex": "/<%/"
+        "regex": "/%>(.*?)%EJSCRIPT_END%/"
       },
       "fragment": false
     },
@@ -4606,7 +4566,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
         "terminal": {
           "$type": "RuleCall",
           "rule": {
-            "$ref": "#/rules@38"
+            "$ref": "#/rules@36"
           },
           "arguments": []
         },
@@ -4627,14 +4587,14 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@39"
+              "$ref": "#/rules@37"
             },
             "arguments": []
           },
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@45"
+              "$ref": "#/rules@43"
             },
             "arguments": []
           },
@@ -4644,7 +4604,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
               {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@47"
+                  "$ref": "#/rules@45"
                 },
                 "arguments": []
               },
@@ -4706,7 +4666,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@40"
+                "$ref": "#/rules@38"
               },
               "arguments": []
             },
@@ -4719,7 +4679,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@41"
+                "$ref": "#/rules@39"
               },
               "arguments": []
             },
@@ -4762,7 +4722,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@43"
+                    "$ref": "#/rules@41"
                   },
                   "arguments": []
                 }
@@ -4781,7 +4741,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                     "terminal": {
                       "$type": "RuleCall",
                       "rule": {
-                        "$ref": "#/rules@43"
+                        "$ref": "#/rules@41"
                       },
                       "arguments": []
                     }
@@ -4818,14 +4778,14 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@42"
+              "$ref": "#/rules@40"
             },
             "arguments": []
           },
           {
             "$type": "RuleCall",
             "rule": {
-              "$ref": "#/rules@44"
+              "$ref": "#/rules@42"
             },
             "arguments": []
           }
@@ -4851,7 +4811,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
             "terminal": {
               "$type": "CrossReference",
               "type": {
-                "$ref": "#/rules@39/definition/elements@0/inferredType"
+                "$ref": "#/rules@37/definition/elements@0/inferredType"
               },
               "terminal": {
                 "$type": "RuleCall",
@@ -4909,7 +4869,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@43"
+                    "$ref": "#/rules@41"
                   },
                   "arguments": []
                 }
@@ -4928,7 +4888,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                     "terminal": {
                       "$type": "RuleCall",
                       "rule": {
-                        "$ref": "#/rules@43"
+                        "$ref": "#/rules@41"
                       },
                       "arguments": []
                     }
@@ -4969,7 +4929,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
             "terminal": {
               "$type": "CrossReference",
               "type": {
-                "$ref": "#/rules@39/definition/elements@0/inferredType"
+                "$ref": "#/rules@37/definition/elements@0/inferredType"
               },
               "terminal": {
                 "$type": "RuleCall",
@@ -5035,7 +4995,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
             "terminal": {
               "$type": "CrossReference",
               "type": {
-                "$ref": "#/rules@39/definition/elements@0/inferredType"
+                "$ref": "#/rules@37/definition/elements@0/inferredType"
               },
               "terminal": {
                 "$type": "RuleCall",
@@ -5118,7 +5078,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@46"
+                    "$ref": "#/rules@44"
                   },
                   "arguments": []
                 }
@@ -5137,7 +5097,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                     "terminal": {
                       "$type": "RuleCall",
                       "rule": {
-                        "$ref": "#/rules@46"
+                        "$ref": "#/rules@44"
                       },
                       "arguments": []
                     }
@@ -5217,7 +5177,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
             "terminal": {
               "$type": "CrossReference",
               "type": {
-                "$ref": "#/rules@39/definition/elements@0/inferredType"
+                "$ref": "#/rules@37/definition/elements@0/inferredType"
               },
               "terminal": {
                 "$type": "RuleCall",
@@ -5275,7 +5235,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@43"
+                    "$ref": "#/rules@41"
                   },
                   "arguments": []
                 }
@@ -5294,7 +5254,7 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
                     "terminal": {
                       "$type": "RuleCall",
                       "rule": {
-                        "$ref": "#/rules@43"
+                        "$ref": "#/rules@41"
                       },
                       "arguments": []
                     }
@@ -5341,7 +5301,13 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
           {
             "$type": "SimpleType",
             "typeRef": {
-              "$ref": "#/rules@39/definition/elements@0/inferredType"
+              "$ref": "#/rules@37/definition/elements@0/inferredType"
+            }
+          },
+          {
+            "$type": "SimpleType",
+            "typeRef": {
+              "$ref": "#/rules@40"
             }
           },
           {
@@ -5353,19 +5319,13 @@ export const CrmscriptImplementationGrammar = (): Grammar => loadedCrmscriptImpl
           {
             "$type": "SimpleType",
             "typeRef": {
+              "$ref": "#/rules@43/definition/elements@0/inferredType"
+            }
+          },
+          {
+            "$type": "SimpleType",
+            "typeRef": {
               "$ref": "#/rules@44"
-            }
-          },
-          {
-            "$type": "SimpleType",
-            "typeRef": {
-              "$ref": "#/rules@45/definition/elements@0/inferredType"
-            }
-          },
-          {
-            "$type": "SimpleType",
-            "typeRef": {
-              "$ref": "#/rules@46"
             }
           }
         ]

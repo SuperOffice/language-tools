@@ -6,21 +6,21 @@ entry Grammar:
     (statements+=Statement | types+=Type)*;
 
 Statement:
-    ExpressionBlock | 
-    IfStatement | 
-    WhileStatement | 
-    ForStatement | 
-    PrintStatement ';' | 
-    ReturnStatement ';' | 
-    Expression ';' 
+    ExpressionBlock |
+    IfStatement |
+    WhileStatement |
+    ForStatement |
+    PrintStatement ';' |
+    ReturnStatement ';' |
+    Expression ';'
 ;
 
 Type:
     VariableDeclaration ';' |
-    FunctionDeclaration 
+    FunctionDeclaration
 ;
 
-IfStatement: 
+IfStatement:
     'if' '(' condition=Expression ')' block=ExpressionBlock
     ('else' elseBlock=ExpressionBlock)?
 ;
@@ -36,26 +36,29 @@ ForStatement:
 ForExecution:
     Expression | type=[VariableDeclaration:ID] '++';
 
-PrintStatement: 'print' '(' value=StringExpression ')'
+PrintStatement:
+    'print' '(' value=StringExpression ')'
 ;
 
-ReturnStatement: 'return' value=Expression? 
+ReturnStatement:
+    'return' value=Expression?
 ;
 
-ExpressionBlock: '{'
+ExpressionBlock:
+    '{'
     (statements+=Statement | types+=Type)*
 '}'
 ;
 
 VariableDeclaration returns NamedElement:
-    {infer VariableDeclaration} type=[Class:ID] (array?='[]')? (arrayOfArray?='[]')? name=ID (assignment?='=' value=(ConstructorCall | Expression))? 
+    {infer VariableDeclaration} type=[Class:ID] (array?='[]')? (arrayOfArray?='[]')? name=ID (assignment?='=' value=(ConstructorCall | Expression))?
 ;
 
 ConstructorCall:
     type=[Class:ID] '(' (params+=Parameter (',' params+=Parameter)*)? ')';
 
 Expression:
-    Assignment 
+    Assignment
 ;
 
 Assignment infers Expression:
@@ -80,15 +83,15 @@ Comparison infers Expression:
 
 MemberCall infers Expression:
     Primary
-	({infer MemberCall.previous=current} 
-        // Member call with function call
+	({infer MemberCall.previous=current}
+    // Member call with function call
         ("." element=[NamedElement:ID] (
 		explicitOperationCall?='('
 		(
 		    arguments+=Expression (',' arguments+=Expression)*
 		)?
-		')')? 
-        // Chained function call
+		')')?
+    // Chained function call
         | (
 		explicitOperationCall?='('
 		(
@@ -103,12 +106,12 @@ Primary infers Expression:
     StringExpression |
     BooleanExpression |
     NumberExpression |
-    NilExpression | 
+    NilExpression |
     FeatureCall
 ;
 
 FeatureCall infers Expression:
-	{infer MemberCall}
+    {infer MemberCall}
 	(element=[NamedElement:ID] | element=[NamedElement:'this'])
     // Optional function call after referencing an element
     (explicitOperationCall?='('
@@ -119,18 +122,29 @@ FeatureCall infers Expression:
 ;
 
 UnaryExpression:
-   operator=('!' | '-' | '+') value=Expression
+    operator=('!' | '-' | '+') value=Expression
 ;
 
-NumberExpression: value=NUMBER;
-StringExpression: value=STRING;
-BooleanExpression: value?='true' | 'false';
-NilExpression: value='nil';
+NumberExpression:
+    value=NUMBER;
+StringExpression:
+    value=STRING;
+BooleanExpression:
+    value?='true' | 'false';
+NilExpression:
+    value='nil';
 
 
 FunctionDeclaration:
     returnType=[Class:ID] (array?='[]')? (arrayOfArray?='[]')? name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' body=ExpressionBlock
 ;
+
+Include:
+    '#include' '\''
+        file=STRING
+    '\''
+;
+
 
 type NamedElement = VariableDeclaration | FunctionDeclaration | Class | MethodMember | FieldMember | Enum | EnumMember;
 
@@ -139,9 +153,7 @@ terminal ID: /[_a-zA-Z][\w_]*/;
 terminal NUMBER returns number: /[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?/;
 terminal STRING: /"[^"]*"|'[^']*'/;
 
-hidden terminal EJSCRIPT_START: /%EJSCRIPT_START%/;
-hidden terminal EJSCRIPT_END: /%EJSCRIPT_END%/;
-hidden terminal SCRIPT_END: /%>/;
-hidden terminal SCRIPT_START: /<%/;
+hidden terminal EJSCRIPT_START: /%EJSCRIPT_START%(.*?)<%/;
+hidden terminal EJSCRIPT_END: /%>(.*?)%EJSCRIPT_END%/;
 hidden terminal ML_COMMENT: /\/\*[\s\S]*?\*\//;
 hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;

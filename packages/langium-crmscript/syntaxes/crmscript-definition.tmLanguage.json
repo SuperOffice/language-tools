@@ -44,22 +44,7 @@
               "name": "punctuation.definition.comment.crmscript-definition"
             }
           },
-          "end": "%EJSCRIPT_START%",
-          "endCaptures": {
-            "0": {
-              "name": "punctuation.definition.comment.crmscript-definition"
-            }
-          }
-        },
-        {
-          "name": "comment.block.crmscript-definition",
-          "begin": "%EJSCRIPT_END%",
-          "beginCaptures": {
-            "0": {
-              "name": "punctuation.definition.comment.crmscript-definition"
-            }
-          },
-          "end": "%EJSCRIPT_END%",
+          "end": "<%",
           "endCaptures": {
             "0": {
               "name": "punctuation.definition.comment.crmscript-definition"
@@ -74,22 +59,7 @@
               "name": "punctuation.definition.comment.crmscript-definition"
             }
           },
-          "end": "%>",
-          "endCaptures": {
-            "0": {
-              "name": "punctuation.definition.comment.crmscript-definition"
-            }
-          }
-        },
-        {
-          "name": "comment.block.crmscript-definition",
-          "begin": "<%",
-          "beginCaptures": {
-            "0": {
-              "name": "punctuation.definition.comment.crmscript-definition"
-            }
-          },
-          "end": "<%",
+          "end": "%EJSCRIPT_END%",
           "endCaptures": {
             "0": {
               "name": "punctuation.definition.comment.crmscript-definition"
