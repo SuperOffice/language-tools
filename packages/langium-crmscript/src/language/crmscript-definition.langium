@@ -9,7 +9,7 @@ DefinitionElement:
     Class |
     Enum |
     Globals ';'
-    ;
+;
 
 Class returns NamedElement:
     {infer Class} 'class' name=ID '{'
@@ -18,15 +18,17 @@ Class returns NamedElement:
 '}';
 
 Constructor:
-    'constructor' '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' ';' ;
+    'constructor' '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' ';';
 
-ClassMember: MethodMember | FieldMember ;
+ClassMember:
+    MethodMember | FieldMember;
 
 MethodMember:
     returnType=[Class:ID] (array?='[]')? (arrayOfArray?='[]')? name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' ';'
 ;
 
-Parameter: type=[Class:ID] (array?='[]')? (arrayOfArray?='[]')? name=ID
+Parameter:
+    type=[Class:ID] (array?='[]')? (arrayOfArray?='[]')? name=ID
 ;
 
 FieldMember:
@@ -35,7 +37,7 @@ FieldMember:
 
 Enum returns NamedElement:
     {infer Enum} 'enum' name=ID '{' (enumMembers+=EnumMember (',' enumMembers+=EnumMember)*)? '}'
-    ;
+;
 
 EnumMember:
     name=ID '=' value=NUMBER

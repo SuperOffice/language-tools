@@ -5,6 +5,7 @@ import {
     Class,
     Enum,
     EnumMember,
+    Include,
     NumberExpression,
     StringExpression
 } from "../generated/ast.js"
@@ -21,6 +22,7 @@ export type TypeDescription =
     | EnumTypeDescription
     | EnumMemberTypeDescription
     | ErrorType
+    | IncludeTypeDescription
     ;
 
 export interface NilTypeDescription {
@@ -190,6 +192,19 @@ export function createEnumMemberType(literal: EnumMember): EnumMemberTypeDescrip
 
 export function isEnumMemberType(item: TypeDescription): item is EnumMemberTypeDescription {
     return item.$type === "enumMember";
+}
+export interface IncludeTypeDescription {
+    readonly $type: "include"
+    readonly literal: Include
+}
+export function createIncludeType(literal: Include): IncludeTypeDescription {
+    return {
+        $type: "include",
+        literal
+    };
+}
+export function isIncludeType(item: TypeDescription): item is IncludeTypeDescription {
+    return item.$type === "include";
 }
 export interface ErrorType {
     readonly $type: "error"

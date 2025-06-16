@@ -23,6 +23,7 @@ export type CrmscriptTerminalNames = keyof typeof CrmscriptTerminals;
 export type CrmscriptKeywordNames = 
     | "!"
     | "!="
+    | "#include"
     | "("
     | ")"
     | "*"
@@ -68,7 +69,7 @@ export function isClassMember(item: unknown): item is ClassMember {
     return reflection.isInstance(item, ClassMember);
 }
 
-export type DefinitionElement = Globals | NamedElement;
+export type DefinitionElement = Globals | NamedElement | TypeOne;
 
 export const DefinitionElement = 'DefinitionElement';
 
@@ -298,6 +299,7 @@ export function isGlobals(item: unknown): item is Globals {
 
 export interface Grammar extends AstNode {
     readonly $type: 'Grammar';
+    includes: Array<Include>;
     statements: Array<Statement>;
     types: Array<Type>;
 }
@@ -320,6 +322,18 @@ export const IfStatement = 'IfStatement';
 
 export function isIfStatement(item: unknown): item is IfStatement {
     return reflection.isInstance(item, IfStatement);
+}
+
+export interface Include extends AstNode {
+    readonly $container: Grammar;
+    readonly $type: 'Include';
+    file: string;
+}
+
+export const Include = 'Include';
+
+export function isInclude(item: unknown): item is Include {
+    return reflection.isInstance(item, Include);
 }
 
 export interface MemberCall extends AstNode {
@@ -428,6 +442,18 @@ export function isStringExpression(item: unknown): item is StringExpression {
     return reflection.isInstance(item, StringExpression);
 }
 
+export interface TypeOne extends AstNode {
+    readonly $type: 'TypeOne' | 'TypeTwo';
+    name: string;
+    type: Reference<Class>;
+}
+
+export const TypeOne = 'TypeOne';
+
+export function isTypeOne(item: unknown): item is TypeOne {
+    return reflection.isInstance(item, TypeOne);
+}
+
 export interface UnaryExpression extends AstNode {
     readonly $container: BinaryExpression | ExpressionBlock | ForStatement | Grammar | IfStatement | MemberCall | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
     readonly $type: 'UnaryExpression';
@@ -471,6 +497,18 @@ export function isWhileStatement(item: unknown): item is WhileStatement {
     return reflection.isInstance(item, WhileStatement);
 }
 
+export interface TypeTwo extends TypeOne {
+    readonly $type: 'TypeTwo';
+    name: string;
+    type: Reference<Enum>;
+}
+
+export const TypeTwo = 'TypeTwo';
+
+export function isTypeTwo(item: unknown): item is TypeTwo {
+    return reflection.isInstance(item, TypeTwo);
+}
+
 export type CrmscriptAstType = {
     BinaryExpression: BinaryExpression
     BooleanExpression: BooleanExpression
@@ -491,6 +529,7 @@ export type CrmscriptAstType = {
     Globals: Globals
     Grammar: Grammar
     IfStatement: IfStatement
+    Include: Include
     MemberCall: MemberCall
     MethodMember: MethodMember
     NamedElement: NamedElement
@@ -502,6 +541,8 @@ export type CrmscriptAstType = {
     Statement: Statement
     StringExpression: StringExpression
     Type: Type
+    TypeOne: TypeOne
+    TypeTwo: TypeTwo
     UnaryExpression: UnaryExpression
     VariableDeclaration: VariableDeclaration
     WhileStatement: WhileStatement
@@ -510,7 +551,7 @@ export type CrmscriptAstType = {
 export class CrmscriptAstReflection extends AbstractAstReflection {
 
     getAllTypes(): string[] {
-        return [BinaryExpression, BooleanExpression, Class, ClassMember, Constructor, ConstructorCall, DefinitionElement, DefinitionUnit, Enum, EnumMember, Expression, ExpressionBlock, FieldMember, ForExecution, ForStatement, FunctionDeclaration, Globals, Grammar, IfStatement, MemberCall, MethodMember, NamedElement, NilExpression, NumberExpression, Parameter, PrintStatement, ReturnStatement, Statement, StringExpression, Type, UnaryExpression, VariableDeclaration, WhileStatement];
+        return [BinaryExpression, BooleanExpression, Class, ClassMember, Constructor, ConstructorCall, DefinitionElement, DefinitionUnit, Enum, EnumMember, Expression, ExpressionBlock, FieldMember, ForExecution, ForStatement, FunctionDeclaration, Globals, Grammar, IfStatement, Include, MemberCall, MethodMember, NamedElement, NilExpression, NumberExpression, Parameter, PrintStatement, ReturnStatement, Statement, StringExpression, Type, TypeOne, TypeTwo, UnaryExpression, VariableDeclaration, WhileStatement];
     }
 
     protected override computeIsSubtype(subtype: string, supertype: string): boolean {
@@ -548,11 +589,15 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
             case FunctionDeclaration: {
                 return this.isSubtype(NamedElement, supertype) || this.isSubtype(Type, supertype);
             }
-            case Globals: {
+            case Globals:
+            case TypeOne: {
                 return this.isSubtype(DefinitionElement, supertype);
             }
             case NamedElement: {
                 return this.isSubtype(DefinitionElement, supertype) || this.isSubtype(Type, supertype);
+            }
+            case TypeTwo: {
+                return this.isSubtype(TypeOne, supertype);
             }
             default: {
                 return false;
@@ -569,6 +614,8 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
             case 'Globals:returnType':
             case 'MethodMember:returnType':
             case 'Parameter:type':
+            case 'TypeOne:type':
+            case 'TypeTwo:type':
             case 'VariableDeclaration:type': {
                 return Class;
             }
@@ -577,6 +624,9 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
             }
             case 'MemberCall:element': {
                 return NamedElement;
+            }
+            case 'TypeTwo:type': {
+                return Enum;
             }
             default: {
                 throw new Error(`${referenceId} is not a valid reference id.`);
@@ -723,6 +773,7 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                 return {
                     name: Grammar,
                     properties: [
+                        { name: 'includes', defaultValue: [] },
                         { name: 'statements', defaultValue: [] },
                         { name: 'types', defaultValue: [] }
                     ]
@@ -735,6 +786,14 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                         { name: 'block' },
                         { name: 'condition' },
                         { name: 'elseBlock' }
+                    ]
+                };
+            }
+            case Include: {
+                return {
+                    name: Include,
+                    properties: [
+                        { name: 'file' }
                     ]
                 };
             }
@@ -812,6 +871,15 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                     ]
                 };
             }
+            case TypeOne: {
+                return {
+                    name: TypeOne,
+                    properties: [
+                        { name: 'name' },
+                        { name: 'type' }
+                    ]
+                };
+            }
             case UnaryExpression: {
                 return {
                     name: UnaryExpression,
@@ -840,6 +908,15 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                     properties: [
                         { name: 'block' },
                         { name: 'condition' }
+                    ]
+                };
+            }
+            case TypeTwo: {
+                return {
+                    name: TypeTwo,
+                    properties: [
+                        { name: 'name' },
+                        { name: 'type' }
                     ]
                 };
             }

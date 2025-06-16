@@ -10,7 +10,7 @@
     },
     {
       "name": "keyword.control.crmscript",
-      "match": "\\b(and|else|false|for|if|nil|or|print|return|this|true|while)\\b"
+      "match": "\\b(and|else|false|for|if|nil|or|print|return|this|true|while)\\b|\\B(#include)\\b"
     },
     {
       "name": "string.quoted.double.crmscript",

@@ -1,23 +1,27 @@
-import { DefaultScopeProvider, EMPTY_SCOPE, ReferenceInfo, Scope } from "langium";
-import { Class, Enum, MemberCall } from "./generated/ast.js";
+import { AstUtils, DefaultScopeProvider, DocumentCache, EMPTY_SCOPE, MapScope, ReferenceInfo, Scope } from "langium";
+import { Class, Enum, Grammar, MemberCall } from "./generated/ast.js";
 import { isClassType, isEnumType } from "./type-system/descriptions.js";
 import { getClassChain, getEnumChain, inferType } from "./type-system/infer.js";
 import { LangiumServices } from "langium/lsp";
+import { dirname, join } from "path";
 
 export class CrmscriptScopeProvider extends DefaultScopeProvider {
 
+    protected documentCache: DocumentCache<string, Scope>;
+
     constructor(services: LangiumServices) {
         super(services);
+        this.documentCache = new DocumentCache<string, Scope>(services.shared);
     }
 
     override getScope(context: ReferenceInfo): Scope {
-        // target element of member calls
         if (context.property === 'element') {
             const memberCall = context.container as MemberCall;
             const previous = memberCall.previous;
             if (!previous) {
                 return super.getScope(context);
             }
+
             const previousType = inferType(previous, new Map());
             if (isClassType(previousType)) {
                 return this.scopeClassMembers(previousType.literal);
@@ -30,25 +34,27 @@ export class CrmscriptScopeProvider extends DefaultScopeProvider {
         return super.getScope(context);
     }
 
-    // override getScope(context: ReferenceInfo): Scope {
-    //     // target element of member calls
-    //     if (context.property === 'element' && isMemberCall(context.container)) {
-    //         const memberCall = context.container;
-    //         const previous = memberCall.previous;
-    //         if (!previous) {
-    //             return super.getScope(context);
-    //         }
-    //         const previousType = inferType(previous, new Map());
-    //         if (isClassType(previousType)) {
-    //             return this.scopeClassMembers(previousType.literal);
-    //         }
-    //         // When the target of our member call isn't a class
-    //         // This means it is either a primitive type or a type resolution error
-    //         // Simply return an empty scope
-    //         return EMPTY_SCOPE;
-    //     }
-    //     return super.getScope(context);
-    // }
+    protected override getGlobalScope(referenceType: string, context: ReferenceInfo): Scope {
+        const document = AstUtils.getDocument(context.container);
+        const currentUri = document.uri;
+        return this.documentCache.get(currentUri, referenceType, () => {
+            const currentDir = dirname(currentUri.path);
+
+            const uris = new Set<string>();
+
+            uris.add(document.textDocument.uri);
+            uris.add("builtins:/library.crmscript-definition");
+            const grammar = document.parseResult.value as Grammar;
+            if (grammar.includes) {
+                for (const fileImport of grammar.includes) {
+                    const filePath = join(currentDir, fileImport.file);
+                    const uri = currentUri.with({ path: filePath });
+                    uris.add(uri.toString());
+                }
+            }
+            return new MapScope(this.indexManager.allElements(referenceType, uris));
+        });
+    }
 
     private scopeClassMembers(classItem: Class): Scope {
         const allMembers = getClassChain(classItem).flatMap(e => e.members);

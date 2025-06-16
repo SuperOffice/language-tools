@@ -3,7 +3,14 @@ grammar CrmscriptImplementation
 import "crmscript-definition";
 
 entry Grammar:
-    (statements+=Statement | types+=Type)*;
+    (
+        includes+=Include
+        | statements+=Statement
+        | types+=Type
+    )*;
+
+Include:
+    '#include'  file=STRING ';';
 
 Statement:
     ExpressionBlock |
@@ -138,13 +145,6 @@ NilExpression:
 FunctionDeclaration:
     returnType=[Class:ID] (array?='[]')? (arrayOfArray?='[]')? name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' body=ExpressionBlock
 ;
-
-Include:
-    '#include' '\''
-        file=STRING
-    '\''
-;
-
 
 type NamedElement = VariableDeclaration | FunctionDeclaration | Class | MethodMember | FieldMember | Enum | EnumMember;
 

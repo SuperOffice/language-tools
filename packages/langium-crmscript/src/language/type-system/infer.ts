@@ -15,8 +15,8 @@ export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDes
     cache.set(node, createErrorType('Recursive definition', node));
     if (isStringExpression(node)) {
         type = createStringType(node);
-    } else if (isNumberExpression(node)){
-        if(Number.isInteger(node.value)){
+    } else if (isNumberExpression(node)) {
+        if (Number.isInteger(node.value)) {
             type = createIntegerType()
         }
         else {
@@ -24,7 +24,7 @@ export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDes
         }
     } else if (isBooleanExpression(node)) {
         type = createBooleanType(node);
-    } 
+    }
     else if (isFunctionDeclaration(node) || isMethodMember(node)) {
         const returnType = inferType(node.returnType.ref, cache);
         const parameters = node.parameters.map(e => ({
@@ -32,7 +32,7 @@ export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDes
             type: inferType(node.returnType.ref, cache)
         }));
         type = createFunctionType(returnType, parameters);
-    } 
+    }
     else if (isMemberCall(node)) {
         type = inferMemberCall(node, cache);
         if (node.explicitOperationCall) {
@@ -62,10 +62,10 @@ export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDes
         } else {
             type = createIntegerType();
         }
-    } 
+    }
     else if (isPrintStatement(node)) {
         type = createVoidType();
-    } 
+    }
     else if (isReturnStatement(node)) {
         if (!node) {
             type = createVoidType();
@@ -73,15 +73,15 @@ export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDes
             type = inferType(node.value, cache);
         }
     }
-    else if(isConstructorCall(node)){
+    else if (isConstructorCall(node)) {
         if (isClass(node.type.ref)) {
             type = createClassType(node.type.ref);
         }
     }
-    else if(isEnum(node)){
+    else if (isEnum(node)) {
         type = createEnumType(node);
     }
-    else if(isEnumMember(node)){
+    else if (isEnumMember(node)) {
         type = createEnumMemberType(node);
     }
     if (!type) {
@@ -93,11 +93,11 @@ export function inferType(node: AstNode | undefined, cache: Map<AstNode, TypeDes
 }
 
 function inferMemberCall(node: MemberCall, cache: Map<AstNode, TypeDescription>): TypeDescription {
-    
+
     const element = node.element?.ref;
     if (element) {
-        if(isVariableDeclaration(element)){
-            if(element.array && isClass(element.type.$nodeDescription?.node)){
+        if (isVariableDeclaration(element)) {
+            if (element.array && isClass(element.type.$nodeDescription?.node)) {
                 return createClassArrayType(element.type.$nodeDescription?.node);
             }
             return inferType(element.type.$nodeDescription?.node, cache);
