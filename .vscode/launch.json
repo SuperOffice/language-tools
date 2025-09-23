@@ -3,65 +3,74 @@
 // Hover to view descriptions of existing attributes.
 // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
 {
-	"version": "0.2.0",
-	"configurations": [
-		{
-			"name": "Launch Node",
-			"program": "${workspaceFolder}/packages/node_app/mainworker.cjs",
-			"request": "launch",
-			"skipFiles": [
-				"<node_internals>/**"
-			],
-			"type": "node",
-			"resolveSourceMapLocations": [
-				"${workspaceFolder}/packages/node_app/**"
-			],
-		},
-		{
-			"name": "superofficedx-vscode-tsfso",
-			"type": "extensionHost",
-			"request": "launch",
-			"args": [
-				"--extensionDevelopmentPath=${workspaceFolder}/packages/superofficedx-vscode-tsfso/",
-				"--disable-extensions",
-				"--folder-uri=${workspaceRoot}/test"
-			],
-			"outFiles": [
-				"${workspaceFolder}/packages/superofficedx-vscode-tsfso/dist/**/*.js"
-			],
-			"preLaunchTask": "npm: build:vscode-tsfso",
-			"autoAttachChildProcesses": false
-		},
-		{
-			"name": "superofficedx-vscode-core",
-			"type": "extensionHost",
-			"request": "launch",
-			"args": [
-				"--extensionDevelopmentPath=${workspaceFolder}/packages/superofficedx-vscode-core/",
-				"--disable-extensions",
-				"--folder-uri=${workspaceRoot}/test"
-			],
-			"outFiles": [
-				"${workspaceFolder}/packages/superofficedx-vscode-core/dist/**/*.js"
-			],
-			"preLaunchTask": "npm: build:vscode-core",
-			"autoAttachChildProcesses": false
-		},
-		{
-			"name": "superofficedx-vscode-crmscript",
-			"type": "extensionHost",
-			"request": "launch",
-			"args": [
-				"--extensionDevelopmentPath=${workspaceFolder}/packages/superofficedx-vscode-crmscript/",
-				"--disable-extensions",
-				"--folder-uri=${workspaceRoot}/packages/langium-crmscript/examples"
-			],
-			"outFiles": [
-				"${workspaceFolder}/packages/superofficedx-vscode-crmscript/out/**/*.js",
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Node",
+            "program": "${workspaceFolder}/packages/node_app/mainworker.cjs",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node",
+            "resolveSourceMapLocations": [
+                "${workspaceFolder}/packages/node_app/**"
+            ],
+        },
+        {
+            "name": "superofficedx-vscode-tsfso",
+            "type": "extensionHost",
+            "request": "launch",
+            "args": [
+                "--extensionDevelopmentPath=${workspaceFolder}/packages/superofficedx-vscode-tsfso/",
+                "--folder-uri=${workspaceRoot}/test"
+            ],
+            "outFiles": [
+                "${workspaceFolder}/packages/superofficedx-vscode-tsfso/dist/**/*.js"
+            ],
+            "preLaunchTask": "npm: build:vscode-tsfso",
+            "autoAttachChildProcesses": true
+        },
+        {
+            "name": "superofficedx-vscode-core",
+            "type": "extensionHost",
+            "request": "launch",
+            "args": [
+                "--extensionDevelopmentPath=${workspaceFolder}/packages/superofficedx-vscode-core/",
+                "--disable-extensions",
+                "--folder-uri=${workspaceRoot}/test"
+            ],
+            "outFiles": [
+                "${workspaceFolder}/packages/superofficedx-vscode-core/dist/**/*.js"
+            ],
+            "preLaunchTask": "npm: build:vscode-core",
+            "autoAttachChildProcesses": false
+        },
+        {
+            "name": "superofficedx-vscode-crmscript",
+            "type": "extensionHost",
+            "request": "launch",
+            "args": [
+                "--extensionDevelopmentPath=${workspaceFolder}/packages/superofficedx-vscode-crmscript/",
+                "--disable-extensions",
+                "--folder-uri=${workspaceRoot}/packages/langium-crmscript/examples"
+            ],
+            "outFiles": [
+                "${workspaceFolder}/packages/superofficedx-vscode-crmscript/out/**/*.js",
                 "${workspaceFolder}/packages/langium-crmscript/node_modules/langium"
-			],
-			"preLaunchTask": "npm: build:vscode-crmscript",
-			"autoAttachChildProcesses": true
-		}
-	]
+            ],
+            "preLaunchTask": "npm: build:vscode-crmscript",
+            "autoAttachChildProcesses": true
+        },
+        {
+            "name": "Attach to Server",
+            "type": "node",
+            "request": "attach",
+            "port": 6009,
+            "restart": true,
+            "outFiles": [
+                "${workspaceRoot}/packages/vscode/dist/*.js"
+            ]
+        },
+    ]
 }
