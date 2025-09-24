@@ -12,25 +12,31 @@ export const create = (ts: typeof import('typescript')): LanguageServicePlugin[]
                     return {
                         ...typeScriptPlugin,
                         async provideDiagnostics(document, token) {
-                            const diagnostics = await typeScriptPlugin.provideDiagnostics!(document, token);
-
+                            const diagnostics = await typeScriptPlugin.provideDiagnostics?.(document, token);
                             if (!diagnostics) return null;
 
-                            if (document.uri.includes('import_')) {
-                                const uri = document.uri;
-                                const match = uri.match(/import_(\d+)_(\d+)/);
+                            const { uri } = document;
+
+                            // Adjust diagnostic range for 'include_' URIs
+                            if (uri.includes('include_')) {
+                                const match = uri.match(/include_(\d+)_(\d+)/);
                                 if (match) {
-                                    const segment = match[0]; // "import_1_27"
-                                    const parts = segment.split('_');
-                                    const to = parseInt(parts[2], 10); // 27
+                                    const to = parseInt(match[2], 10);
                                     diagnostics.forEach(diagnostic => {
                                         diagnostic.range.start = Position.create(0, 0);
                                         diagnostic.range.end = Position.create(0, to);
                                     });
                                 }
                             }
-                            return diagnostics;
+
+                            // Filter out specific diagnostics for 'tsfso' URIs
+                            const filteredDiagnostics = uri.includes('tsfso')
+                                ? diagnostics.filter(d => d.code !== 1375)
+                                : diagnostics;
+
+                            return filteredDiagnostics;
                         }
+
                     };
                 },
             };
