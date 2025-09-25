@@ -13,7 +13,7 @@ interface IncludeDirective {
     endPosition: Position;
 }
 
-enum LanguageType {
+export enum LanguageType {
     Include = 'include',
     Typescript = 'tsfso',
 }

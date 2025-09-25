@@ -8,7 +8,7 @@ import { TypeScriptExtraServiceScript } from '@volar/typescript';
 import path from 'path';
 import ts, { ModuleResolutionKind } from 'typescript';
 import { URI } from 'vscode-uri';
-import { LanguageService } from './languageService.js';
+import { LanguageService, LanguageType } from './languageService.js';
 
 export function getLanguagePlugin(): LanguagePlugin<URI, TsfsoVirtualCode> {
     return {
@@ -56,7 +56,8 @@ export function getLanguagePlugin(): LanguagePlugin<URI, TsfsoVirtualCode> {
                 const newSettings = {
                     ...baseCompilationSettings,
                     module: ts.ModuleKind.ESNext,
-                    moduleResolution: ModuleResolutionKind.NodeNext
+                    moduleResolution: ModuleResolutionKind.NodeNext,
+                    //moduleDetection: ts.ModuleDetectionKind.Legacy,
                 };
 
                 return {
@@ -120,8 +121,12 @@ class TsfsoVirtualCode implements VirtualCode {
         const service = new LanguageService();
         const codeblocks = service.scan(documentText);
 
-        codeblocks.forEach((block, index) => {
+        let editedDocumentText: string = documentText;
+
+        const includeBlocks = codeblocks.filter(block => block.type === LanguageType.Include);
+        includeBlocks.forEach((block, index) => {
             let content = documentText.substring(block.range[0], block.range[1]);
+            editedDocumentText = editedDocumentText.replace(content, ' '.repeat(content.length));
 
             const contentLength = content.length;
             if (block.type === 'include' && block.fileName) {
@@ -135,6 +140,38 @@ class TsfsoVirtualCode implements VirtualCode {
                 mappings: [service.createMapping(block.range[0], contentLength)],
                 embeddedCodes: [],
             });
+
+            // collect parts for editedDocumentTextParts
+            editedDocumentText = editedDocumentText.replace(content, ' '.repeat(content.length));
+            //editedDocumentTextParts(block.range[0], block.range[1]);
         });
+
+        this.embeddedCodes.push({
+            id: `tsfso_${this.embeddedCodes.length}_0`,
+            languageId: 'typescript',
+            snapshot: service.createSnapshot(editedDocumentText, [0, editedDocumentText.length], LanguageType.Typescript),
+            mappings: [service.createMapping(0, editedDocumentText.length)],
+            embeddedCodes: [],
+        });
+
+        // create an editedDocumentText where all ranges in includeBlocks are filtered out
+        //const editedDocumentText = documentText.replace(editedDocumentTextParts, '');
+
+        // codeblocks.forEach((block, index) => {
+        //     let content = documentText.substring(block.range[0], block.range[1]);
+
+        //     const contentLength = content.length;
+        //     if (block.type === 'include' && block.fileName) {
+        //         content = service.readFileContent(this.uri, block.fileName);
+        //     }
+
+        //     this.embeddedCodes.push({
+        //         id: `${block.type}_${index}_${contentLength}`,
+        //         languageId: 'typescript',
+        //         snapshot: service.createSnapshot(content, block.range, block.type),
+        //         mappings: [service.createMapping(block.range[0], contentLength)],
+        //         embeddedCodes: [],
+        //     });
+        // });
     }
 }
