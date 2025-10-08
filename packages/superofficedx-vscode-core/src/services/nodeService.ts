@@ -11,9 +11,9 @@ export class NodeService implements INodeService {
 
     constructor(private readonly context: ExtensionContext, private httpHandler: IHttpHandler) {}
 
-    async executeScriptLocally(session: SuperOfficeAuthenticationSession, script: string): Promise<string> {       
+    async executeScriptLocally(session: SuperOfficeAuthenticationSession, script: string): Promise<string> {
         const childProcess = this.createChildProcess();
-        
+
         // Wait for 1 second before proceeding. This is the wait-time for the node to get started.
         // TODO: Figure out a better way ot detecting when the node is ready to accept the script.
         // setTimeout(() => {
@@ -31,11 +31,11 @@ export class NodeService implements INodeService {
             cwd: this.context.extensionPath,
             stdio: 'pipe',
         };
-    
+
         // If you want to debug the whole mainworker.cjs file, use '--inspect-brk''
         //const args = ['--inspect-brk=127.0.0.1:9234', '../node_app/mainworker.cjs'];
         const args = ['--inspect=127.0.0.1:9234', '../node_app/mainworker.cjs'];
-        
+
         return spawn('node', args, options);
     }
 
@@ -46,7 +46,7 @@ export class NodeService implements INodeService {
             window.showErrorMessage('No folder is open in the workspace.');
             return;
         }
-    
+
         const config = {
             type: 'node',
             request: 'attach',
@@ -56,7 +56,7 @@ export class NodeService implements INodeService {
             skipFiles: ['<node_internals>/**'],
             outFiles: ['${workspaceFolder}../node_app/mainworker.js'],
         };
-    
+
         // Start the debugging session with the specified configuration
         debug.startDebugging(workspace.workspaceFolders[0], config);
     }
@@ -72,28 +72,28 @@ export class NodeService implements INodeService {
                         parameters: "",
                         eventData: "",
                     };
-    
+
                     const result = await this.httpHandler.post<NodeResponse>('http://localhost:8080/script',
                         requestBody,
-                        { 
+                        {
                             'x-apiendpoint': `${session.webApiUri}`,
-                            'x-accesstoken': `Bearer ${session.accessToken}`,
+                            'x-accesstoken': `${session.accessToken}`,
                             'Accept': 'application/json'
                         }
                         );
                     return res(result.result);
                 }
             });
-    
+
             childProcess.stderr?.setEncoding('utf8');
             childProcess.stderr?.on('data', (stderr) => {
                 console.error(`Child Error: ${stderr}`);
             });
-    
+
             childProcess.on('close', (exitCode) => {
                 console.log(`Child exited with code: ${exitCode}`);
             });
-    
+
             childProcess.on('error', (error) => {
                 console.error(`Child process error: ${error.message}`);
                 return rej(error);

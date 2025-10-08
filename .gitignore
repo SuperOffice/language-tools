@@ -5,3 +5,4 @@ out
 .vscode-test
 test
 packages/superofficedx-vscode-core/tsconfig.tsbuildinfo
+packages/node_app/
