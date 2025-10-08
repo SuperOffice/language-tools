@@ -72,5 +72,21 @@
                 "${workspaceRoot}/packages/vscode/dist/*.js"
             ]
         },
+        {
+            "name": "Core + TSFSO",
+            "type": "extensionHost",
+            "request": "launch",
+            "args": [
+                "--extensionDevelopmentPath=${workspaceFolder}/packages/superofficedx-vscode-tsfso/",
+                "--extensionDevelopmentPath=${workspaceFolder}/packages/superofficedx-vscode-core/",
+                "--folder-uri=${workspaceRoot}/test",
+                "--disable-extensions"
+            ],
+            "outFiles": [
+                "${workspaceFolder}/packages/superofficedx-vscode-tsfso/dist/**/*.js"
+            ],
+            "preLaunchTask": "npm: build:vscode-tsfso",
+            "autoAttachChildProcesses": true
+        },
     ]
 }

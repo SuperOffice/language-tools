@@ -1,6 +1,5 @@
 {
-    "scripts": 
-    {
+    "scripts": {
         "preinstall": "npx only-allow pnpm",
         "build:vscode-core": "npm run build --prefix ./packages/superofficedx-vscode-core",
         "build:vscode-tsfso": "npm run build --prefix ./packages/superofficedx-vscode-tsfso",
@@ -9,18 +8,17 @@
         "test:core": "npm run test --prefix ./packages/superofficedx-vscode-core"
     },
     "devDependencies": {
-        "@eslint/js": "^9.14.0",
-        "@superoffice/webapi": "^10.3.4",
-        "@types/eslint__js": "^8.42.3",
+        "@eslint/js": "^9.37.0",
+        "@superoffice/webapi": "^11.4.1157",
         "@types/node": "latest",
-        "@types/vscode": "^1.95.0",
-        "@volar/language-server": "~2.4.0",
-        "@volar/vscode": "~2.4.0",
-        "@vscode/test-cli": "^0.0.10",
-        "@vscode/test-electron": "^2.3.9",
-        "eslint": "^9.15.0",
+        "@types/vscode": "^1.104.0",
+        "@volar/language-server": "~2.4.23",
+        "@volar/vscode": "~2.4.23",
+        "@vscode/test-cli": "^0.0.11",
+        "@vscode/test-electron": "^2.5.2",
         "esbuild": "latest",
-        "typescript": "^5.6.3",
-        "typescript-eslint": "^8.14.0"
+        "eslint": "^9.37.0",
+        "typescript": "^5.9.3",
+        "typescript-eslint": "^8.46.0"
     }
 }
