@@ -1,5 +1,5 @@
-export const NSDocumentTemplate = `/** 
-The template a document is based on is stored in the SO arc\template folder on the server. This will return the name as displayed in the GUI, and not the physical document name, of the template the document object is based on.
+export const NSDocumentTemplate = `/**
+The template a document is based on is stored in the SO arc\template folder on the server. This will return the name as displayed in the GUI, and not the physical document name, of the template the document object is based on.
 */
 class NSDocumentTemplate {
     Integer GetAutoeventId();
@@ -16,7 +16,7 @@ class NSDocumentTemplate {
     Void SetAutoeventId(Integer autoeventId);
     Void SetDefaultOref(String defaultOref);
     Void SetDeleted(Integer deleted);
-    /** 
+    /**
     Sets the direction of a document template
     */
     Void SetDirection(Integer direction);

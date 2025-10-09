@@ -1,13 +1,13 @@
 {
-	"extends": "../../tsconfig.base.json",
-	"compilerOptions": {
-		"outDir": "out",
-		"rootDir": "./src"
-	},
-	"include": [
-		"src",
-		"../langium-crmscript/src/language/builtin",
-	],
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "outDir": "out",
+        "rootDir": "../"
+    },
+    "include": [
+        "src",
+        "../langium-crmscript/src/language/builtin",
+    ],
     "exclude": [
         "node_modules",
         ".vscode-test-web"
