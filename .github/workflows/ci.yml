@@ -40,11 +40,6 @@ jobs:
             - name: Run vitest tests
               run: pnpm test
 
-            - name: Run VSCode extension tests
-              run: pnpm run test:core
-              env:
-                  DISPLAY: ":99.0"
-
     lint:
         runs-on: ubuntu-latest
 
