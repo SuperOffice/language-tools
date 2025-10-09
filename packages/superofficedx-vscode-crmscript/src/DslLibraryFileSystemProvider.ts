@@ -11,7 +11,7 @@ export class DslLibraryFileSystemProvider implements vscode.FileSystemProvider {
             }));
     }
 
-    stat(uri: vscode.Uri): vscode.FileStat {
+    stat(): vscode.FileStat {
         const date = Date.now();
         return {
             ctime: date,
@@ -21,7 +21,7 @@ export class DslLibraryFileSystemProvider implements vscode.FileSystemProvider {
         };
     }
 
-    readFile(uri: vscode.Uri): Uint8Array {
+    readFile(): Uint8Array {
         return new Uint8Array(Buffer.from(builtins));
     }
 
@@ -32,7 +32,7 @@ export class DslLibraryFileSystemProvider implements vscode.FileSystemProvider {
 
     watch() {
         return {
-            dispose: () => {}
+            dispose: () => { }
         };
     }
 
