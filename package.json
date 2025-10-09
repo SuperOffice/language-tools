@@ -5,6 +5,9 @@
         "build:vscode-tsfso": "npm run build --prefix ./packages/superofficedx-vscode-tsfso",
         "build:vscode-crmscript": "npm run build --prefix ./packages/superofficedx-vscode-crmscript",
         "build:langium-crmscript": "npm run langium:generate --prefix ./packages/langium-crmscript",
+        "test": "vitest",
+        "test:watch": "vitest --watch",
+        "test:coverage": "vitest --coverage",
         "test:core": "npm run test --prefix ./packages/superofficedx-vscode-core"
     },
     "devDependencies": {
@@ -19,6 +22,7 @@
         "esbuild": "latest",
         "eslint": "^9.37.0",
         "typescript": "^5.9.3",
-        "typescript-eslint": "^8.46.0"
+        "typescript-eslint": "^8.46.0",
+        "vitest": "^3.2.4"
     }
 }
