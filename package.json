@@ -19,6 +19,7 @@
         "esbuild": "latest",
         "eslint": "^9.37.0",
         "typescript": "^5.9.3",
-        "typescript-eslint": "^8.46.0"
+        "typescript-eslint": "^8.46.0",
+        "vitest": "^3.2.4"
     }
 }
