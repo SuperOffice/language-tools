@@ -5,6 +5,9 @@
         "build:vscode-tsfso": "npm run build --prefix ./packages/superofficedx-vscode-tsfso",
         "build:vscode-crmscript": "npm run build --prefix ./packages/superofficedx-vscode-crmscript",
         "build:langium-crmscript": "npm run langium:generate --prefix ./packages/langium-crmscript",
+        "test": "vitest",
+        "test:watch": "vitest --watch",
+        "test:coverage": "vitest --coverage",
         "test:core": "npm run test --prefix ./packages/superofficedx-vscode-core"
     },
     "devDependencies": {
