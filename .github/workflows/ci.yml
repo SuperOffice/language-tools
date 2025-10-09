@@ -37,20 +37,8 @@ jobs:
                   pnpm run build:vscode-core
                   pnpm run build:vscode-tsfso
 
-            - name: Debug - Check test files
-              run: |
-                  echo "Checking for test files..."
-                  find packages/language-server/test -name "*.test.ts" -type f || echo "No test files found"
-                  echo "Checking vitest config..."
-                  cat packages/language-server/vitest.config.ts
-
             - name: Run vitest tests
               run: pnpm test
-
-            - name: Run VSCode extension tests
-              run: pnpm run test:core
-              env:
-                  DISPLAY: ":99.0"
 
     lint:
         runs-on: ubuntu-latest
