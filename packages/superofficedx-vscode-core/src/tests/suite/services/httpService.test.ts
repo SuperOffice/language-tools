@@ -1,8 +1,7 @@
 import * as assert from 'assert';
 import * as sinon from 'sinon';
-import { HttpService } from '../../../services/httpService';
-import { IHttpHandler } from '../../../handlers/httpHandler';
-import { IFileSystemService } from '../../../services/fileSystemService';
+import { IHttpHandler } from '../../../handlers';
+import { HttpService, IFileSystemService } from '../../../services';
 import { State, UserClaims } from '../../../types/index';
 
 suite('HttpService Test Suite', () => {

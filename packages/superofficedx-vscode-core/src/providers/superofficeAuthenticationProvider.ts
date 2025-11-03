@@ -11,9 +11,7 @@ import {
 
 import { v4 as uuid } from 'uuid';
 import { State, SuoFile, SuperOfficeAuthenticationSession, Token, UserClaims } from '../types/index';
-import { IFileSystemService } from '../services/fileSystemService';
-import { IAuthenticationService } from '../services/authenticationService';
-import { IHttpService } from '../services/httpService';
+import { IFileSystemService, IAuthenticationService, IHttpService } from '../services';
 import { getPackagePublisher } from '../utils';
 
 export class SuperofficeAuthenticationProvider implements AuthenticationProvider, Disposable {
@@ -157,7 +155,7 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
         await this.updateContextKey(false);
     }
 
-    async setSession(session: SuperOfficeAuthenticationSession) {
+    async setSession(session: SuperOfficeAuthenticationSession): Promise<void> {
         this.currentSession = session;
         this._onDidChangeSessions.fire({ added: [session], removed: [], changed: [] });
         await this.updateContextKey(true);
@@ -185,7 +183,7 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
         await commands.executeCommand('setContext', 'extension.isAuthenticated', isAuthenticated);
     }
 
-    public async dispose() {
+    public async dispose(): Promise<void> {
         this.disposables.forEach(d => d.dispose());
         this.disposables = [];
         this._onDidChangeSessions.dispose();

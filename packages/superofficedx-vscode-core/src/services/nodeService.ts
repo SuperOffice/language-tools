@@ -1,5 +1,5 @@
 import { ChildProcess, spawn, SpawnOptions } from "child_process";
-import { IHttpHandler } from "../handlers/httpHandler";
+import { IHttpHandler } from "../handlers";
 import { ExtensionContext, workspace, window, debug } from 'vscode'
 import { NodeRequest, SuperOfficeAuthenticationSession, NodeResponse } from "../types";
 
@@ -9,7 +9,9 @@ export interface INodeService {
 
 export class NodeService implements INodeService {
 
-    constructor(private readonly context: ExtensionContext, private httpHandler: IHttpHandler) {}
+    constructor(
+        private readonly context: ExtensionContext, private readonly httpHandler: IHttpHandler
+    ) { }
 
     async executeScriptLocally(session: SuperOfficeAuthenticationSession, script: string): Promise<string> {
         const childProcess = this.createChildProcess();
@@ -39,7 +41,7 @@ export class NodeService implements INodeService {
         return spawn('node', args, options);
     }
 
-    private startDebugger() {
+    private startDebugger(): void {
 
         // Check if there is a folder open in the workspace
         if (!workspace.workspaceFolders) {
@@ -76,11 +78,13 @@ export class NodeService implements INodeService {
                     const result = await this.httpHandler.post<NodeResponse>('http://localhost:8080/script',
                         requestBody,
                         {
-                            'x-apiendpoint': `${session.webApiUri}`,
-                            'x-accesstoken': `${session.accessToken}`,
-                            'Accept': 'application/json'
+                            headers: {
+                                'x-apiendpoint': `${session.webApiUri}`,
+                                'x-accesstoken': `${session.accessToken}`,
+                                'Accept': 'application/json'
+                            }
                         }
-                        );
+                    );
                     return res(result.result);
                 }
             });
@@ -110,4 +114,3 @@ export class NodeService implements INodeService {
     // }
 
 }
-

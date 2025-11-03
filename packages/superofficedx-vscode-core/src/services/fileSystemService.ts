@@ -1,6 +1,6 @@
 import { FileType, Uri, workspace, window, FileSystemError } from 'vscode'
 
-import { IFileSystemHandler } from '../handlers/fileSystemHandler';
+import { IFileSystemHandler } from '../handlers';
 import { ScriptEntity, SuoFile } from '../types/index';
 import path from 'path';
 import { getFileType } from '../utils';
@@ -14,7 +14,9 @@ export interface IFileSystemService {
 }
 
 export class FileSystemService implements IFileSystemService {
-    constructor(private fileSystemHandler: IFileSystemHandler) { }
+    constructor(
+        private readonly fileSystemHandler: IFileSystemHandler
+    ) { }
 
     get suoFilePath(): string {
         return `./.superoffice/.suo`;
@@ -118,7 +120,7 @@ export class FileSystemService implements IFileSystemService {
 
     /**
  * Get the full URI for a file located within the current workspace.
- * 
+ *
  * @param relativePath The relative path to the desired file within the workspace.
  * @returns The full URI pointing to the file in the current workspace.
  * @throws {Error} If there's no workspace currently opened in VSCode.

@@ -1,4 +1,6 @@
 import * as http from 'http';
+import * as path from 'path';
+import * as fs from 'fs';
 import { env, ProgressLocation, Uri, window } from 'vscode';
 import { v4 as uuid } from 'uuid';
 import * as crypto from 'crypto';
@@ -22,6 +24,39 @@ export class AuthenticationService implements IAuthenticationService {
     private _codeVerifiers = new Map<string, string>();
     private _scopes = new Map<string, string[]>();
     private _environment: string = "";
+
+    /**
+     * Load HTML template from resources folder
+     */
+    private loadHtmlTemplate(filename: string): string {
+        try {
+            const resourcesPath = path.join(__dirname, 'resources', filename);
+            return fs.readFileSync(resourcesPath, 'utf8');
+        } catch (error) {
+            console.error(`Failed to load HTML template: ${filename}`, error);
+            // Fallback to simple HTML
+            if (filename.includes('success')) {
+                return `
+                    <html>
+                    <body style="text-align: center; font-family: system-ui; padding: 50px;">
+                        <h1 style="color: #28a745;">Authentication Successful!</h1>
+                        <p>You can now close this tab and return to Visual Studio Code.</p>
+                    </body>
+                    </html>
+                `;
+            } else {
+                return `
+                    <html>
+                    <body style="text-align: center; font-family: system-ui; padding: 50px;">
+                        <h1 style="color: #dc3545;">Authentication Failed</h1>
+                        <p>Please try again.</p>
+                    </body>
+                    </html>
+                `;
+            }
+        }
+    }
+
     /**
       * Log in to OpenId Connect
       */
@@ -135,28 +170,24 @@ export class AuthenticationService implements IAuthenticationService {
 
                     // Send a confirmation page to the browser
                     res.writeHead(200, { 'Content-Type': 'text/html' });
-                    res.end(`
-                        <html>
-                        <body>
-                            <h1>Authentication Successful!</h1>
-                            <p>You can close this tab and return to Visual Studio Code.</p>
-                        </body>
-                        </html>
-                    `);
+                    res.end(this.loadHtmlTemplate('auth-success.html'));
+                    // res.end(`
+                    //     <html>
+                    //     <body>
+                    //         <h1>Authentication Successful!</h1>
+                    //         <p>You can close this tab and return to Visual Studio Code.</p>
+                    //     </body>
+                    //     </html>
+                    // `);
 
                     resolve(tokenInformation);
 
                 } catch (error) {
                     // Send error feedback to the browser if possible
                     res.writeHead(500, { 'Content-Type': 'text/html' });
-                    res.end(`
-                        <html>
-                        <body>
-                            <h1>Authentication Failed</h1>
-                            <p>${(error as Error).message}</p>
-                        </body>
-                        </html>
-                    `);
+                    const errorHtml = this.loadHtmlTemplate('auth-error.html')
+                        .replace('{{ERROR_MESSAGE}}', (error as Error).message);
+                    res.end(errorHtml);
                     reject(error);
                 } finally {
                     this.closeServer();
@@ -187,7 +218,7 @@ export class AuthenticationService implements IAuthenticationService {
         }
     }
 
-    private toBase64UrlEncoding(buffer: Buffer) {
+    private toBase64UrlEncoding(buffer: Buffer): string {
         return buffer.toString('base64')
             .replace(/\+/g, '-')
             .replace(/\//g, '_')

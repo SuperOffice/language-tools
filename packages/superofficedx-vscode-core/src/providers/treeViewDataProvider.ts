@@ -1,7 +1,7 @@
 import { Uri, TreeItem, TreeItemCollapsibleState, ThemeIcon, Command, TreeDataProvider, EventEmitter, Event, ExtensionContext } from 'vscode';
 import { ScriptInfo } from '../types/index';
 import { SuperofficeAuthenticationProvider } from './superofficeAuthenticationProvider';
-import { IHttpService } from '../services/httpService';
+import { IHttpService } from '../services';
 
 interface TreeDataItem {
     label: string;
@@ -44,7 +44,7 @@ export class TreeViewDataProvider implements TreeDataProvider<Node> {
         }
     }
 
-    get SCRIPT_DETAILS() {
+    get SCRIPT_DETAILS(): string {
         return 'superOfficeDX.viewScriptDetails'
     }
 
@@ -92,15 +92,15 @@ export class TreeViewDataProvider implements TreeDataProvider<Node> {
 
     /**
      * Processes a given script along with its path.
-     * The function parses the path, constructs the folder hierarchy 
-     * if it doesn't exist, and then adds the script at the appropriate 
+     * The function parses the path, constructs the folder hierarchy
+     * if it doesn't exist, and then adds the script at the appropriate
      * node in the tree.
      *
      * @param root - The root node of the tree.
      * @param scriptPath - The path associated with the script.
      * @param script - The script data.
      */
-    addToTreeData(root: TreeDataItem, scriptPath: string, scriptInfo: ScriptInfo) {
+    addToTreeData(root: TreeDataItem, scriptPath: string, scriptInfo: ScriptInfo): void {
         // Split path by '/' and remove empty segments
         const parts = scriptPath.split('/').filter(Boolean);
         const currentNode = parts.reduce(this.getOrAddChildNode, root);

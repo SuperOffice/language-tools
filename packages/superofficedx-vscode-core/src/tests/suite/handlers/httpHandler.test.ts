@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 import * as sinon from 'sinon';
-import { HttpHandler } from '../../../handlers/httpHandler';
+import { HttpHandler } from '../../../handlers';
 
 
 suite('HttpHandler Test Suite', () => {
