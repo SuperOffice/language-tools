@@ -1,3 +1,3 @@
-export { DIContainer } from './diContainer';
-export { ServiceKeys } from './serviceKeys';
-export { createContainer, configureServices } from './serviceRegistrations';
+export { DIContainer } from './core';
+export { createContainer } from './containerRegistration';
+export { ConfigurationKeys } from './configurations/configurationKeys';

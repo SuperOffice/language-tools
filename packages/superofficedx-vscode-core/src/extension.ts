@@ -3,18 +3,18 @@ import { ExtensionContext, workspace, window } from 'vscode';
 import { TreeViewDataProvider, SuperofficeAuthenticationProvider, CustomTextDocumentContentProvider } from './providers';
 import { registerCommands } from './commands';
 import { getCustomScheme } from './utils';
-import { createContainer, ServiceKeys } from './container';
+import { createContainer, ConfigurationKeys } from './container';
 
 export async function activate(context: ExtensionContext): Promise<void> {
-    console.log('"vscode-superoffice" extension is now active.');
+    console.log('SuperOffice Core Tools is now active.');
 
     // Create and configure DI container
     const container = createContainer(context);
 
     // Resolve services from container
-    const textContentProvider = container.resolve<CustomTextDocumentContentProvider>(ServiceKeys.TextDocumentContentProvider);
-    const authProvider = container.resolve<SuperofficeAuthenticationProvider>(ServiceKeys.AuthenticationProvider);
-    const treeViewDataProvider = container.resolve<TreeViewDataProvider>(ServiceKeys.TreeViewDataProvider);
+    const textContentProvider = container.resolve<CustomTextDocumentContentProvider>(ConfigurationKeys.TextDocumentContentProvider);
+    const authProvider = container.resolve<SuperofficeAuthenticationProvider>(ConfigurationKeys.AuthenticationProvider);
+    const treeViewDataProvider = container.resolve<TreeViewDataProvider>(ConfigurationKeys.TreeViewDataProvider);
 
     // Register providers with VS Code
     context.subscriptions.push(workspace.registerTextDocumentContentProvider(getCustomScheme(), textContentProvider));

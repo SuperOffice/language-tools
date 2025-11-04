@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import assert from 'assert';
 import { registerCommands, CommandKeys } from '../../../commands';
 import { HttpService, IHttpService, INodeService, NodeService } from '../../../services';
-import { DIContainer, ServiceKeys } from '../../../container';
+import { DIContainer, ConfigurationKeys } from '../../../container';
 import { ScriptEntity } from '../../../types';
 
 /**
@@ -18,9 +18,9 @@ function createTestContainer(
     const container = new DIContainer();
 
     // Register the mocked services
-    container.registerSingleton(ServiceKeys.ExtensionContext, () => context);
-    container.registerSingleton(ServiceKeys.HttpService, () => mockHttpService);
-    container.registerSingleton(ServiceKeys.NodeService, () => mockNodeService);
+    container.registerSingleton(ConfigurationKeys.ExtensionContext, () => context);
+    container.registerSingleton(ConfigurationKeys.HttpService, () => mockHttpService);
+    container.registerSingleton(ConfigurationKeys.NodeService, () => mockNodeService);
 
     // Register other services as needed (auth provider, etc.)
     // You might need to add more based on what your commands require

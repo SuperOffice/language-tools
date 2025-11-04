@@ -1,161 +1,162 @@
 {
-  "name": "superofficedx-vscode-core",
-  "publisher": "superoffice",
-  "displayName": "SuperOffice Core Tools",
-  "description": "Provides core functionality for SuperOffice VS Code extensions.",
-  "qna": "https://github.com/SuperOffice/language-tools/issues",
-  "bugs": {
-    "url": "https://github.com/SuperOffice/language-tools/issues"
-  },
-  "version": "0.0.1",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/SuperOffice/language-tools.git"
-  },
-  "engines": {
-    "vscode": "^1.95.0"
-  },
-  "categories": [
-    "Other"
-  ],
-  "activationEvents": [],
-  "main": "./dist/extension.js",
-  "contributes": {
-    "commands": [
-      {
-        "command": "superOfficeDX.startNativeAppFlow",
-        "title": "Sign In",
-        "icon": "$(log-in)",
-        "category": "SuperOffice"
-      },
-      {
-        "command": "superOfficeDX.viewScriptDetails",
-        "title": "ViewScriptDetails"
-      },
-      {
-        "command": "superOfficeDX.previewScript",
-        "title": "PreviewScript"
-      },
-      {
-        "command": "superOfficeDX.downloadScript",
-        "title": "DownloadScript"
-      },
-      {
-        "command": "superOfficeDX.downloadScriptFolder",
-        "title": "DownloadScriptFolder"
-      },
-      {
-        "command": "superOfficeDX.executeTypeScriptLocally",
-        "title": "ExecuteTypeScriptLocally",
-        "category": "SuperOffice",
-        "enablement": "resourceScheme == file"
-      },
-      {
-        "command": "superOfficeDX.executeTypeScript",
-        "title": "ExecuteTypeScript",
-        "category": "SuperOffice",
-        "enablement": "resourceScheme == file"
-      },
-      {
-        "command": "superOfficeDX.uploadScript",
-        "title": "UploadScript",
-        "category": "SuperOffice",
-        "enablement": "resourceScheme == file"
-      }
-    ],
-    "viewsContainers": {
-      "activitybar": [
-        {
-          "id": "superOfficeDX",
-          "title": "SuperOffice DX",
-          "icon": "/resources/logo.svg"
-        }
-      ]
+    "name": "superofficedx-vscode-core",
+    "publisher": "superoffice",
+    "displayName": "SuperOffice Core Tools",
+    "description": "Provides core functionality for SuperOffice VS Code extensions.",
+    "qna": "https://github.com/SuperOffice/language-tools/issues",
+    "bugs": {
+        "url": "https://github.com/SuperOffice/language-tools/issues"
     },
-    "views": {
-      "superOfficeDX": [
-        {
-          "id": "superOfficeDX.scriptExplorer",
-          "name": "Scripts",
-          "icon": "/resources/logo.svg"
-        }
-      ]
+    "version": "0.0.1",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/SuperOffice/language-tools.git"
     },
-    "viewsWelcome": [
-      {
-        "view": "superOfficeDX.scriptExplorer",
-        "contents": "You are not logged in to SuperOffice [learn more](https://docs.superoffice.com/).\n[Login](command:superOfficeDX.startNativeAppFlow)"
-      }
+    "engines": {
+        "vscode": "^1.95.0"
+    },
+    "categories": [
+        "Other"
     ],
-    "submenus": [
-      {
-        "id": "superofficedx.submenu",
-        "label": "SuperOffice"
-      }
-    ],
-    "menus": {
-      "view/title": [],
-      "view/item/context": [
-        {
-          "command": "superOfficeDX.previewScript",
-          "group": "0_script",
-          "when": "view == superOfficeDX.scriptExplorer && viewItem == script"
+    "activationEvents": [],
+    "main": "./dist/extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "superOfficeDX.startNativeAppFlow",
+                "title": "Sign In",
+                "icon": "$(log-in)",
+                "category": "SuperOffice"
+            },
+            {
+                "command": "superOfficeDX.viewScriptDetails",
+                "title": "ViewScriptDetails"
+            },
+            {
+                "command": "superOfficeDX.previewScript",
+                "title": "PreviewScript"
+            },
+            {
+                "command": "superOfficeDX.downloadScript",
+                "title": "DownloadScript"
+            },
+            {
+                "command": "superOfficeDX.downloadScriptFolder",
+                "title": "DownloadScriptFolder"
+            },
+            {
+                "command": "superOfficeDX.executeTypeScriptLocally",
+                "title": "ExecuteTypeScriptLocally",
+                "category": "SuperOffice",
+                "enablement": "resourceScheme == file"
+            },
+            {
+                "command": "superOfficeDX.executeTypeScript",
+                "title": "ExecuteTypeScript",
+                "category": "SuperOffice",
+                "enablement": "resourceScheme == file"
+            },
+            {
+                "command": "superOfficeDX.uploadScript",
+                "title": "UploadScript",
+                "category": "SuperOffice",
+                "enablement": "resourceScheme == file"
+            }
+        ],
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "superOfficeDX",
+                    "title": "SuperOffice DX",
+                    "icon": "/resources/logo.svg"
+                }
+            ]
         },
-        {
-          "command": "superOfficeDX.downloadScript",
-          "group": "0_script",
-          "when": "view == superOfficeDX.scriptExplorer && viewItem == script"
+        "views": {
+            "superOfficeDX": [
+                {
+                    "id": "superOfficeDX.scriptExplorer",
+                    "name": "Scripts",
+                    "icon": "/resources/logo.svg"
+                }
+            ]
         },
-        {
-          "command": "superOfficeDX.downloadScriptFolder",
-          "group": "0_script",
-          "when": "view == superOfficeDX.scriptExplorer && viewItem == folder"
+        "viewsWelcome": [
+            {
+                "view": "superOfficeDX.scriptExplorer",
+                "contents": "You are not logged in to SuperOffice [learn more](https://docs.superoffice.com/).\n[Login](command:superOfficeDX.startNativeAppFlow)"
+            }
+        ],
+        "submenus": [
+            {
+                "id": "superofficedx.submenu",
+                "label": "SuperOffice"
+            }
+        ],
+        "menus": {
+            "view/title": [],
+            "view/item/context": [
+                {
+                    "command": "superOfficeDX.previewScript",
+                    "group": "0_script",
+                    "when": "view == superOfficeDX.scriptExplorer && viewItem == script"
+                },
+                {
+                    "command": "superOfficeDX.downloadScript",
+                    "group": "0_script",
+                    "when": "view == superOfficeDX.scriptExplorer && viewItem == script"
+                },
+                {
+                    "command": "superOfficeDX.downloadScriptFolder",
+                    "group": "0_script",
+                    "when": "view == superOfficeDX.scriptExplorer && viewItem == folder"
+                }
+            ],
+            "explorer/context": [
+                {
+                    "submenu": "superofficedx.submenu",
+                    "group": "superoffice",
+                    "when": "extension.isAuthenticated"
+                }
+            ],
+            "superofficedx.submenu": [
+                {
+                    "command": "superOfficeDX.executeTypeScriptLocally",
+                    "when": "resourceExtname == .tsfso"
+                },
+                {
+                    "command": "superOfficeDX.executeTypeScript",
+                    "when": "resourceExtname == .tsfso"
+                },
+                {
+                    "command": "superOfficeDX.uploadScript"
+                }
+            ]
         }
-      ],
-      "explorer/context": [
-        {
-          "submenu": "superofficedx.submenu",
-          "group": "superoffice",
-          "when": "extension.isAuthenticated"
-        }
-      ],
-      "superofficedx.submenu": [
-        {
-          "command": "superOfficeDX.executeTypeScriptLocally",
-          "when": "resourceExtname == .tsfso"
-        },
-        {
-          "command": "superOfficeDX.executeTypeScript",
-          "when": "resourceExtname == .tsfso"
-        },
-        {
-          "command": "superOfficeDX.uploadScript"
-        }
-      ]
+    },
+    "scripts": {
+        "preinstall": "npx only-allow pnpm",
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "pretest": "npm run compile",
+        "test": "vscode-test",
+        "build": "node ./scripts/build.js",
+        "test:coverage": "vscode-test --coverage"
+    },
+    "devDependencies": {
+        "@playwright/test": "^1.49.0",
+        "@types/mocha": "^10.0.1",
+        "@types/node": "*",
+        "@types/sinon": "^17.0.3",
+        "@types/uuid": "^9.0.5",
+        "@vscode/test-cli": "*",
+        "@vscode/test-electron": "*",
+        "esbuild": "*",
+        "glob": "^10.3.3",
+        "mocha": "^10.7.3",
+        "sinon": "^19.0.2",
+        "typescript": "*",
+        "uuid": "^9.0.1"
     }
-  },
-  "scripts": {
-    "preinstall": "npx only-allow pnpm",
-    "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile",
-    "test": "vscode-test",
-    "build": "node ./scripts/build.js"
-  },
-  "devDependencies": {
-    "@playwright/test": "^1.49.0",
-    "@types/mocha": "^10.0.1",
-    "@types/node": "*",
-    "@types/sinon": "^17.0.3",
-    "@types/uuid": "^9.0.5",
-    "@vscode/test-cli": "*",
-    "@vscode/test-electron": "*",
-    "esbuild": "*",
-    "glob": "^10.3.3",
-    "mocha": "^10.7.3",
-    "sinon": "^19.0.2",
-    "typescript": "*",
-    "uuid": "^9.0.1"
-  }
 }

@@ -1,5 +1,5 @@
 import { ExtensionContext, commands } from 'vscode';
-import { DIContainer, ServiceKeys } from '../../container';
+import { DIContainer, ConfigurationKeys } from '../../container';
 import { CommandKeys } from '../commandKeys';
 import { startNativeAppFlow } from '../implementations/auth';
 
@@ -16,7 +16,7 @@ class AuthCommandFactory {
  * Register all authentication-related commands
  */
 export function registerAuthCommands(container: DIContainer): void {
-    const context = container.resolve<ExtensionContext>(ServiceKeys.ExtensionContext);
+    const context = container.resolve<ExtensionContext>(ConfigurationKeys.ExtensionContext);
     const authFactory = new AuthCommandFactory();
 
     context.subscriptions.push(

@@ -1,7 +1,7 @@
 /**
- * Service registration keys for the DI container
+ * Configuration registration keys for the DI container
  */
-export const ServiceKeys = {
+export const ConfigurationKeys = {
     // Handlers
     FileSystemHandler: Symbol('FileSystemHandler'),
     HttpHandler: Symbol('HttpHandler'),

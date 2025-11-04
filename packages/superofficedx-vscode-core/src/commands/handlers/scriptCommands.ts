@@ -1,5 +1,5 @@
 import { ExtensionContext, commands, Uri, window } from 'vscode';
-import { DIContainer, ServiceKeys } from '../../container';
+import { DIContainer, ConfigurationKeys } from '../../container';
 import { CommandKeys } from '../commandKeys';
 import { Node, SuperofficeAuthenticationProvider } from '../../providers';
 import { IHttpService, INodeService } from '../../services';
@@ -67,9 +67,9 @@ class ScriptCommandFactory implements IScriptCommands {
     // ========================================================================
 
     createPreviewCommand() {
-        const httpService = this.container.resolve<IHttpService>(ServiceKeys.HttpService);
-        const context = this.container.resolve<ExtensionContext>(ServiceKeys.ExtensionContext);
-        const authProvider = this.container.resolve<SuperofficeAuthenticationProvider>(ServiceKeys.AuthenticationProvider);
+        const httpService = this.container.resolve<IHttpService>(ConfigurationKeys.HttpService);
+        const context = this.container.resolve<ExtensionContext>(ConfigurationKeys.ExtensionContext);
+        const authProvider = this.container.resolve<SuperofficeAuthenticationProvider>(ConfigurationKeys.AuthenticationProvider);
 
         return async (node: Node): Promise<void> => {
             const result = await this.preview({ node, context, httpService, authProvider });
@@ -86,9 +86,9 @@ class ScriptCommandFactory implements IScriptCommands {
     }
 
     createExecuteCommand() {
-        const httpService = this.container.resolve<IHttpService>(ServiceKeys.HttpService);
-        const context = this.container.resolve<ExtensionContext>(ServiceKeys.ExtensionContext);
-        const authProvider = this.container.resolve<SuperofficeAuthenticationProvider>(ServiceKeys.AuthenticationProvider);
+        const httpService = this.container.resolve<IHttpService>(ConfigurationKeys.HttpService);
+        const context = this.container.resolve<ExtensionContext>(ConfigurationKeys.ExtensionContext);
+        const authProvider = this.container.resolve<SuperofficeAuthenticationProvider>(ConfigurationKeys.AuthenticationProvider);
 
         return async (fileUri: Uri): Promise<void> => {
             const result = await this.execute({ fileUri, context, httpService, authProvider });
@@ -105,9 +105,9 @@ class ScriptCommandFactory implements IScriptCommands {
     }
 
     createExecuteLocallyCommand() {
-        const nodeService = this.container.resolve<INodeService>(ServiceKeys.NodeService);
-        const context = this.container.resolve<ExtensionContext>(ServiceKeys.ExtensionContext);
-        const authProvider = this.container.resolve<SuperofficeAuthenticationProvider>(ServiceKeys.AuthenticationProvider);
+        const nodeService = this.container.resolve<INodeService>(ConfigurationKeys.NodeService);
+        const context = this.container.resolve<ExtensionContext>(ConfigurationKeys.ExtensionContext);
+        const authProvider = this.container.resolve<SuperofficeAuthenticationProvider>(ConfigurationKeys.AuthenticationProvider);
 
         return async (fileUri: Uri): Promise<void> => {
             const result = await this.executeLocally({ fileUri, context, nodeService, authProvider });
@@ -124,9 +124,9 @@ class ScriptCommandFactory implements IScriptCommands {
     }
 
     createDownloadCommand() {
-        const httpService = this.container.resolve<IHttpService>(ServiceKeys.HttpService);
-        const context = this.container.resolve<ExtensionContext>(ServiceKeys.ExtensionContext);
-        const authProvider = this.container.resolve<SuperofficeAuthenticationProvider>(ServiceKeys.AuthenticationProvider);
+        const httpService = this.container.resolve<IHttpService>(ConfigurationKeys.HttpService);
+        const context = this.container.resolve<ExtensionContext>(ConfigurationKeys.ExtensionContext);
+        const authProvider = this.container.resolve<SuperofficeAuthenticationProvider>(ConfigurationKeys.AuthenticationProvider);
 
         return async (node: Node): Promise<void> => {
             const result = await this.download({ node, context, httpService, authProvider });
@@ -143,9 +143,9 @@ class ScriptCommandFactory implements IScriptCommands {
     }
 
     createDownloadFolderCommand() {
-        const httpService = this.container.resolve<IHttpService>(ServiceKeys.HttpService);
-        const context = this.container.resolve<ExtensionContext>(ServiceKeys.ExtensionContext);
-        const authProvider = this.container.resolve<SuperofficeAuthenticationProvider>(ServiceKeys.AuthenticationProvider);
+        const httpService = this.container.resolve<IHttpService>(ConfigurationKeys.HttpService);
+        const context = this.container.resolve<ExtensionContext>(ConfigurationKeys.ExtensionContext);
+        const authProvider = this.container.resolve<SuperofficeAuthenticationProvider>(ConfigurationKeys.AuthenticationProvider);
 
         return async (node: Node): Promise<void> => {
             const result = await this.downloadFolder({ node, context, httpService, authProvider });
@@ -162,9 +162,9 @@ class ScriptCommandFactory implements IScriptCommands {
     }
 
     createUploadCommand() {
-        const httpService = this.container.resolve<IHttpService>(ServiceKeys.HttpService);
-        const context = this.container.resolve<ExtensionContext>(ServiceKeys.ExtensionContext);
-        const authProvider = this.container.resolve<SuperofficeAuthenticationProvider>(ServiceKeys.AuthenticationProvider);
+        const httpService = this.container.resolve<IHttpService>(ConfigurationKeys.HttpService);
+        const context = this.container.resolve<ExtensionContext>(ConfigurationKeys.ExtensionContext);
+        const authProvider = this.container.resolve<SuperofficeAuthenticationProvider>(ConfigurationKeys.AuthenticationProvider);
 
         return async (fileUri: Uri): Promise<void> => {
             const result = await this.upload({ fileUri, context, httpService, authProvider });
@@ -200,7 +200,7 @@ class ScriptCommandFactory implements IScriptCommands {
  * Register script commands using the strict factory with custom authentication
  */
 export function registerScriptCommands(container: DIContainer): void {
-    const context = container.resolve<ExtensionContext>(ServiceKeys.ExtensionContext);
+    const context = container.resolve<ExtensionContext>(ConfigurationKeys.ExtensionContext);
     const scriptFactory = new ScriptCommandFactory(container);
 
     context.subscriptions.push(
