@@ -88,5 +88,20 @@
             "preLaunchTask": "npm: build:vscode-tsfso",
             "autoAttachChildProcesses": true
         },
+        {
+            "name": "superofficedx-vscode-crmscript-new",
+            "type": "extensionHost",
+            "request": "launch",
+            "args": [
+                "--extensionDevelopmentPath=${workspaceFolder}/packages/superofficedx-vscode-crmscript/",
+                "--disable-extensions",
+                "--folder-uri=${workspaceRoot}/packages/crmscript-language-server/test-workspace"
+            ],
+            "outFiles": [
+                "${workspaceFolder}/packages/superofficedx-vscode-crmscript/out/**/*.js"
+            ],
+            "preLaunchTask": "npm: build:vscode-crmscript",
+            "autoAttachChildProcesses": true
+        }
     ]
 }

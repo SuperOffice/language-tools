@@ -1,77 +1,77 @@
 {
-  "name": "superofficedx-vscode-crmscript",
-  "publisher": "superoffice",
-  "displayName": "TypeScript for SuperOffice",
-  "description": "",
-  "qna": "https://github.com/SuperOffice/language-tools/issues",
-  "bugs": {
-    "url": "https://github.com/SuperOffice/language-tools/issues"
-  },
-  "version": "0.0.1",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/SuperOffice/language-tools.git"
-  },
-  "engines": {
-    "vscode": "^1.95.0"
-  },
-  "categories": [
-    "Other"
-  ],
-  "activationEvents": [],  
-  "main": "./out/superofficedx-vscode-crmscript/src/main.cjs",
-  "contributes": {
-    "languages": [
-      {
-        "id": "crmscript",
-        "extensions": [
-          ".crmscript"
-        ],
-        "configuration": "./syntaxes/crmscript-language-configuration.json",
-        "icon": {
-          "light": "/resources/logo.svg",
-          "dark": "/resources/logo.svg"
-        }
-      },
-      {
-        "id": "crmscript-definition",
-        "extensions": [
-          ".crmscript-definition"
-        ],
-        "configuration": "./syntaxes/crmscript-language-configuration.json",
-        "icon": {
-          "light": "/resources/logo.svg",
-          "dark": "/resources/logo.svg"
-        }
-      }
+    "name": "superofficedx-vscode-crmscript",
+    "publisher": "superoffice",
+    "displayName": "TypeScript for SuperOffice",
+    "description": "",
+    "qna": "https://github.com/SuperOffice/language-tools/issues",
+    "bugs": {
+        "url": "https://github.com/SuperOffice/language-tools/issues"
+    },
+    "version": "0.0.1",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/SuperOffice/language-tools.git"
+    },
+    "engines": {
+        "vscode": "^1.95.0"
+    },
+    "categories": [
+        "Other"
     ],
-    "grammars": [
-      {
-        "language": "crmscript",
-        "scopeName": "source.crmscript",
-        "path": "./syntaxes/crmscript.tmLanguage.json"
-      },
-      {
-        "language": "crmscript-definition",
-        "scopeName": "source.crmscript-definition",
-        "path": "./syntaxes/crmscript-definition.tmLanguage.json"
-      }
-    ]
-  },
-  "scripts": {
-    "preinstall": "npx only-allow pnpm",
-    "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
-    "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js",
-    "build": "node ./scripts/esbuild.mjs"
-  },
-  "dependencies": {
-    "vscode-languageclient": "~9.0.1"
-  },
-  "devDependencies": {
-    "esbuild": "*"
-  }
+    "activationEvents": [],
+    "main": "./out/superofficedx-vscode-crmscript/src/main.cjs",
+    "contributes": {
+        "languages": [
+            {
+                "id": "crmscript",
+                "extensions": [
+                    ".crmscript"
+                ],
+                "configuration": "./syntaxes/crmscript-language-configuration.json",
+                "icon": {
+                    "light": "/resources/logo.svg",
+                    "dark": "/resources/logo.svg"
+                }
+            },
+            {
+                "id": "crmscript-definition",
+                "extensions": [
+                    ".crmscript-definition"
+                ],
+                "configuration": "./syntaxes/crmscript-language-configuration.json",
+                "icon": {
+                    "light": "/resources/logo.svg",
+                    "dark": "/resources/logo.svg"
+                }
+            }
+        ],
+        "grammars": [
+            {
+                "language": "crmscript",
+                "scopeName": "source.crmscript",
+                "path": "./syntaxes/crmscript.tmLanguage.json"
+            },
+            {
+                "language": "crmscript-definition",
+                "scopeName": "source.crmscript-definition",
+                "path": "./syntaxes/crmscript-definition.tmLanguage.json"
+            }
+        ]
+    },
+    "scripts": {
+        "preinstall": "npx only-allow pnpm",
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "pretest": "npm run compile && npm run lint",
+        "lint": "eslint src --ext ts",
+        "test": "node ./out/test/runTest.js",
+        "build": "node ./scripts/esbuild_new.mjs"
+    },
+    "dependencies": {
+        "vscode-languageclient": "~9.0.1"
+    },
+    "devDependencies": {
+        "esbuild": "*"
+    }
 }
