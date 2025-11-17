@@ -1,12 +1,9 @@
 import { window, workspace, authentication } from 'vscode';
-import {
-    ScriptUploadParams,
-    CommandResult,
-    createSuccessResult,
-    createErrorResult,
-    isValidFileUri
-} from '../../types';
-import { SuperOfficeAuthenticationSession } from '../../../types';
+import { ScriptUploadParams } from '../../types/commandContracts';
+import { CommandResult } from '../../types/commandContracts';
+import { createSuccessResult, createErrorResult, isValidFileUri } from '../../types/commandContracts';
+import { SuperOfficeAuthenticationSession } from '../../../types/authSession';
+
 import { getPackagePublisher } from '../../../utils';
 
 export async function upload(params: ScriptUploadParams): Promise<CommandResult<void>> {

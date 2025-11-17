@@ -1,10 +1,8 @@
 import { TextDocument, workspace, window } from 'vscode';
-import {
-    ScriptViewDetailsParams,
-    CommandResult,
-    createSuccessResult,
-    createErrorResult
-} from '../../types';
+import { ScriptViewDetailsParams } from '../../types/commandContracts';
+import { CommandResult } from '../../types/commandContracts';
+import { createSuccessResult } from '../../types/commandContracts';
+import { createErrorResult } from '../../types/commandContracts';
 
 const openedScripts = new Map<string, TextDocument>();
 

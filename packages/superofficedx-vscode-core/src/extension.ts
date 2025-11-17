@@ -1,9 +1,11 @@
 import { ExtensionContext, workspace, window } from 'vscode';
-
-import { TreeViewDataProvider, SuperofficeAuthenticationProvider, CustomTextDocumentContentProvider } from './providers';
-import { registerCommands } from './commands';
+import { CustomTextDocumentContentProvider } from "./providers/textDocumentContentProvider";
+import { SuperofficeAuthenticationProvider } from "./providers/superofficeAuthenticationProvider";
+import { TreeViewDataProvider } from "./providers/treeViewDataProvider";
+import { registerCommands } from './commands/commandRegistration';
 import { getCustomScheme } from './utils';
-import { createContainer, ConfigurationKeys } from './container';
+import { createContainer } from './container/containerRegistration';
+import { ConfigurationKeys } from './container/configurations/configurationKeys';
 
 export async function activate(context: ExtensionContext): Promise<void> {
     console.log('SuperOffice Core Tools is now active.');

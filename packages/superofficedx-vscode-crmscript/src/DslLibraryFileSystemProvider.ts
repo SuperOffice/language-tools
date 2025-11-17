@@ -3,7 +3,7 @@ import { builtins } from '../../langium-crmscript/src/language/builtin/builtins.
 
 export class DslLibraryFileSystemProvider implements vscode.FileSystemProvider {
 
-    static register(context: vscode.ExtensionContext) {
+    static register(context: vscode.ExtensionContext): void {
         context.subscriptions.push(
             vscode.workspace.registerFileSystemProvider('builtins', new DslLibraryFileSystemProvider(), {
                 isReadonly: true,
@@ -30,9 +30,9 @@ export class DslLibraryFileSystemProvider implements vscode.FileSystemProvider {
     private readonly didChangeFile = new vscode.EventEmitter<vscode.FileChangeEvent[]>();
     onDidChangeFile = this.didChangeFile.event;
 
-    watch() {
+    watch(): vscode.Disposable {
         return {
-            dispose: () => { }
+            dispose: (): void => { }
         };
     }
 
@@ -40,19 +40,19 @@ export class DslLibraryFileSystemProvider implements vscode.FileSystemProvider {
         throw vscode.FileSystemError.NoPermissions();
     }
 
-    createDirectory() {
+    createDirectory(): void {
         throw vscode.FileSystemError.NoPermissions();
     }
 
-    writeFile() {
+    writeFile(): void {
         throw vscode.FileSystemError.NoPermissions();
     }
 
-    delete() {
+    delete(): void {
         throw vscode.FileSystemError.NoPermissions();
     }
 
-    rename() {
+    rename(): void {
         throw vscode.FileSystemError.NoPermissions();
     }
 }

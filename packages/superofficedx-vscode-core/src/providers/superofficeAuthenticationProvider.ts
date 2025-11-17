@@ -10,8 +10,14 @@ import {
 } from 'vscode';
 
 import { v4 as uuid } from 'uuid';
-import { State, SuoFile, SuperOfficeAuthenticationSession, Token, UserClaims } from '../types/index';
-import { IFileSystemService, IAuthenticationService, IHttpService } from '../services';
+import { State } from '../types/state';
+import { SuoFile } from '../types/suoFile';
+import { SuperOfficeAuthenticationSession } from '../types/authSession';
+import { Token } from '../types/token';
+import { UserClaims } from '../types/userClaims';
+import { IFileSystemService } from '../services/fileSystemService';
+import { IAuthenticationService } from '../services/authenticationService';
+import { IHttpService } from '../services/httpService';
 import { getPackagePublisher } from '../utils';
 
 export class SuperofficeAuthenticationProvider implements AuthenticationProvider, Disposable {

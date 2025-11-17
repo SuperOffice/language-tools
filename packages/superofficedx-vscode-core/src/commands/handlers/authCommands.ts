@@ -1,7 +1,8 @@
 import { ExtensionContext, commands } from 'vscode';
-import { DIContainer, ConfigurationKeys } from '../../container';
+import { DIContainer } from '../../container/core/diContainer';
+import { ConfigurationKeys } from '../../container/configurations/configurationKeys';
 import { CommandKeys } from '../commandKeys';
-import { startNativeAppFlow } from '../implementations/auth';
+import { startNativeAppFlow } from '../implementations/auth/startNativeAppFlow';
 
 /**
  * Factory for creating authentication-related command handlers

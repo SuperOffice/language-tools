@@ -1,13 +1,11 @@
 import { workspace, window, authentication } from 'vscode';
-import {
-    ScriptExecuteParams,
-    CommandResult,
-    createSuccessResult,
-    createErrorResult,
-    isValidFileUri,
-    ScriptExecutionResult
-} from '../../types';
-import { SuperOfficeAuthenticationSession } from '../../../types';
+import { ScriptExecuteParams } from '../../types/commandContracts';
+import { CommandResult } from '../../types/commandContracts';
+import { createSuccessResult } from '../../types/commandContracts';
+import { createErrorResult } from '../../types/commandContracts';
+import { isValidFileUri } from '../../types/commandContracts';
+import { ScriptExecutionResult } from '../../types/commandContracts';
+import { SuperOfficeAuthenticationSession } from '../../../types/authSession';
 import { getPackagePublisher } from '../../../utils';
 
 export async function execute(params: ScriptExecuteParams): Promise<CommandResult<ScriptExecutionResult>> {

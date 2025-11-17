@@ -1,14 +1,12 @@
 import { authentication, workspace } from "vscode";
-import {
-    ScriptDownloadFolderParams,
-    CommandResult,
-    createSuccessResult,
-    createErrorResult,
-    ScriptDownloadResult
-} from '../../types';
-import { Node } from '../../../providers';
-import { IHttpService } from '../../../services';
-import { SuperOfficeAuthenticationSession } from "../../../types";
+import { ScriptDownloadFolderParams } from '../../types/commandContracts';
+import { CommandResult } from '../../types/commandContracts';
+import { createSuccessResult } from '../../types/commandContracts';
+import { createErrorResult } from '../../types/commandContracts';
+import { ScriptDownloadResult } from '../../types/commandContracts';
+import { Node } from '../../../providers/treeViewDataProvider';
+import { IHttpService } from '../../../services/httpService';
+import { SuperOfficeAuthenticationSession } from "../../../types/authSession";
 import { getPackagePublisher } from "../../../utils";
 
 export async function downloadFolder(params: ScriptDownloadFolderParams): Promise<CommandResult<ScriptDownloadResult>> {
