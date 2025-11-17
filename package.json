@@ -13,19 +13,19 @@
     },
     "devDependencies": {
         "@eslint/js": "^9.37.0",
+        "@playwright/test": "^1.56.1",
         "@superoffice/webapi": "^11.4.1157",
-        "@types/node": "latest",
+        "@types/node": "^24.10.1",
         "@types/vscode": "^1.104.0",
+        "@vitest/coverage-v8": "^4.0.10",
         "@volar/language-server": "~2.4.23",
         "@volar/vscode": "~2.4.23",
-        "@vscode/test-cli": "^0.0.11",
+        "@vscode/test-cli": "^0.0.12",
         "@vscode/test-electron": "^2.5.2",
-        "esbuild": "latest",
+        "esbuild": "^0.27.0",
         "eslint": "^9.37.0",
         "typescript": "^5.9.3",
         "typescript-eslint": "^8.46.0",
-        "vitest": "^3.2.4",
-        "@vitest/coverage-v8": "^3.2.4",
-        "@playwright/test": "^1.49.0"
+        "vitest": "^4.0.10"
     }
 }

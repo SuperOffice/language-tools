@@ -148,16 +148,15 @@
         "build": "node ./scripts/build.js"
     },
     "devDependencies": {
-        "@playwright/test": "*",
-        "@types/node": "*",
+        "@playwright/test": "^1.56.1",
+        "@types/node": "^24.10.1",
         "@types/uuid": "^9.0.5",
-        "@vitest/coverage-v8": "*",
-        "@vscode/test-cli": "*",
-        "@vscode/test-electron": "*",
-        "esbuild": "*",
-        "glob": "^10.3.3",
-        "typescript": "*",
+        "@vitest/coverage-v8": "^4.0.10",
+        "@vscode/test-cli": "^0.0.12",
+        "@vscode/test-electron": "^2.5.2",
+        "esbuild": "^0.27.0",
+        "typescript": "^5.9.3",
         "uuid": "^9.0.1",
-        "vitest": "*"
+        "vitest": "^4.0.10"
     }
 }
