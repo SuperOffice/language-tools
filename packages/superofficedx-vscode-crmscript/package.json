@@ -66,7 +66,7 @@
         "pretest": "npm run compile && npm run lint",
         "lint": "eslint src --ext ts",
         "test": "node ./out/test/runTest.js",
-        "build": "node ./scripts/esbuild_new.mjs"
+        "build": "node ./scripts/esbuild.mjs"
     },
     "dependencies": {
         "vscode-languageclient": "~9.0.1"

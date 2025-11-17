@@ -22,8 +22,7 @@ export function deactivate(): Thenable<void> | undefined {
 function startLanguageClient(context: vscode.ExtensionContext): LanguageClient {
     DslLibraryFileSystemProvider.register(context);
 
-    //const serverModule = context.asAbsolutePath(path.join('out', 'langium-crmscript', 'src', 'language', 'main.cjs'));
-    const serverModule = context.asAbsolutePath(path.join('out', 'crmscript-language-server', 'src', 'lsp', 'server.cjs'));
+    const serverModule = context.asAbsolutePath(path.join('out', 'langium-crmscript', 'src', 'language', 'main.cjs'));
     // The debug options for the server
     // --inspect=6009: runs the server in Node's Inspector mode so VS Code can attach to the server for debugging.
     // By setting `process.env.DEBUG_BREAK` to a truthy value, the language server will wait until a debugger is attached.
