@@ -12,23 +12,23 @@ import { LanguageService, LanguageType } from './languageService.js';
 
 export function getLanguagePlugin(): LanguagePlugin<URI, TsfsoVirtualCode> {
     return {
-        getLanguageId(uri) {
+        getLanguageId(uri): string | undefined {
             if (uri.path.endsWith('.tsfso')) {
                 return 'tsfso';
             }
         },
 
-        createVirtualCode(uri, languageId, snapshot) {
+        createVirtualCode(uri, languageId, snapshot): TsfsoVirtualCode | undefined {
             if (languageId === 'tsfso') {
                 return new TsfsoVirtualCode(uri, snapshot, languageId);
             }
         },
         typescript: {
             extraFileExtensions: [{ extension: 'tsfso', isMixedContent: true, scriptKind: ts.ScriptKind.TS }],
-            getServiceScript() {
+            getServiceScript(): TypeScriptExtraServiceScript | undefined {
                 return undefined;
             },
-            getExtraServiceScripts(fileName, root) {
+            getExtraServiceScripts(fileName, root): TypeScriptExtraServiceScript[] {
                 const scripts: TypeScriptExtraServiceScript[] = [];
                 for (const code of forEachEmbeddedCode(root)) {
                     if (code.languageId === 'javascript') {
@@ -50,7 +50,7 @@ export function getLanguagePlugin(): LanguagePlugin<URI, TsfsoVirtualCode> {
                 }
                 return scripts;
             },
-            resolveLanguageServiceHost(host) {
+            resolveLanguageServiceHost(host): ts.LanguageServiceHost {
                 const baseCompilationSettings = host.getCompilationSettings();
                 // Set compiler options
                 const newSettings = {
@@ -63,7 +63,7 @@ export function getLanguagePlugin(): LanguagePlugin<URI, TsfsoVirtualCode> {
                 return {
                     ...host,
                     getCompilationSettings: () => newSettings,
-                    getScriptFileNames: () => {
+                    getScriptFileNames: (): string[] => {
                         const fileNames = host.getScriptFileNames();
                         const addedFileNames: string[] = [];
                         addedFileNames.push(
@@ -95,12 +95,12 @@ class TsfsoVirtualCode implements VirtualCode {
         this.onSnapshotUpdated();
     }
 
-    public update(newSnapshot: ts.IScriptSnapshot) {
+    public update(newSnapshot: ts.IScriptSnapshot): void {
         this.snapshot = newSnapshot;
         this.onSnapshotUpdated();
     }
 
-    private onSnapshotUpdated() {
+    private onSnapshotUpdated(): void {
         this.mappings = [
             {
                 sourceOffsets: [0],
