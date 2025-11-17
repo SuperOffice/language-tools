@@ -4,7 +4,7 @@ This document outlines the vitest setup and best practices implemented for this 
 
 ## Overview
 
-We've migrated from Sinon to Vitest's built-in mocking capabilities for unit tests. Vitest provides a modern, fast, and batteries-included testing framework with excellent TypeScript support.
+We've migrated from Sinon and Mocha to Vitest's built-in testing and mocking capabilities for unit tests. Vitest provides a modern, fast, and batteries-included testing framework with excellent TypeScript support.
 
 ## Test Structure
 

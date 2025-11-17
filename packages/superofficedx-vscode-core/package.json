@@ -148,7 +148,6 @@
     },
     "devDependencies": {
         "@playwright/test": "^1.49.0",
-        "@types/mocha": "^10.0.1",
         "@types/node": "*",
         "@types/uuid": "^9.0.5",
         "@vitest/coverage-v8": "^3.2.4",
@@ -156,7 +155,6 @@
         "@vscode/test-electron": "*",
         "esbuild": "*",
         "glob": "^10.3.3",
-        "mocha": "^10.7.3",
         "typescript": "*",
         "uuid": "^9.0.1",
         "vitest": "^3.2.4"

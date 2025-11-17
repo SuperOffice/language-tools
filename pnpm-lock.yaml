@@ -114,9 +114,6 @@ importers:
       '@playwright/test':
         specifier: ^1.49.0
         version: 1.49.0
-      '@types/mocha':
-        specifier: ^10.0.1
-        version: 10.0.9
       '@types/node':
         specifier: '*'
         version: 22.9.1
@@ -138,9 +135,6 @@ importers:
       glob:
         specifier: ^10.3.3
         version: 10.4.5
-      mocha:
-        specifier: ^10.7.3
-        version: 10.8.2
       typescript:
         specifier: '*'
         version: 5.6.3
@@ -1425,10 +1419,6 @@ packages:
 
   /@types/mocha@10.0.10:
     resolution: {integrity: sha512-xPyYSz1cMPnJQhl0CLMH68j3gprKZaTjG3s5Vi+fDgx+uhG9NOXwbVt52eFS8ECyXhyKcjDLCBEqBExKuiZb7Q==}
-    dev: true
-
-  /@types/mocha@10.0.9:
-    resolution: {integrity: sha512-sicdRoWtYevwxjOHNMPTl3vSfJM6oyW8o1wXeI7uww6b6xHg8eBznQDNSGBCDJmsE8UMxP05JgZRtsKbTqt//Q==}
     dev: true
 
   /@types/node@16.18.119:
