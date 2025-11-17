@@ -1,7 +1,8 @@
 import { FileType, Uri, workspace, window, FileSystemError } from 'vscode'
 
-import { IFileSystemHandler } from '../handlers';
-import { ScriptEntity, SuoFile } from '../types/index';
+import { IFileSystemHandler } from '../handlers/fileSystemHandler';
+import { ScriptEntity } from '../types/script';
+import { SuoFile } from '../types/suoFile';
 import path from 'path';
 import { getFileType } from '../utils';
 

@@ -1,11 +1,9 @@
 import { DIContainer } from '../core/diContainer';
 import { ConfigurationKeys } from './configurationKeys';
-import {
-    FileSystemService,
-    AuthenticationService,
-    HttpService,
-    NodeService
-} from '../../services';
+import { FileSystemService } from '../../services/fileSystemService';
+import { AuthenticationService } from '../../services/authenticationService';
+import { HttpService } from '../../services/httpService';
+import { NodeService } from '../../services/nodeService';
 
 /**
  * Configures all service registrations for the DI container

@@ -1,13 +1,14 @@
 import { workspace, window, authentication } from 'vscode';
+
 import {
     ScriptDownloadParams,
+    ScriptDownloadResult,
     CommandResult,
     createSuccessResult,
     createErrorResult,
-    isValidScriptNode,
-    ScriptDownloadResult
-} from '../../types';
-import { SuperOfficeAuthenticationSession } from '../../../types';
+    isValidScriptNode
+} from '../../types/commandContracts';
+import { SuperOfficeAuthenticationSession } from '../../../types/authSession';
 import { getPackagePublisher } from '../../../utils';
 
 export async function download(params: ScriptDownloadParams): Promise<CommandResult<ScriptDownloadResult>> {

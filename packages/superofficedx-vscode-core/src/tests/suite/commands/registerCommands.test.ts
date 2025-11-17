@@ -1,10 +1,13 @@
 import * as vscode from 'vscode';
 import sinon from 'sinon';
 import assert from 'assert';
-import { registerCommands, CommandKeys } from '../../../commands';
-import { HttpService, IHttpService, INodeService, NodeService } from '../../../services';
-import { DIContainer, ConfigurationKeys } from '../../../container';
-import { ScriptEntity } from '../../../types';
+import { registerCommands } from '../../../commands/commandRegistration';
+import { CommandKeys } from '../../../commands/commandKeys';
+import { HttpService, IHttpService } from '../../../services/httpService';
+import { NodeService, INodeService } from '../../../services/nodeService';
+import { DIContainer } from '../../../container/core/diContainer';
+import { ConfigurationKeys } from '../../../container/configurations/configurationKeys';
+import { ScriptEntity } from '../../../types/script';
 
 /**
  * Alternative approach: Create a test-specific container factory

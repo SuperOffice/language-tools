@@ -1,4 +1,5 @@
-import { FileSystemHandler, HttpHandler } from "../../handlers";
+import { HttpHandler } from "../../handlers/httpHandler";
+import { FileSystemHandler } from "../../handlers/fileSystemHandler";
 import { DIContainer } from "../core/diContainer";
 import { ConfigurationKeys } from "./configurationKeys";
 

@@ -8,7 +8,7 @@ import { isBooleanType, isEnumMemberType, TypeDescription, typeToString } from '
 /**
  * Register custom validation checks.
  */
-export function registerValidationChecks(services: CrmscriptServices) {
+export function registerValidationChecks(services: CrmscriptServices): void {
     const registry = services.validation.ValidationRegistry;
     const validator = services.validation.CrmscriptValidator;
     const checks: ValidationChecks<CrmscriptAstType> = {
@@ -56,7 +56,7 @@ export class CrmscriptValidator {
         }
     }
 
-    checkConstructorCallType(call: ConstructorCall, accept: ValidationAcceptor) {
+    checkConstructorCallType(call: ConstructorCall, accept: ValidationAcceptor): void {
         const typeDecl = call.type?.ref;
         if (!typeDecl || !isClass(typeDecl)) return;
 
@@ -75,7 +75,7 @@ export class CrmscriptValidator {
         }
     }
 
-    checkMemberCallParameters(memberCall: MemberCall, accept: ValidationAcceptor) {
+    checkMemberCallParameters(memberCall: MemberCall, accept: ValidationAcceptor): void {
 
         const methodMember = memberCall.element?.ref as MethodMember;
         if (!methodMember) return;
@@ -163,7 +163,7 @@ export class CrmscriptValidator {
     }
 
     checkUniqueVariableName(grammar: Grammar, accept: ValidationAcceptor): void {
-        const extractor = (grammar: Grammar) => stream(grammar.types);
+        const extractor = (grammar: Grammar): Stream<NamedAstNode> => stream(grammar.types);
         this.checkUniqueName(grammar, accept, extractor, 'type');
     }
 

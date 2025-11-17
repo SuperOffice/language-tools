@@ -1,12 +1,15 @@
 import { ExtensionContext, commands, Uri, window } from 'vscode';
-import { DIContainer, ConfigurationKeys } from '../../container';
+import { DIContainer } from '../../container/core/diContainer';
+import { ConfigurationKeys } from '../../container/configurations/configurationKeys';
 import { CommandKeys } from '../commandKeys';
-import { Node, SuperofficeAuthenticationProvider } from '../../providers';
-import { IHttpService, INodeService } from '../../services';
-import { ScriptInfo } from '../../types';
+import { Node } from '../../providers/treeViewDataProvider';
+import { SuperofficeAuthenticationProvider } from '../../providers/superofficeAuthenticationProvider';
+import { IHttpService } from '../../services/httpService';
+import { INodeService } from '../../services/nodeService';
+import { ScriptInfo } from '../../types/script';
 
-// Import strict interfaces and types
 import {
+    IScriptCommands,
     ScriptPreviewParams,
     ScriptExecuteParams,
     ScriptExecuteLocallyParams,
@@ -15,13 +18,17 @@ import {
     ScriptUploadParams,
     ScriptViewDetailsParams,
     CommandResult,
-    IScriptCommands,
     ScriptExecutionResult,
     ScriptDownloadResult
-} from '../types';
+} from '../types/commandContracts';
 
-// Import implementations for commands
-import { download, downloadFolder, execute, executeLocally, upload, viewDetails, preview } from '../implementations/script';
+import { preview } from '../implementations/script/preview';
+import { execute } from '../implementations/script/execute';
+import { executeLocally } from '../implementations/script/executeLocally';
+import { download } from '../implementations/script/download';
+import { downloadFolder } from '../implementations/script/downloadFolder';
+import { upload } from '../implementations/script/upload';
+import { viewDetails } from '../implementations/script/viewDetails';
 
 /**
  * Strict script command factory with custom authentication provider

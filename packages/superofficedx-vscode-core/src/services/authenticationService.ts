@@ -4,7 +4,8 @@ import * as fs from 'fs';
 import { env, ProgressLocation, Uri, window } from 'vscode';
 import { v4 as uuid } from 'uuid';
 import * as crypto from 'crypto';
-import { Token, UserClaims } from '../types';
+import { Token } from '../types/token';
+import { UserClaims } from '../types/userClaims';
 import { promiseFromEvent } from '../utils';
 
 const CLIENT_ID = `1a5764a8090f136cc9d30f381626d5fa`;

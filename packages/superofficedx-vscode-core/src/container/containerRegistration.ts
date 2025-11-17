@@ -1,10 +1,8 @@
 import { ExtensionContext } from 'vscode';
-import {
-    configureContainer,
-    configureHandlers,
-    configureProviders,
-    configureServices,
-} from './configurations';
+import { configureContainer } from './configurations/containerConfiguration';
+import { configureHandlers } from './configurations/handlerConfiguration';
+import { configureProviders } from './configurations/providerConfiguration';
+import { configureServices } from './configurations/serviceConfiguration';
 import { DIContainer } from './core/diContainer';
 
 /**

@@ -1,7 +1,9 @@
 import { ChildProcess, spawn, SpawnOptions } from "child_process";
-import { IHttpHandler } from "../handlers";
+import { IHttpHandler } from "../handlers/httpHandler";
 import { ExtensionContext, workspace, window, debug } from 'vscode'
-import { NodeRequest, SuperOfficeAuthenticationSession, NodeResponse } from "../types";
+//import { NodeRequest, SuperOfficeAuthenticationSession, NodeResponse } from "../types";
+import { SuperOfficeAuthenticationSession } from "../types/authSession";
+import { NodeRequest, NodeResponse } from "../types/node";
 
 export interface INodeService {
     executeScriptLocally(session: SuperOfficeAuthenticationSession, script: string): Promise<string>

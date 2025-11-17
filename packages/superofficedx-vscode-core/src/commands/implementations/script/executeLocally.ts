@@ -6,8 +6,9 @@ import {
     createErrorResult,
     isValidFileUri,
     ScriptExecutionResult
-} from '../../types';
-import { SuperOfficeAuthenticationSession } from '../../../types';
+} from '../../types/commandContracts';
+import { SuperOfficeAuthenticationSession } from '../../../types/authSession';
+
 import { getPackagePublisher } from '../../../utils';
 
 export async function executeLocally(params: ScriptExecuteLocallyParams): Promise<CommandResult<ScriptExecutionResult>> {

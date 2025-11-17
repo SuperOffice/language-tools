@@ -1,8 +1,10 @@
 import * as assert from 'assert';
 import * as sinon from 'sinon';
-import { IHttpHandler } from '../../../handlers';
-import { HttpService, IFileSystemService } from '../../../services';
-import { State, UserClaims } from '../../../types/index';
+import { IHttpHandler } from '../../../handlers/httpHandler';
+import { HttpService } from '../../../services/httpService';
+import { IFileSystemService } from '../../../services/fileSystemService';
+import { State } from '../../../types/state';
+import { UserClaims } from '../../../types/userClaims';
 
 suite('HttpService Test Suite', () => {
     // const environment = 'sod';

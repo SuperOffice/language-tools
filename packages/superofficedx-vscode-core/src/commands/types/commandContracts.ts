@@ -1,7 +1,10 @@
 import { Uri, ExtensionContext } from 'vscode';
-import { Node, SuperofficeAuthenticationProvider } from '../../providers';
-import { IHttpService, INodeService } from '../../services';
-import { ScriptInfo, SuperOfficeAuthenticationSession } from '../../types';
+import { Node } from '../../providers/treeViewDataProvider';
+import { SuperofficeAuthenticationProvider } from '../../providers/superofficeAuthenticationProvider';
+import { IHttpService } from '../../services/httpService';
+import { INodeService } from '../../services/nodeService';
+import { ScriptInfo } from '../../types/script';
+import { SuperOfficeAuthenticationSession } from '../../types/authSession';
 
 /**
  * Base result type for all command operations

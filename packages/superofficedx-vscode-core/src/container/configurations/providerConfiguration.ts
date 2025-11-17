@@ -1,4 +1,7 @@
-import { CustomTextDocumentContentProvider, SuperofficeAuthenticationProvider, TreeViewDataProvider } from "../../providers";
+
+import { CustomTextDocumentContentProvider } from "../../providers/textDocumentContentProvider";
+import { SuperofficeAuthenticationProvider } from "../../providers/superofficeAuthenticationProvider";
+import { TreeViewDataProvider } from "../../providers/treeViewDataProvider";
 import { DIContainer } from "../core/diContainer";
 import { ConfigurationKeys } from "./configurationKeys";
 

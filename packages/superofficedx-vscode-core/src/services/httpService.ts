@@ -1,6 +1,14 @@
 import { Uri } from "vscode";
-import { IHttpHandler } from "../handlers";
-import { DynamicScriptOdata, ExecuteScriptResponse, Hierarchy, ScriptEntity, Scripts, State, SuperOfficeAuthenticationSession, UserClaims } from "../types/index";
+import { IHttpHandler } from "../handlers/httpHandler";
+//import { DynamicScriptOdata, ExecuteScriptResponse, Hierarchy, ScriptEntity, Scripts, State, SuperOfficeAuthenticationSession, UserClaims } from "../types/index";
+import { DynamicScriptOdata } from "../types/script";
+import { ExecuteScriptResponse } from "../types/script";
+import { Hierarchy } from "../types/hierarchy";
+import { ScriptEntity } from "../types/script";
+import { Scripts } from "../types/script";
+import { State } from "../types/state";
+import { SuperOfficeAuthenticationSession } from "../types/authSession";
+import { UserClaims } from "../types/userClaims";
 import { IFileSystemService } from "./fileSystemService";
 
 export interface IHttpService {

@@ -1,5 +1,6 @@
-import { DIContainer } from '../container';
-import { registerAuthCommands, registerScriptCommands } from './handlers';
+import { DIContainer } from '../container/core/diContainer';
+import { registerAuthCommands } from './handlers/authCommands';
+import { registerScriptCommands } from './handlers/scriptCommands';
 
 /**
  * Central command registration coordinator.

@@ -1,13 +1,7 @@
 
 import { Uri, workspace, window, authentication } from 'vscode';
-import {
-    ScriptPreviewParams,
-    CommandResult,
-    createSuccessResult,
-    createErrorResult,
-    isValidScriptNode
-} from '../../types';
-import { SuperOfficeAuthenticationSession } from '../../../types';
+import { ScriptPreviewParams, CommandResult, createSuccessResult, createErrorResult, isValidScriptNode } from '../../types/commandContracts';
+import { SuperOfficeAuthenticationSession } from '../../../types/authSession';
 import { getCustomScheme, getPackagePublisher } from '../../../utils';
 
 export async function preview(params: ScriptPreviewParams): Promise<CommandResult<void>> {
