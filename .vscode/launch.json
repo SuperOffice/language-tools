@@ -99,7 +99,7 @@
             ],
             "outFiles": [
                 "${workspaceFolder}/packages/crmscript-language-server/dist/src/**/*.js",
-                "${workspaceFolder}/packages/crmscript-language-server/vscode-extension/out/*.js",
+                "${workspaceFolder}/packages/crmscript-language-server/vscode-extension/out/*.js"
             ],
             "preLaunchTask": "npm: build:crmscript-language-server",
             "autoAttachChildProcesses": true
