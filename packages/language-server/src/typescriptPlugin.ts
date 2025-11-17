@@ -11,7 +11,7 @@ export const create = (ts: typeof import('typescript')): LanguageServicePlugin[]
                     const typeScriptPlugin = plugin.create(context);
                     return {
                         ...typeScriptPlugin,
-                        async provideDiagnostics(document, token) {
+                        async provideDiagnostics(document, token): Promise<import('@volar/language-server').Diagnostic[] | null> {
                             const diagnostics = await typeScriptPlugin.provideDiagnostics?.(document, token);
                             if (!diagnostics) return null;
 
