@@ -1,0 +1,3 @@
+[submodule "packages/crmscript-language-server"]
+	path = packages/crmscript-language-server
+	url = https://github.com/SuperOffice/crmscript-language-server
