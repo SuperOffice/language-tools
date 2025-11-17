@@ -1,10 +1,13 @@
 import { workspace, window, authentication } from 'vscode';
 
-import { ScriptDownloadParams, ScriptDownloadResult } from '../../types/commandContracts';
-import { CommandResult } from '../../types/commandContracts';
-import { createSuccessResult } from '../../types/commandContracts';
-import { createErrorResult } from '../../types/commandContracts';
-import { isValidScriptNode } from '../../types/commandContracts';
+import {
+    ScriptDownloadParams,
+    ScriptDownloadResult,
+    CommandResult,
+    createSuccessResult,
+    createErrorResult,
+    isValidScriptNode
+} from '../../types/commandContracts';
 import { SuperOfficeAuthenticationSession } from '../../../types/authSession';
 import { getPackagePublisher } from '../../../utils';
 
