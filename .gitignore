@@ -6,3 +6,4 @@ out
 test
 packages/node_app/
 packages/superofficedx-vscode-core/tsconfig.tsbuildinfo
+coverage

@@ -1,0 +1,1 @@
+export { DIContainer } from './diContainer';

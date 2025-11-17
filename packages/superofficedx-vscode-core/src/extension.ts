@@ -1,42 +1,25 @@
 import { ExtensionContext, workspace, window } from 'vscode';
 
-import { TreeViewDataProvider } from './providers/treeViewDataProvider';
-import { SuperofficeAuthenticationProvider } from './providers/superofficeAuthenticationProvider';
-
-import { FileSystemHandler } from './handlers/fileSystemHandler';
-import { HttpHandler } from './handlers/httpHandler';
-
-import { FileSystemService } from './services/fileSystemService';
-import { AuthenticationService } from './services/authenticationService';
-import { HttpService } from './services/httpService';
-import { NodeService } from './services/nodeService';
-
-import { registerCommands } from './commands/registerCommands';
+import { TreeViewDataProvider, SuperofficeAuthenticationProvider, CustomTextDocumentContentProvider } from './providers';
+import { registerCommands } from './commands';
 import { getCustomScheme } from './utils';
-import { CustomTextDocumentContentProvider } from './providers/textDocumentContentProvider';
+import { createContainer, ConfigurationKeys } from './container';
 
-export async function activate(context: ExtensionContext) {
-    console.log('"vscode-superoffice" extension is now active.');
+export async function activate(context: ExtensionContext): Promise<void> {
+    console.log('SuperOffice Core Tools is now active.');
 
-    // Filesystem handler
-    const fileSystemHandler = new FileSystemHandler();
-    const fileSystemService = new FileSystemService(fileSystemHandler);
+    // Create and configure DI container
+    const container = createContainer(context);
 
-    // Http handler
-    const httpHandler = new HttpHandler();
-    const httpService = new HttpService(httpHandler, fileSystemService);
+    // Resolve services from container
+    const textContentProvider = container.resolve<CustomTextDocumentContentProvider>(ConfigurationKeys.TextDocumentContentProvider);
+    const authProvider = container.resolve<SuperofficeAuthenticationProvider>(ConfigurationKeys.AuthenticationProvider);
+    const treeViewDataProvider = container.resolve<TreeViewDataProvider>(ConfigurationKeys.TreeViewDataProvider);
 
-    // TextDocumentContentProvider
-    const textContentProvider = new CustomTextDocumentContentProvider();
+    // Register providers with VS Code
     context.subscriptions.push(workspace.registerTextDocumentContentProvider(getCustomScheme(), textContentProvider));
-
-    // Authentication provider
-    const authenticationService = new AuthenticationService();
-    const authProvider = new SuperofficeAuthenticationProvider(context, fileSystemService, authenticationService, httpService);
     context.subscriptions.push(authProvider);
 
-    // Instantiate TreeViewDataProvider
-    const treeViewDataProvider = new TreeViewDataProvider(context, authProvider, httpService);
     const treeviewProvider = window.registerTreeDataProvider(TreeViewDataProvider.viewId, treeViewDataProvider);
     context.subscriptions.push(treeviewProvider);
 
@@ -45,9 +28,8 @@ export async function activate(context: ExtensionContext) {
         treeViewDataProvider.refresh();
     });
 
-    const nodeService = new NodeService(context, httpHandler);
-
-    registerCommands(context, httpService, nodeService);
+    // Register commands
+    registerCommands(container);
 }
 
-export function deactivate() { }
+export function deactivate(): void { }

@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 import * as vscode from 'vscode';
-import { FileSystemHandler } from '../../../handlers/fileSystemHandler';
+import { FileSystemHandler } from '../../../handlers';
 
 suite('FileSystemHandler Test Suite', () => {
     const fsHandler = new FileSystemHandler();

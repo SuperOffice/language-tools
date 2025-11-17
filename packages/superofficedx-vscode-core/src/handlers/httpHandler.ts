@@ -1,9 +1,37 @@
+/**
+ * HTTP-specific error with additional context
+ */
+export class HttpError extends Error {
+    constructor(
+        message: string,
+        public readonly status?: number,
+        public readonly url?: string,
+        public readonly method?: string,
+        public readonly response?: Response
+    ) {
+        super(message);
+        this.name = 'HttpError';
+    }
+}
+
+/**
+ * Configuration options for HTTP requests
+ */
+export interface HttpRequestOptions {
+    readonly headers?: Record<string, string>;
+    readonly timeout?: number;
+    readonly retries?: number;
+}
+
+/**
+ * HTTP handler interface with improved typing and options
+ */
 export interface IHttpHandler {
-    get<T>(url: string, headers?: Record<string, string>): Promise<T>;
-    post<T>(url: string, body: unknown, headers?: Record<string, string>): Promise<T>;
-    put<T>(url: string, body: unknown, headers?: Record<string, string>): Promise<T>;
-    delete<T>(url: string, headers?: Record<string, string>): Promise<T>;
-    patch<T>(url: string, body: unknown, headers?: Record<string, string>): Promise<T>;
+    get<T>(url: string, options?: HttpRequestOptions): Promise<T>;
+    post<T>(url: string, body: unknown, options?: HttpRequestOptions): Promise<T>;
+    put<T>(url: string, body: unknown, options?: HttpRequestOptions): Promise<T>;
+    delete<T>(url: string, options?: HttpRequestOptions): Promise<T>;
+    patch<T>(url: string, body: unknown, options?: HttpRequestOptions): Promise<T>;
 }
 
 export class HttpHandler implements IHttpHandler {

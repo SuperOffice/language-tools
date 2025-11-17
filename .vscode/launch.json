@@ -44,7 +44,7 @@
                 "${workspaceFolder}/packages/superofficedx-vscode-core/dist/**/*.js"
             ],
             "preLaunchTask": "npm: build:vscode-core",
-            "autoAttachChildProcesses": false
+            "autoAttachChildProcesses": true
         },
         {
             "name": "superofficedx-vscode-crmscript",

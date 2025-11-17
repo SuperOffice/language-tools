@@ -1,6 +1,6 @@
 import { authentication, window } from 'vscode';
 
-export async function startNativeAppFlow() {
+export async function startNativeAppFlow(): Promise<void> {
     try {
         await authentication.getSession('superoffice', [], { createIfNone: true });
     } catch (error) {
