@@ -1,10 +1,9 @@
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import * as vscode from 'vscode';
-import sinon from 'sinon';
-import assert from 'assert';
 import { registerCommands } from '../../../commands/commandRegistration';
 import { CommandKeys } from '../../../commands/commandKeys';
-import { HttpService, IHttpService } from '../../../services/httpService';
-import { NodeService, INodeService } from '../../../services/nodeService';
+import { IHttpService } from '../../../services/httpService';
+import { INodeService } from '../../../services/nodeService';
 import { DIContainer } from '../../../container/core/diContainer';
 import { ConfigurationKeys } from '../../../container/configurations/configurationKeys';
 import { ScriptEntity } from '../../../types/script';
@@ -31,30 +30,43 @@ function createTestContainer(
     return container;
 }
 
-suite('registerCommands - Alternative Approach', () => {
+describe('registerCommands - Alternative Approach', () => {
     let context: vscode.ExtensionContext;
-    let mockHttpService: sinon.SinonStubbedInstance<IHttpService>;
-    let mockNodeService: sinon.SinonStubbedInstance<INodeService>;
+    let mockHttpService: IHttpService;
+    let mockNodeService: INodeService;
 
     // Get all command values from CommandKeys for dynamic testing
     const expectedCommands = Object.values(CommandKeys);
 
-    setup(() => {
+    beforeEach(() => {
         // Mock VSCode extension context
         context = {
             subscriptions: [],
         } as unknown as vscode.ExtensionContext;
 
-        // Create mock services
-        mockHttpService = sinon.createStubInstance(HttpService);
-        mockNodeService = sinon.createStubInstance(NodeService);
+        // Create mock services using vitest
+        mockHttpService = {
+            getTenantState: vi.fn(),
+            getCrmScriptEntity: vi.fn(),
+            getCrmScriptByUniqueIdentifier: vi.fn(),
+            getScriptsInFolder: vi.fn(),
+            executeScript: vi.fn(),
+            validateScript: vi.fn(),
+            saveScript: vi.fn(),
+        } as unknown as IHttpService;
+
+        mockNodeService = {
+            getChildren: vi.fn(),
+            getParent: vi.fn(),
+            getNodeById: vi.fn(),
+        } as unknown as INodeService;
     });
 
-    teardown(() => {
-        sinon.restore();
+    afterEach(() => {
+        vi.clearAllMocks();
     });
 
-    test('should register commands using test container', () => {
+    it('should register commands using test container', () => {
         // Create test container with mocked dependencies
         const testContainer = createTestContainer(context, mockHttpService, mockNodeService);
 
@@ -62,24 +74,20 @@ suite('registerCommands - Alternative Approach', () => {
         registerCommands(testContainer);
 
         // Check that the number of disposables matches the number of defined commands
-        assert.strictEqual(
-            context.subscriptions.length,
-            expectedCommands.length,
-            `Expected ${expectedCommands.length} commands to be registered: ${expectedCommands.join(', ')}`
-        );
+        expect(context.subscriptions.length).toBe(expectedCommands.length);
 
         // Check that each subscription is a valid disposable
-        context.subscriptions.forEach((sub, index) => {
-            assert.ok(typeof sub.dispose === 'function', `Subscription at index ${index} is not disposable`);
+        context.subscriptions.forEach((sub) => {
+            expect(typeof sub.dispose).toBe('function');
         });
     });
 
-    test('should handle command execution with mocked services', () => {
+    it('should handle command execution with mocked services', () => {
         // This approach allows you to test actual command behavior with mocked dependencies
         const testContainer = createTestContainer(context, mockHttpService, mockNodeService);
 
         // Set up mock responses
-        mockHttpService.getCrmScriptEntity.resolves({
+        vi.mocked(mockHttpService.getCrmScriptEntity).mockResolvedValue({
             SourceCode: 'test script content',
             Name: 'Test Script'
         } as ScriptEntity);
@@ -87,7 +95,7 @@ suite('registerCommands - Alternative Approach', () => {
         registerCommands(testContainer);
 
         // You can now test that the commands were registered correctly
-        assert.ok(context.subscriptions.length > 0, 'Commands should be registered');
+        expect(context.subscriptions.length).toBeGreaterThan(0);
 
         // You could even test command execution here if needed
         // (though that might be better suited for integration tests)

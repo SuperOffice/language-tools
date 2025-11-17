@@ -1,18 +1,14 @@
-import * as assert from 'assert';
-import * as sinon from 'sinon';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { IHttpHandler } from '../../../handlers/httpHandler';
 import { HttpService } from '../../../services/httpService';
 import { IFileSystemService } from '../../../services/fileSystemService';
 import { State } from '../../../types/state';
 import { UserClaims } from '../../../types/userClaims';
 
-suite('HttpService Test Suite', () => {
-    // const environment = 'sod';
-    // const contextIdentifier = '12345';
-
+describe('HttpService Test Suite', () => {
     let httpService: HttpService;
-    let httpHandlerMock: sinon.SinonStubbedInstance<IHttpHandler>;
-    let fileSystemServiceMock: sinon.SinonStubbedInstance<IFileSystemService>;
+    let httpHandlerMock: IHttpHandler;
+    let fileSystemServiceMock: IFileSystemService;
 
     const userClaims: UserClaims = {
         "http://schemes.superoffice.net/identity/ctx": "Cust26759",
@@ -21,29 +17,28 @@ suite('HttpService Test Suite', () => {
         "iss": "https://sod.superoffice.com"
     };
 
-    setup(() => {
-        // Create mock instances for IHttpHandler and IFileSystemService
+    beforeEach(() => {
+        // Create mock implementations using vi.fn()
         httpHandlerMock = {
-            get: sinon.stub(),
-            post: sinon.stub(),
-            put: sinon.stub(),
-            delete: sinon.stub(),
-        } as unknown as sinon.SinonStubbedInstance<IHttpHandler>;
+            get: vi.fn(),
+            post: vi.fn(),
+            put: vi.fn(),
+            delete: vi.fn(),
+        };
 
         fileSystemServiceMock = {
-            writeScriptToFile: sinon.stub(),
-        } as unknown as sinon.SinonStubbedInstance<IFileSystemService>;
+            writeScriptToFile: vi.fn(),
+        } as unknown as IFileSystemService;
 
         // Initialize HttpService with mocked dependencies
         httpService = new HttpService(httpHandlerMock, fileSystemServiceMock);
     });
 
-    teardown(() => {
-        sinon.restore();
+    afterEach(() => {
+        vi.clearAllMocks();
     });
 
-    test('getTenantStateAsync - should return tenant state for valid environment and contextIdentifier', async () => {
-
+    it('getTenantStateAsync - should return tenant state for valid environment and contextIdentifier', async () => {
         const expectedState: State = {
             ContextIdentifier: 'Cust31038',
             Endpoint: '',
@@ -56,31 +51,27 @@ suite('HttpService Test Suite', () => {
         const stateUrl = `${userClaims.iss}/api/state/${userClaims["http://schemes.superoffice.net/identity/ctx"]}`;
 
         // Mock the behavior of httpHandler.get to return a successful response
-        httpHandlerMock.get.withArgs(`${stateUrl}`).resolves(expectedState);
+        vi.mocked(httpHandlerMock.get).mockResolvedValue(expectedState);
 
         const result = await httpService.getTenantState(userClaims);
 
-        // Assertions
-        assert.deepStrictEqual(result, expectedState, 'Expected tenant state to match the mocked response');
-        assert.strictEqual(httpHandlerMock.get.calledOnce, true, 'Expected httpHandler.get to be called once');
-        assert.strictEqual(httpHandlerMock.get.firstCall.args[0], stateUrl, 'Expected URL to match');
+        // Assertions using vitest matchers
+        expect(result).toEqual(expectedState);
+        expect(httpHandlerMock.get).toHaveBeenCalledOnce();
+        expect(httpHandlerMock.get).toHaveBeenCalledWith(stateUrl);
     });
 
-    test('getTenantStateAsync - should throw an error if httpHandler.get fails', async () => {
+    it('getTenantStateAsync - should throw an error if httpHandler.get fails', async () => {
         const stateUrl = `${userClaims.iss}/api/state/${userClaims["http://schemes.superoffice.net/identity/ctx"]}`;
 
         // Mock the behavior of httpHandler.get to throw an error
-        httpHandlerMock.get.withArgs(`${stateUrl}`).rejects(new Error('Network error'));
+        vi.mocked(httpHandlerMock.get).mockRejectedValue(new Error('Network error'));
 
-        await assert.rejects(
-            async () => {
-                await httpService.getTenantState(userClaims);
-            },
-            (error: Error) => error.message === `Error getting state for ${userClaims["http://schemes.superoffice.net/identity/ctx"]}`,
-            'Expected error message to match'
-        );
+        await expect(httpService.getTenantState(userClaims))
+            .rejects
+            .toThrow(`Error getting state for ${userClaims["http://schemes.superoffice.net/identity/ctx"]}`);
 
-        assert.strictEqual(httpHandlerMock.get.calledOnce, true, 'Expected httpHandler.get to be called once');
-        assert.strictEqual(httpHandlerMock.get.firstCall.args[0], stateUrl, 'Expected URL to match');
+        expect(httpHandlerMock.get).toHaveBeenCalledOnce();
+        expect(httpHandlerMock.get).toHaveBeenCalledWith(stateUrl);
     });
 });
