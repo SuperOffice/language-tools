@@ -59,7 +59,7 @@ pnpm eslint .
 ```
 
 **Pre-existing Issues:** 22 ESLint errors (missing return types) - DO NOT block on these.
-**Strict Rules:** Explicit function return types, no-any, barrel imports (import from index.ts, not direct files).
+**Strict Rules:** Explicit function return types, no-any.
 **Before commit:** Run `pnpm eslint .` - ensure NO NEW errors.
 
 ## Project Structure
@@ -84,11 +84,6 @@ Authentication, script browsing/execution for SuperOffice.
 
 **Structure:** `src/extension.ts` (entry) | `commands/` | `providers/` (TreeView, auth, virtual FS) | `services/` (HTTP, FS, auth, Node) | `handlers/` | `container/` (DI) | `scripts/build.js` (esbuild + copy resources)
 **Output:** `dist/extension.js`
-**Import Rule:** ALWAYS use barrel exports:
-```typescript
-✅ import { IHttpService } from '../../services';
-❌ import { IHttpService } from '../../services/httpService'; // ESLint error
-```
 
 #### 2. `language-server` (TypeScript LSP Server)
 Volar-based LSP for TypeScript.
@@ -121,11 +116,10 @@ LSP client for .crmscript files.
 ## Common Issues
 
 1. **Build fails:** Build langium-crmscript first: `pnpm run build:langium-crmscript`
-2. **Import errors:** Use barrel imports from `index.ts` (services/, providers/, commands/, handlers/)
-3. **pnpm not found:** Install globally: `npm install -g pnpm@8`
-4. **TSC errors:** Ensure package `tsconfig.json` extends `../../tsconfig.base.json`
-5. **VS Code tests fail offline:** Expected. Skip `test:core` in CI/sandboxed environments
-6. **Generated files modified:** Run `pnpm run build:langium-crmscript` to regenerate
+2. **pnpm not found:** Install globally: `npm install -g pnpm@8`
+3. **TSC errors:** Ensure package `tsconfig.json` extends `../../tsconfig.base.json`
+4. **VS Code tests fail offline:** Expected. Skip `test:core` in CI/sandboxed environments
+5. **Generated files modified:** Run `pnpm run build:langium-crmscript` to regenerate
 
 ## Development Workflow
 
@@ -138,7 +132,6 @@ LSP client for .crmscript files.
 **Rules:**
 - ❌ Don't edit `packages/langium-crmscript/src/language/generated/` (auto-generated)
 - ❌ Don't edit `dist/` or `out/` (build outputs)
-- ✅ Use barrel imports (index.ts) for services/providers/commands/handlers
 - ✅ Add explicit return types to functions
 - ✅ Run `pnpm eslint .` before committing
 
