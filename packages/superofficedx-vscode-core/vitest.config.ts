@@ -6,7 +6,6 @@ export default defineConfig({
         include: ['src/tests/**/*.test.ts'],
         exclude: [
             // VS Code integration tests - require actual VS Code API
-            '**/fileSystemHandler.test.ts',
             '**/superofficedx-vscode-core.test.ts',
             '**/virtualFileSystemProvider.test.ts',
             '**/registerCommands.test.ts'

@@ -13,13 +13,13 @@ We've migrated from Sinon and Mocha to Vitest's built-in testing and mocking cap
 Located in `src/tests/suite/`, these tests use vitest and run in a Node.js environment:
 
 - `handlers/httpHandler.test.ts` - Tests HTTP request handling with mocked fetch
+- `handlers/fileSystemHandler.test.ts` - Tests file system operations with mocked VS Code workspace.fs API
 - `services/httpService.test.ts` - Tests service layer with mocked dependencies
 
 ### Integration Tests (VS Code Test Runner)
 
 The following tests require the VS Code API and continue to use the `@vscode/test-cli` runner:
 
-- `handlers/fileSystemHandler.test.ts` - Tests filesystem operations
 - `commands/registerCommands.test.ts` - Tests command registration (requires full DI container)
 - `providers/virtualFileSystemProvider.test.ts` - Tests VS Code virtual filesystem
 - `superofficedx-vscode-core.test.ts` - Basic integration tests
@@ -75,9 +75,29 @@ VS Code module is mocked via vitest config aliasing:
 }
 ```
 
-The mock file (`src/tests/__mocks__/vscode.ts`) provides stubs for VS Code APIs.
+The mock file (`src/tests/__mocks__/vscode.ts`) provides stubs for VS Code APIs including:
+- `workspace.fs` - In-memory file system for testing file operations
+- `window` - Message dialogs and UI interactions
+- `Uri` - File path handling
+- Other commonly used VS Code APIs
 
-### 4. Test Organization
+### 4. Mocking VS Code File System
+
+The `workspace.fs` API is mocked with an in-memory file system:
+
+```typescript
+// Mock file system operations
+beforeEach(() => {
+    // Clear the mock file system
+    vscode.workspace.fs.__clearMockFileSystem();
+});
+
+// Write and read files
+await fsHandler.writeFile(uri, 'content');
+const content = await fsHandler.readFile(uri);
+```
+
+### 5. Test Organization
 
 Using vitest's `describe`, `it`, `beforeEach`, `afterEach`:
 

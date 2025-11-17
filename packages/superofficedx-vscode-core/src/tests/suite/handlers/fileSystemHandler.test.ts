@@ -1,61 +1,85 @@
-import * as assert from 'assert';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import * as vscode from 'vscode';
 import { FileSystemHandler } from '../../../handlers/fileSystemHandler';
 
-suite('FileSystemHandler Test Suite', () => {
-    const fsHandler = new FileSystemHandler();
+describe('FileSystemHandler Test Suite', () => {
+    let fsHandler: FileSystemHandler;
     let tempFileUri: vscode.Uri;
 
-    suiteSetup(async () => {
-        // Set up a temporary file URI for testing
-        const workspaceFolders = vscode.workspace.workspaceFolders;
-        if (!workspaceFolders) {
-            throw new Error("No workspace folder is open.");
+    beforeEach(() => {
+        // Clear the mock file system before each test
+        if (vscode.workspace.fs.__clearMockFileSystem) {
+            vscode.workspace.fs.__clearMockFileSystem();
         }
-        const folderUri = workspaceFolders[0].uri;
-        tempFileUri = vscode.Uri.joinPath(folderUri, 'tempFile.txt');
+        
+        // Initialize the file system handler
+        fsHandler = new FileSystemHandler();
+        
+        // Create a mock temporary file URI
+        tempFileUri = vscode.Uri.joinPath(
+            { path: '/mock/workspace' } as vscode.Uri,
+            'tempFile.txt'
+        );
     });
 
-    test('writeFile - should write content to a file', async () => {
+    afterEach(() => {
+        // Clear mocks after each test
+        vi.clearAllMocks();
+    });
+
+    it('writeFile - should write content to a file', async () => {
         const content = 'Hello, VSCode!';
         const result = await fsHandler.writeFile(tempFileUri, content);
 
-        assert.strictEqual(result, true, 'Expected writeFile to return true');
+        expect(result).toBe(true);
+        
         const fileContent = await fsHandler.readFile(tempFileUri);
-        assert.strictEqual(fileContent, content, 'Expected file content to match written content');
+        expect(fileContent).toBe(content);
     });
 
-    test('readFile - should read content from a file', async () => {
+    it('readFile - should read content from a file', async () => {
         const content = 'Read this content!';
         await fsHandler.writeFile(tempFileUri, content);
 
         const fileContent = await fsHandler.readFile(tempFileUri);
-        assert.strictEqual(fileContent, content, 'Expected read content to match file content');
+        expect(fileContent).toBe(content);
     });
 
-    test('deleteFile - should delete the file', async () => {
+    it('deleteFile - should delete the file', async () => {
         await fsHandler.writeFile(tempFileUri, 'Temporary content');
         await fsHandler.deleteFile(tempFileUri);
 
         const fileExists = await fsHandler.exists(tempFileUri);
-        assert.strictEqual(fileExists, false, 'Expected file to not exist after deletion');
+        expect(fileExists).toBe(false);
     });
 
-    test('exists - should return true if file exists, false otherwise', async () => {
+    it('exists - should return true if file exists, false otherwise', async () => {
         await fsHandler.writeFile(tempFileUri, 'Checking existence');
         const fileExists = await fsHandler.exists(tempFileUri);
-        assert.strictEqual(fileExists, true, 'Expected file to exist');
+        expect(fileExists).toBe(true);
 
         await fsHandler.deleteFile(tempFileUri);
         const fileDoesNotExist = await fsHandler.exists(tempFileUri);
-        assert.strictEqual(fileDoesNotExist, false, 'Expected file to not exist');
+        expect(fileDoesNotExist).toBe(false);
     });
 
-    suiteTeardown(async () => {
-        // Cleanup: delete the temporary file if it still exists
-        if (await fsHandler.exists(tempFileUri)) {
-            await fsHandler.deleteFile(tempFileUri);
-        }
-        vscode.window.showInformationMessage('All tests done!');
+    it('readFile - should return undefined when reading fails', async () => {
+        const nonExistentUri = vscode.Uri.joinPath(
+            { path: '/mock/workspace' } as vscode.Uri,
+            'nonexistent.txt'
+        );
+
+        const fileContent = await fsHandler.readFile(nonExistentUri);
+        expect(fileContent).toBeUndefined();
+        expect(vscode.window.showErrorMessage).toHaveBeenCalled();
+    });
+
+    it('writeFile - should return false when writing fails', async () => {
+        // Mock writeFile to throw an error
+        vi.spyOn(vscode.workspace.fs, 'writeFile').mockRejectedValueOnce(new Error('Write error'));
+
+        const result = await fsHandler.writeFile(tempFileUri, 'content');
+        expect(result).toBe(false);
+        expect(vscode.window.showErrorMessage).toHaveBeenCalled();
     });
 });
