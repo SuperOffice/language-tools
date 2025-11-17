@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import * as vscode from 'vscode';
-import { FileSystemHandler } from '../../../handlers/fileSystemHandler';
+import { FileSystemHandler } from '../../../handlers/fileSystemHandler.js';
 
 describe('FileSystemHandler Test Suite', () => {
     let fsHandler: FileSystemHandler;
@@ -11,10 +11,10 @@ describe('FileSystemHandler Test Suite', () => {
         if (vscode.workspace.fs.__clearMockFileSystem) {
             vscode.workspace.fs.__clearMockFileSystem();
         }
-        
+
         // Initialize the file system handler
         fsHandler = new FileSystemHandler();
-        
+
         // Create a mock temporary file URI
         tempFileUri = vscode.Uri.joinPath(
             { path: '/mock/workspace' } as vscode.Uri,
@@ -32,7 +32,7 @@ describe('FileSystemHandler Test Suite', () => {
         const result = await fsHandler.writeFile(tempFileUri, content);
 
         expect(result).toBe(true);
-        
+
         const fileContent = await fsHandler.readFile(tempFileUri);
         expect(fileContent).toBe(content);
     });

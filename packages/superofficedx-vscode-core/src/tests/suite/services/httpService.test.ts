@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { IHttpHandler } from '../../../handlers/httpHandler';
-import { HttpService } from '../../../services/httpService';
-import { IFileSystemService } from '../../../services/fileSystemService';
-import { State } from '../../../types/state';
-import { UserClaims } from '../../../types/userClaims';
+import { IHttpHandler } from '../../../handlers/httpHandler.js';
+import { HttpService } from '../../../services/httpService.js';
+import { IFileSystemService } from '../../../services/fileSystemService.js';
+import { State } from '../../../types/state.js';
+import { UserClaims } from '../../../types/userClaims.js';
 
 describe('HttpService Test Suite', () => {
     let httpService: HttpService;
@@ -24,6 +24,7 @@ describe('HttpService Test Suite', () => {
             post: vi.fn(),
             put: vi.fn(),
             delete: vi.fn(),
+            patch: vi.fn(),
         };
 
         fileSystemServiceMock = {

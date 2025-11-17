@@ -12,9 +12,7 @@ export default defineConfig({
         ],
         environment: 'node',
         globals: true,
-        alias: {
-            vscode: '/home/runner/work/language-tools/language-tools/packages/superofficedx-vscode-core/src/tests/__mocks__/vscode.ts'
-        },
+        setupFiles: ['./src/tests/vitest-setup.ts'],
         coverage: {
             provider: 'v8',
             reporter: ['text', 'json', 'html'],

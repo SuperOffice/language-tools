@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import * as vscode from 'vscode';
-import { registerCommands } from '../../../commands/commandRegistration';
-import { CommandKeys } from '../../../commands/commandKeys';
-import { IHttpService } from '../../../services/httpService';
-import { INodeService } from '../../../services/nodeService';
-import { DIContainer } from '../../../container/core/diContainer';
-import { ConfigurationKeys } from '../../../container/configurations/configurationKeys';
-import { ScriptEntity } from '../../../types/script';
+import { registerCommands } from '../../../commands/commandRegistration.js';
+import { CommandKeys } from '../../../commands/commandKeys.js';
+import { IHttpService } from '../../../services/httpService.js';
+import { INodeService } from '../../../services/nodeService.js';
+import { DIContainer } from '../../../container/core/diContainer.js';
+import { ConfigurationKeys } from '../../../container/configurations/configurationKeys.js';
+import { ScriptEntity } from '../../../types/script.js';
 
 /**
  * Alternative approach: Create a test-specific container factory

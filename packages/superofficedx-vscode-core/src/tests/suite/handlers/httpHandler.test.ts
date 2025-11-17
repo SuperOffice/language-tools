@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from 'vitest';
-import { HttpHandler } from '../../../handlers/httpHandler';
+import { HttpHandler } from '../../../handlers/httpHandler.js';
 
 describe('HttpHandler Test Suite', () => {
     let httpHandler: HttpHandler;
@@ -25,7 +25,7 @@ describe('HttpHandler Test Suite', () => {
         fetchMock.mockResolvedValue(new Response(JSON.stringify(responseData), { status: 200 }));
 
         const result = await httpHandler.get<{ success: boolean }>('https://api.example.com/data');
-        
+
         expect(fetchMock).toHaveBeenCalledOnce();
         expect(fetchMock).toHaveBeenCalledWith('https://api.example.com/data', expect.any(Object));
         expect(result).toEqual(responseData);
@@ -37,7 +37,7 @@ describe('HttpHandler Test Suite', () => {
         fetchMock.mockResolvedValue(new Response(JSON.stringify(responseData), { status: 200 }));
 
         const result = await httpHandler.post<{ success: boolean }>('https://api.example.com/data', requestBody);
-        
+
         expect(fetchMock).toHaveBeenCalledOnce();
         expect(fetchMock).toHaveBeenCalledWith('https://api.example.com/data', expect.objectContaining({
             method: 'POST'
@@ -51,7 +51,7 @@ describe('HttpHandler Test Suite', () => {
         fetchMock.mockResolvedValue(new Response(JSON.stringify(responseData), { status: 200 }));
 
         const result = await httpHandler.put<{ success: boolean }>('https://api.example.com/data', requestBody);
-        
+
         expect(fetchMock).toHaveBeenCalledOnce();
         expect(fetchMock).toHaveBeenCalledWith('https://api.example.com/data', expect.objectContaining({
             method: 'PUT'
@@ -64,7 +64,7 @@ describe('HttpHandler Test Suite', () => {
         fetchMock.mockResolvedValue(new Response(JSON.stringify(responseData), { status: 200 }));
 
         const result = await httpHandler.delete<{ success: boolean }>('https://api.example.com/data');
-        
+
         expect(fetchMock).toHaveBeenCalledOnce();
         expect(fetchMock).toHaveBeenCalledWith('https://api.example.com/data', expect.objectContaining({
             method: 'DELETE'
