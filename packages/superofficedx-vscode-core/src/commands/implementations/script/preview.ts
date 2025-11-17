@@ -1,10 +1,6 @@
 
 import { Uri, workspace, window, authentication } from 'vscode';
-import { ScriptPreviewParams } from '../../types/commandContracts';
-import { CommandResult } from '../../types/commandContracts';
-import { createSuccessResult } from '../../types/commandContracts';
-import { createErrorResult } from '../../types/commandContracts';
-import { isValidScriptNode } from '../../types/commandContracts';
+import { ScriptPreviewParams, CommandResult, createSuccessResult, createErrorResult, isValidScriptNode } from '../../types/commandContracts';
 import { SuperOfficeAuthenticationSession } from '../../../types/authSession';
 import { getCustomScheme, getPackagePublisher } from '../../../utils';
 
