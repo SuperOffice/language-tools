@@ -155,7 +155,7 @@
         "@vscode/test-cli": "*",
         "@vscode/test-electron": "*",
         "esbuild": "*",
-        "glob": "^10.3.3",
+        "glob": "^11.1.0",
         "typescript": "*",
         "uuid": "^9.0.1",
         "vitest": "*"
