@@ -1,5 +1,5 @@
 import { Uri, TreeItem, TreeItemCollapsibleState, ThemeIcon, Command, TreeDataProvider, EventEmitter, Event, ExtensionContext } from 'vscode';
-import { ScriptInfo } from '../types/script';
+import { ScriptInfo } from '../types/odata/script';
 import { SuperofficeAuthenticationProvider } from './superofficeAuthenticationProvider';
 import { IHttpService } from '../services/httpService';
 

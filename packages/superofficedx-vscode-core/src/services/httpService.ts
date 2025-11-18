@@ -1,11 +1,12 @@
 import { Uri } from "vscode";
 import { IHttpHandler } from "../handlers/httpHandler";
 //import { DynamicScriptOdata, ExecuteScriptResponse, Hierarchy, ScriptEntity, Scripts, State, SuperOfficeAuthenticationSession, UserClaims } from "../types/index";
-import { DynamicScriptOdata } from "../types/script";
-import { ExecuteScriptResponse } from "../types/script";
+import { DynamicScriptOdata } from "../types/odata/script";
+import { ExecuteScriptResponse } from "../types/odata/script";
 import { Hierarchy } from "../types/hierarchy";
-import { ScriptEntity } from "../types/script";
-import { Scripts } from "../types/script";
+import { ScriptEntity } from "../types/odata/script";
+import { Scripts } from "../types/odata/script";
+import { ExtraTablesOdata } from "../types/odata/extratable";
 import { State } from "../types/state";
 import { SuperOfficeAuthenticationSession } from "../types/authSession";
 import { UserClaims } from "../types/userClaims";
@@ -14,6 +15,7 @@ import { IFileSystemService } from "./fileSystemService";
 export interface IHttpService {
     getTenantState(claims: UserClaims): Promise<State>;
     getScriptList(session: SuperOfficeAuthenticationSession): Promise<Scripts>;
+    getExtraTables(session: SuperOfficeAuthenticationSession): Promise<ExtraTablesOdata>;
     getCrmScriptEntity(session: SuperOfficeAuthenticationSession, ejscriptId: number): Promise<ScriptEntity>;
     executeScript(session: SuperOfficeAuthenticationSession, script: string): Promise<ExecuteScriptResponse>;
     downloadScript(session: SuperOfficeAuthenticationSession, ejscriptId: number): Promise<Uri>;
@@ -48,6 +50,10 @@ export class HttpService implements IHttpService {
 
     private getDynamicUrl(ejscriptId: number): string {
         return `/v1/archive/dynamic?$select=ejscript.id,ejscript.type,ejscript.description,ejscript.include_id,ejscript.access_key,ejscript.unique_identifier&$filter=ejscript.id eq '${ejscriptId}'`;
+    }
+
+    get getExtraTablesUrl(): string {
+        return `/v1/archive/dynamic?$select=extra_tables.id,extra_tables.table_name,extra_tables.(extra_fields->extra_table).field_name,extra_tables.(extra_fields->extra_table).type,extra_tables.(extra_fields->extra_table).description`;
     }
 
 
@@ -88,6 +94,22 @@ export class HttpService implements IHttpService {
             throw new Error('Error getting All Script info: ' + error);
         }
     }
+
+    public async getExtraTables(session: SuperOfficeAuthenticationSession): Promise<ExtraTablesOdata> {
+        try {
+            return await this.httpHandler.get<ExtraTablesOdata>(`${session.webApiUri}${this.getExtraTablesUrl}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${session.accessToken}`,
+                        'Accept': 'application/json'
+                    }
+                }
+            );
+        }
+        catch (error) {
+            throw new Error('Error getting ExtraTables: ' + error);
+        }
+    };
 
     public async getCrmScriptEntity(session: SuperOfficeAuthenticationSession, ejscriptId: number): Promise<ScriptEntity> {
         try {
