@@ -30,5 +30,9 @@ export default defineConfig({
                 statements: 3
             }
         }
+    },
+    // Add esbuild for TypeScript compilation
+    esbuild: {
+        target: 'node20'
     }
 });
