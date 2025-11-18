@@ -1,8 +1,23 @@
 # Copilot Instructions for SuperOffice Language Tools
 
+# Project coding standards for TypeScript
+
+Apply the [general coding guidelines](./general-coding.instructions.md) to all code.
+
+## TypeScript Guidelines
+- Use TypeScript for all new code
+- Follow functional programming principles where possible
+- Use interfaces for data structures and type definitions
+- Prefer immutable data (const, readonly)
+- Use optional chaining (?.) and nullish coalescing (??) operators
+- Explicit function return types, no-any.
+
 ## Repository Overview
 
-VS Code extensions for TypeScript and CRMScript in SuperOffice. Implements LSP servers using Volar (TypeScript) and Langium (CRMScript).
+Monorepo containing VS Code extensions for:
+1. Core functionality in vscode
+2. LSP server using Volar (TypeScript)
+3. LSP server using Langium (CRMScript)
 
 **Type:** Monorepo (pnpm workspace) | **Languages:** TypeScript | **Frameworks:** Volar, Langium, VS Code Extension API | **Size:** ~521 TS files | **Runtime:** Node.js 20.x | **Package Manager:** pnpm 8.x (REQUIRED)
 
@@ -57,10 +72,6 @@ pnpm run test:core     # Fails offline: "getaddrinfo ENOTFOUND update.code.visua
 ```bash
 pnpm eslint .
 ```
-
-**Pre-existing Issues:** 22 ESLint errors (missing return types) - DO NOT block on these.
-**Strict Rules:** Explicit function return types, no-any.
-**Before commit:** Run `pnpm eslint .` - ensure NO NEW errors.
 
 ## Project Structure
 
