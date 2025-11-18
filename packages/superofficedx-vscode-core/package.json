@@ -80,8 +80,8 @@
                     "icon": "/resources/logo.svg"
                 },
                 {
-                    "id": "superOfficeDX.dummyExplorer",
-                    "name": "Dummy Explorer",
+                    "id": "superOfficeDX.extraTablesExplorer",
+                    "name": "Extra Tables Explorer",
                     "icon": "/resources/logo.svg"
                 }
             ]

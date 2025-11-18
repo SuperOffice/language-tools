@@ -2,7 +2,7 @@ import { ExtensionContext, workspace, window } from 'vscode';
 import { CustomTextDocumentContentProvider } from "./providers/textDocumentContentProvider";
 import { SuperofficeAuthenticationProvider } from "./providers/superofficeAuthenticationProvider";
 import { TreeViewDataProvider } from "./providers/treeViewDataProvider";
-import { DummyTreeViewDataProvider } from "./providers/dummyTreeViewDataProvider";
+import { ExtraTablesTreeViewDataProvider } from "./providers/extraTablesTreeViewDataProvider";
 import { registerCommands } from './commands/commandRegistration';
 import { getCustomScheme } from './utils';
 import { createContainer } from './container/containerRegistration';
@@ -18,20 +18,21 @@ export async function activate(context: ExtensionContext): Promise<void> {
     const textContentProvider = container.resolve<CustomTextDocumentContentProvider>(ConfigurationKeys.TextDocumentContentProvider);
     const authProvider = container.resolve<SuperofficeAuthenticationProvider>(ConfigurationKeys.AuthenticationProvider);
     const treeViewDataProvider = container.resolve<TreeViewDataProvider>(ConfigurationKeys.TreeViewDataProvider);
-    const dummyTreeViewDataProvider = container.resolve<DummyTreeViewDataProvider>(ConfigurationKeys.DummyTreeViewDataProvider);
+    const extraTablesTreeViewDataProvider = container.resolve<ExtraTablesTreeViewDataProvider>(ConfigurationKeys.ExtraTablesTreeViewDataProvider);
 
     // Register providers with VS Code
     context.subscriptions.push(workspace.registerTextDocumentContentProvider(getCustomScheme(), textContentProvider));
     context.subscriptions.push(authProvider);
 
     const treeviewProvider = window.registerTreeDataProvider(TreeViewDataProvider.viewId, treeViewDataProvider);
-    const dummyTreeviewProvider = window.registerTreeDataProvider(DummyTreeViewDataProvider.viewId, dummyTreeViewDataProvider);
+    const extraTablesTreeviewProvider = window.registerTreeDataProvider(ExtraTablesTreeViewDataProvider.viewId, extraTablesTreeViewDataProvider);
     context.subscriptions.push(treeviewProvider);
-    context.subscriptions.push(dummyTreeviewProvider);
+    context.subscriptions.push(extraTablesTreeviewProvider);
 
     // Listen for authentication session changes to refresh the tree view
     authProvider.onDidChangeSessions(() => {
         treeViewDataProvider.refresh();
+        extraTablesTreeViewDataProvider.refresh();
     });
 
     // Register commands
