@@ -10,8 +10,8 @@ import { ConfigurationKeys } from '../../../src/container/configurations/configu
 import { ScriptEntity } from '../../../src/types/odata/script';
 
 /**
- * Alternative approach: Create a test-specific container factory
- * This is often cleaner than mocking the container
+ * Creates a test-specific container factory.
+ * This is often cleaner than mocking the container.
  */
 function createTestContainer(
     context: vscode.ExtensionContext,
