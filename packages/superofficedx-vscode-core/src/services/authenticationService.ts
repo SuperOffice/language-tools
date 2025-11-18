@@ -60,8 +60,11 @@ export class AuthenticationService implements IAuthenticationService {
     }
 
     /**
-    * Generate authorize URL with scopes, parameters and state etc.
-    */
+     * Generates an OAuth2 authorization URL for the specified SuperOffice environment.
+     * Includes PKCE code challenge, state, and required scopes.
+     * @param environment The SuperOffice environment (tenant) to authenticate against.
+     * @returns A promise that resolves to a Uri containing the authorization URL.
+     */
     public async generateAuthorizeUrl(environment: string): Promise<Uri> {
         const nonceId = uuid();
         const scopes = ['openid'];
