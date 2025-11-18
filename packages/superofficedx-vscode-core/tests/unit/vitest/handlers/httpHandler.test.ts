@@ -77,6 +77,6 @@ describe('HttpHandler Test Suite', () => {
 
         await expect(httpHandler.get('https://api.example.com/data'))
             .rejects
-            .toThrow(/HTTP error! status: 500/);
+            .toThrow(/HTTP 500/);
     });
 });

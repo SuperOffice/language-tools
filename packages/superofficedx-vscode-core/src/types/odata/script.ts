@@ -1,7 +1,4 @@
-interface ResponseOdataMetadata {
-    "odata.metadata": string;
-    "odata.nextLink": null | string;  // Assuming the value can sometimes be a string
-}
+import { ResponseOdataMetadata } from "./odataResponse";
 
 export interface Scripts extends ResponseOdataMetadata {
     value: ScriptInfo[];
@@ -25,7 +22,7 @@ export interface ScriptInfo {
     uniqueIdentifier: string;
     type: number;
     registeredBy: string;
-    registeredDate: Date; 
+    registeredDate: Date;
     updatedBy: string;
     updatedDate: Date;
     path: string;
@@ -38,7 +35,7 @@ export interface DynamicScriptOdata {
     "odata.metadata": string;
     "odata.nextLink": null | string;
     value: DynamicScriptOdataValue[];
-    
+
 }
 interface DynamicScriptOdataValue {
     PrimaryKey: string;
@@ -67,7 +64,7 @@ export interface ScriptEntity {
     ValidationResult: ValidationResult;
 }
 
-interface ValidationResult{
+interface ValidationResult {
     Valid: boolean;
     ErrorMessage: string;
     LineNumber: number;

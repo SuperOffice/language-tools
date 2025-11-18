@@ -6,7 +6,7 @@ import { Node } from '../../providers/treeViewDataProvider';
 import { SuperofficeAuthenticationProvider } from '../../providers/superofficeAuthenticationProvider';
 import { IHttpService } from '../../services/httpService';
 import { INodeService } from '../../services/nodeService';
-import { ScriptInfo } from '../../types/script';
+import { ScriptInfo } from '../../types/odata/script';
 
 import {
     IScriptCommands,

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Disposable, Event, EventEmitter, ExtensionContext } from "vscode";
-import { ScriptEntity } from "./types/script";
+import { ScriptEntity } from "./types/odata/script";
 
 export interface PromiseAdapter<T, U> {
     (
