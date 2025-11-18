@@ -26,11 +26,10 @@ export class ExtraTablesTreeViewDataProvider implements TreeDataProvider<ExtraTa
     public static readonly viewId = 'superOfficeDX.extraTablesExplorer';
 
     constructor(
-        context: ExtensionContext,
+        _context: ExtensionContext, // Parameter required for DI container compatibility
         private authProvider: SuperofficeAuthenticationProvider,
         private httpService: IHttpService) {
-        // Constructor parameter required for DI container compatibility
-        void context; // Mark as used to satisfy linter
+        // _context is intentionally unused; required for DI container compatibility
     }
 
     // Call this method to trigger a refresh of the tree view
