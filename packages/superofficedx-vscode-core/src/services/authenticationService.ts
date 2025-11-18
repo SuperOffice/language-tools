@@ -16,15 +16,16 @@ const CALLBACK_URI = `http://${CALLBACK_HOSTNAME}:${CALLBACK_PORT}/callback`;
 export interface IAuthenticationService {
     login(environment: string): Promise<Token>;
     getClaimsFromToken(token: string): UserClaims;
+    generateAuthorizeUrl(environment: string): Promise<Uri>;
 }
 
 export class AuthenticationService implements IAuthenticationService {
     private server: http.Server | null = null;
-
     private _pendingStates: string[] = [];
     private _codeVerifiers = new Map<string, string>();
     private _scopes = new Map<string, string[]>();
     private _environment: string = "";
+    private _state: string = "";
 
     /**
      * Load HTML template from resources folder
@@ -59,11 +60,45 @@ export class AuthenticationService implements IAuthenticationService {
     }
 
     /**
+    * Generate AuthorizeUrl with scopes, parameters and state etc.
+    */
+    public async generateAuthorizeUrl(environment: string): Promise<Uri> {
+
+
+        const nonceId = uuid();
+        const scopes = ['openid']
+        const codeVerifier = this.toBase64UrlEncoding(crypto.randomBytes(32));
+        const codeChallenge = this.toBase64UrlEncoding(this.sha256(codeVerifier));
+        const callbackUri = await env.asExternalUri(Uri.parse(CALLBACK_URI));
+        const callbackQuery = new URLSearchParams(callbackUri.query);
+        const state = callbackQuery.get('state') || nonceId;
+
+        this._environment = environment;
+        this._state = state;
+
+        this._pendingStates.push(state);
+        this._codeVerifiers.set(state, codeVerifier);
+        this._scopes.set(state, scopes);
+
+        const searchParams = new URLSearchParams([
+            ['response_type', "code"],
+            ['client_id', CLIENT_ID],
+            ['redirect_uri', CALLBACK_URI],
+            ['state', state],
+            ['scope', scopes.join(' ')],
+            ['code_challenge_method', 'S256'],
+            ['code_challenge', codeChallenge],
+        ]);
+
+        const uri = Uri.parse(`https://${environment}.superoffice.com/login/common/oauth/authorize?${searchParams.toString()}`);
+
+        return Promise.resolve(uri);
+    }
+
+    /**
       * Log in to OpenId Connect
       */
     public async login(environment: string): Promise<Token> {
-        this._environment = environment;
-
         return await window.withProgress<Token>({
             location: ProgressLocation.Notification,
             title: "Signing in to SuperOffice...",
@@ -71,32 +106,7 @@ export class AuthenticationService implements IAuthenticationService {
 
         }, async (_, token) => {
 
-            const nonceId = uuid();
-
-            const scopes = ['openid']
-
-            const codeVerifier = this.toBase64UrlEncoding(crypto.randomBytes(32));
-            const codeChallenge = this.toBase64UrlEncoding(this.sha256(codeVerifier));
-
-            const callbackUri = await env.asExternalUri(Uri.parse(CALLBACK_URI));
-            const callbackQuery = new URLSearchParams(callbackUri.query);
-            const stateId = callbackQuery.get('state') || nonceId;
-
-            this._pendingStates.push(stateId);
-            this._codeVerifiers.set(stateId, codeVerifier);
-            this._scopes.set(stateId, scopes);
-
-            const searchParams = new URLSearchParams([
-                ['response_type', "code"],
-                ['client_id', CLIENT_ID],
-                ['redirect_uri', CALLBACK_URI],
-                ['state', stateId],
-                ['scope', scopes.join(' ')],
-                ['code_challenge_method', 'S256'],
-                ['code_challenge', codeChallenge],
-            ]);
-
-            const uri = Uri.parse(`https://${this._environment}.superoffice.com/login/common/oauth/authorize?${searchParams.toString()}`);
+            const uri = await this.generateAuthorizeUrl(environment);
 
             await env.openExternal(uri);
 
@@ -109,7 +119,7 @@ export class AuthenticationService implements IAuthenticationService {
                 ])
             }
             finally {
-                this._pendingStates = this._pendingStates.filter(n => n !== stateId);
+                this._pendingStates = this._pendingStates.filter(n => n !== this._state);
             }
         });
     }

@@ -1,13 +1,13 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import * as vscode from 'vscode';
-import { registerCommands } from '../../../commands/commandRegistration.js';
-import { CommandKeys } from '../../../commands/commandKeys.js';
-import { IHttpService } from '../../../services/httpService.js';
-import { INodeService } from '../../../services/nodeService.js';
-import { SuperofficeAuthenticationProvider } from '../../../providers/superofficeAuthenticationProvider.js';
-import { DIContainer } from '../../../container/core/diContainer.js';
-import { ConfigurationKeys } from '../../../container/configurations/configurationKeys.js';
-import { ScriptEntity } from '../../../types/script.js';
+import { registerCommands } from '../../../../src/commands/commandRegistration';
+import { CommandKeys } from '../../../../src/commands/commandKeys';
+import { IHttpService } from '../../../../src/services/httpService';
+import { INodeService } from '../../../../src/services/nodeService';
+import { SuperofficeAuthenticationProvider } from '../../../../src/providers/superofficeAuthenticationProvider';
+import { DIContainer } from '../../../../src/container/core/diContainer';
+import { ConfigurationKeys } from '../../../../src/container/configurations/configurationKeys';
+import { ScriptEntity } from '../../../../src/types/script';
 
 /**
  * Alternative approach: Create a test-specific container factory

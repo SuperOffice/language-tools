@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { IHttpHandler } from '../../../handlers/httpHandler.js';
-import { HttpService } from '../../../services/httpService.js';
-import { IFileSystemService } from '../../../services/fileSystemService.js';
-import { State } from '../../../types/state.js';
-import { UserClaims } from '../../../types/userClaims.js';
+import { IHttpHandler } from '../../../../src/handlers/httpHandler';
+import { HttpService } from '../../../../src/services/httpService';
+import { IFileSystemService } from '../../../../src/services/fileSystemService';
+import { State } from '../../../../src/types/state';
+import { UserClaims } from '../../../../src/types/userClaims';
 
 describe('HttpService Test Suite', () => {
     let httpService: HttpService;

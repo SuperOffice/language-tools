@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from 'vitest';
-import { HttpHandler } from '../../../handlers/httpHandler.js';
+import { HttpHandler } from '../../../../src/handlers/httpHandler';
 
 describe('HttpHandler Test Suite', () => {
     let httpHandler: HttpHandler;
