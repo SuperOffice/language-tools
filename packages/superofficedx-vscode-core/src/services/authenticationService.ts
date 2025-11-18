@@ -66,7 +66,6 @@ export class AuthenticationService implements IAuthenticationService {
         const nonceId = uuid();
         const scopes = ['openid'];
         const codeVerifier = this.toBase64UrlEncoding(crypto.randomBytes(32));
-        const codeVerifier = this.toBase64UrlEncoding(crypto.randomBytes(32));
         const codeChallenge = this.toBase64UrlEncoding(this.sha256(codeVerifier));
         const callbackUri = await env.asExternalUri(Uri.parse(CALLBACK_URI));
         const callbackQuery = new URLSearchParams(callbackUri.query);
