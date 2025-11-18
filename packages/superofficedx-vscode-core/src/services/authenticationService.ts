@@ -63,10 +63,9 @@ export class AuthenticationService implements IAuthenticationService {
     * Generate AuthorizeUrl with scopes, parameters and state etc.
     */
     public async generateAuthorizeUrl(environment: string): Promise<Uri> {
-
-
         const nonceId = uuid();
         const scopes = ['openid']
+        const codeVerifier = this.toBase64UrlEncoding(crypto.randomBytes(32));
         const codeVerifier = this.toBase64UrlEncoding(crypto.randomBytes(32));
         const codeChallenge = this.toBase64UrlEncoding(this.sha256(codeVerifier));
         const callbackUri = await env.asExternalUri(Uri.parse(CALLBACK_URI));
