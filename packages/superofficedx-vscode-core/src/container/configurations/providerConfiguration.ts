@@ -2,6 +2,7 @@
 import { CustomTextDocumentContentProvider } from "../../providers/textDocumentContentProvider";
 import { SuperofficeAuthenticationProvider } from "../../providers/superofficeAuthenticationProvider";
 import { TreeViewDataProvider } from "../../providers/treeViewDataProvider";
+import { DummyTreeViewDataProvider } from "../../providers/dummyTreeViewDataProvider";
 import { DIContainer } from "../core/diContainer";
 import { ConfigurationKeys } from "./configurationKeys";
 
@@ -23,6 +24,12 @@ export function configureProviders(container: DIContainer): void {
             container.resolve(ConfigurationKeys.ExtensionContext),
             container.resolve(ConfigurationKeys.AuthenticationProvider),
             container.resolve(ConfigurationKeys.HttpService)
+        )
+    );
+
+    container.registerSingleton(ConfigurationKeys.DummyTreeViewDataProvider, () =>
+        new DummyTreeViewDataProvider(
+            container.resolve(ConfigurationKeys.ExtensionContext)
         )
     );
 

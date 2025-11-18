@@ -15,6 +15,7 @@ export const ConfigurationKeys = {
     // Providers
     AuthenticationProvider: Symbol('AuthenticationProvider'),
     TreeViewDataProvider: Symbol('TreeViewDataProvider'),
+    DummyTreeViewDataProvider: Symbol('DummyTreeViewDataProvider'),
     TextDocumentContentProvider: Symbol('TextDocumentContentProvider'),
 
     // VS Code Context

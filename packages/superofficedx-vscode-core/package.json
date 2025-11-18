@@ -78,6 +78,11 @@
                     "id": "superOfficeDX.scriptExplorer",
                     "name": "Scripts",
                     "icon": "/resources/logo.svg"
+                },
+                {
+                    "id": "superOfficeDX.dummyExplorer",
+                    "name": "Dummy Explorer",
+                    "icon": "/resources/logo.svg"
                 }
             ]
         },
