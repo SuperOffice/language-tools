@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import * as vscode from 'vscode';
-import { FileSystemHandler } from '../../../handlers/fileSystemHandler.js';
+import { FileSystemHandler } from '../../../../src/handlers/fileSystemHandler';
 
 describe('FileSystemHandler Test Suite', () => {
     let fsHandler: FileSystemHandler;

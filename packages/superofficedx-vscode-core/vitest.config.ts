@@ -3,22 +3,22 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
     test: {
-        include: ['src/tests/**/*.test.ts'],
+        include: ['tests/unit/vitest/**/*.test.ts'],
         exclude: [
             // VS Code integration tests - require actual VS Code API
             //'**/registerCommands.test.ts'
         ],
         environment: 'node',
         globals: true,
-        setupFiles: ['./src/tests/vitest-setup.ts'],
+        setupFiles: ['./tests/unit/vitest/vitest-setup.ts'],
         coverage: {
             provider: 'v8',
             reporter: ['text', 'json', 'html'],
             include: ['src/**/*.ts'],
             exclude: [
-                'src/tests/**',
-                'src/**/*.d.ts',
-                'src/types/**',
+                'tests/unit/vitest/**',
+                'tests/unit/vitest/**/*.d.ts',
+                'tests/unit/vitest/types/**',
                 'dist/**'
             ],
             // Set realistic thresholds for files under test
