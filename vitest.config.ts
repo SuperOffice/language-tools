@@ -8,4 +8,8 @@ export default defineConfig({
             'packages/superofficedx-vscode-core/vitest.config.ts'
         ],
     },
+    // Add esbuild for TypeScript compilation
+    esbuild: {
+        target: 'node20'
+    }
 });
