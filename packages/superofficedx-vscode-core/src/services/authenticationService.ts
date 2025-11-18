@@ -60,7 +60,7 @@ export class AuthenticationService implements IAuthenticationService {
     }
 
     /**
-    * Generate AuthorizeUrl with scopes, parameters and state etc.
+    * Generate authorize URL with scopes, parameters and state etc.
     */
     public async generateAuthorizeUrl(environment: string): Promise<Uri> {
         const nonceId = uuid();
