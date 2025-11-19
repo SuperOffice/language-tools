@@ -8,7 +8,7 @@ import { MockSuperofficeDataService } from '../services/mockSuperofficeDataServi
 export class SuperofficeQuickDiffProvider implements QuickDiffProvider {
     constructor(
         private readonly dataService: MockSuperofficeDataService
-    ) {}
+    ) { }
 
     /**
      * Provide the original resource URI for diff comparison
@@ -21,7 +21,7 @@ export class SuperofficeQuickDiffProvider implements QuickDiffProvider {
             // Return URI with different scheme for original content
             return uri.with({ scheme: 'superoffice-original' });
         }
-        
+
         return null;
     }
 
@@ -36,7 +36,7 @@ export class SuperofficeQuickDiffProvider implements QuickDiffProvider {
             const pathParts = uri.authority; // This contains the script-id
             return pathParts || null;
         }
-        
+
         return null;
     }
 

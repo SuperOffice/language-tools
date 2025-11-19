@@ -16,7 +16,7 @@ export class SourceControlService {
     constructor(
         private readonly dataService: MockSuperofficeDataService,
         private readonly context?: ExtensionContext
-    ) {}
+    ) { }
 
     /**
      * Initialize the source control service
@@ -27,12 +27,12 @@ export class SourceControlService {
         }
 
         console.log('SuperOffice Source Control Service: Initializing...');
-        
+
         // Initialize source control if context is available (Phase 2)
         if (this.context) {
             await this.initializeSourceControl();
         }
-        
+
         this._isInitialized = true;
     }
 
@@ -45,18 +45,18 @@ export class SourceControlService {
         }
 
         console.log('SuperOffice Source Control Service: Initializing VS Code SourceControl...');
-        
+
         // Create source control instance
         this.sourceControl = scm.createSourceControl('superoffice', 'SuperOffice Scripts');
         this.sourceControl.quickDiffProvider = undefined; // Will be set later when QuickDiffProvider is registered
-        
+
         // Create resource groups
         this.changedResources = this.sourceControl.createResourceGroup('changed', 'Changed Scripts');
         this.untrackedResources = this.sourceControl.createResourceGroup('untracked', 'New Scripts');
-        
+
         // Add to subscriptions
         this.context.subscriptions.push(this.sourceControl);
-        
+
         console.log('SuperOffice Source Control Service: SourceControl initialized');
     }
 
@@ -99,20 +99,20 @@ export class SourceControlService {
         }
 
         console.log('SuperOffice Source Control Service: Updating source control view...');
-        
+
         // For Phase 2, we'll show all scripts as "untracked" (new scripts)
         // In a real implementation, this would detect actual changes
         const resourceStates: SourceControlResourceState[] = [];
-        
+
         for (const script of Array.from(this.scriptsInMemory.values())) {
             const resourceState = this.createResourceState(script);
             resourceStates.push(resourceState);
         }
-        
+
         // Update resource groups
         this.changedResources.resourceStates = [];
         this.untrackedResources.resourceStates = resourceStates;
-        
+
         console.log(`SuperOffice Source Control Service: Added ${resourceStates.length} scripts to source control view`);
     }
 
@@ -121,7 +121,7 @@ export class SourceControlService {
      */
     private createResourceState(script: SuperofficeScript): SourceControlResourceState {
         const uri = this.createScriptUri(script);
-        
+
         return {
             resourceUri: uri,
             command: {
@@ -179,7 +179,7 @@ export class SourceControlService {
         // Handle overloads
         let message: string;
         let scriptIds: string[] | undefined;
-        
+
         if (Array.isArray(scriptIdsOrMessage) || scriptIdsOrMessage === undefined) {
             // First overload: commitChanges(message, scriptIds?)
             message = messageOrScriptId;
@@ -190,16 +190,16 @@ export class SourceControlService {
             message = (scriptIdsOrMessage as string) || `Commit changes to ${scriptId}`;
             scriptIds = [scriptId];
         }
-        
+
         console.log(`SuperOffice Source Control Service: Committing changes with message: "${message}"`);
-        
+
         try {
-            const scriptsToCommit = scriptIds 
+            const scriptsToCommit = scriptIds
                 ? scriptIds.map(id => this.scriptsInMemory.get(id)).filter(script => script !== undefined)
                 : Array.from(this.scriptsInMemory.values()).filter(script => script.isModified);
-            
+
             console.log(`SuperOffice Source Control Service: Committing ${scriptsToCommit.length} scripts`);
-            
+
             // Update scripts to mark as committed
             for (const script of scriptsToCommit) {
                 if (script) {
@@ -208,10 +208,10 @@ export class SourceControlService {
                     script.isModified = false;
                 }
             }
-            
+
             // Refresh view after commit
             await this.updateSourceControlView();
-            
+
             window.showInformationMessage(`SuperOffice: Successfully committed ${scriptsToCommit.length} script(s)`);
         } catch (error) {
             console.error('SuperOffice Source Control Service: Error during commit:', error);
@@ -226,14 +226,14 @@ export class SourceControlService {
      */
     public async discardChanges(scriptIds?: string[]): Promise<void> {
         console.log('SuperOffice Source Control Service: Discarding changes...');
-        
+
         try {
-            const scriptsToDiscard = scriptIds 
+            const scriptsToDiscard = scriptIds
                 ? scriptIds.map(id => this.scriptsInMemory.get(id)).filter(script => script !== undefined)
                 : Array.from(this.scriptsInMemory.values());
-                
+
             console.log(`SuperOffice Source Control Service: Discarding ${scriptsToDiscard.length} scripts`);
-            
+
             // In Phase 2, we'll just log the operation
             // Real implementation would reset to remote versions
             for (const script of scriptsToDiscard) {
@@ -241,10 +241,10 @@ export class SourceControlService {
                     console.log(`- Discarding: ${script.name}`);
                 }
             }
-            
+
             // Refresh view after discard
             await this.updateSourceControlView();
-            
+
             window.showInformationMessage(`SuperOffice: Successfully discarded changes for ${scriptsToDiscard.length} scripts`);
         } catch (error) {
             console.error('SuperOffice Source Control Service: Error during discard:', error);
@@ -273,7 +273,7 @@ export class SourceControlService {
      */
     public async detectChanges(): Promise<SuperofficeResourceChange[]> {
         console.log('SuperOffice Source Control Service: Detecting changes...');
-        
+
         // Phase 2: Return empty array - real change detection would compare with remote versions
         return [];
     }
@@ -319,13 +319,13 @@ export class SourceControlService {
      */
     public dispose(): void {
         console.log('SuperOffice Source Control Service: Disposing...');
-        
+
         // Dispose VS Code SourceControl if it exists
         if (this.sourceControl) {
             this.sourceControl.dispose();
             this.sourceControl = undefined;
         }
-        
+
         // Clear memory
         this.scriptsInMemory.clear();
         this._isInitialized = false;

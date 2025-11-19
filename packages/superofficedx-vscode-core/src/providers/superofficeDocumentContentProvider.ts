@@ -8,7 +8,7 @@ import { MockSuperofficeDataService } from '../services/mockSuperofficeDataServi
 export class SuperofficeDocumentContentProvider implements TextDocumentContentProvider {
     constructor(
         private readonly dataService: MockSuperofficeDataService
-    ) {}
+    ) { }
 
     /**
      * Provide text document content for custom URI schemes
@@ -19,13 +19,13 @@ export class SuperofficeDocumentContentProvider implements TextDocumentContentPr
     async provideTextDocumentContent(uri: Uri, _token?: CancellationToken): Promise<string> {
         try {
             const scriptId = this.extractScriptId(uri);
-            
+
             if (!scriptId) {
                 return '// Error: Could not extract script ID from URI\\n// URI: ' + uri.toString();
             }
 
             const script = await this.dataService.getScriptAsync(scriptId);
-            
+
             if (!script) {
                 return `// Error: Script not found with ID: ${scriptId}\\n// URI: ${uri.toString()}`;
             }
@@ -33,7 +33,7 @@ export class SuperofficeDocumentContentProvider implements TextDocumentContentPr
             // For original content URI scheme, return the script content as-is
             // For modified content, in a real implementation this would show local changes
             return script.content;
-            
+
         } catch (error) {
             console.error('SuperOffice Document Content Provider: Error providing content:', error);
             const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -53,7 +53,7 @@ export class SuperofficeDocumentContentProvider implements TextDocumentContentPr
             // The script ID is in the authority part
             return uri.authority || null;
         }
-        
+
         return null;
     }
 

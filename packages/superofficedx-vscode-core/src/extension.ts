@@ -21,7 +21,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     const authProvider = container.resolve<SuperofficeAuthenticationProvider>(ConfigurationKeys.AuthenticationProvider);
     const treeViewDataProvider = container.resolve<TreeViewDataProvider>(ConfigurationKeys.TreeViewDataProvider);
     const extraTablesTreeViewDataProvider = container.resolve<ExtraTablesTreeViewDataProvider>(ConfigurationKeys.ExtraTablesTreeViewDataProvider);
-    
+
     // Phase 2: Resolve source control providers and service
     const superofficeDocumentProvider = container.resolve<SuperofficeDocumentContentProvider>(ConfigurationKeys.SuperofficeDocumentContentProvider);
     const sourceControlService = container.resolve<SourceControlService>(ConfigurationKeys.SourceControlService);
@@ -29,7 +29,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     // Register providers with VS Code
     context.subscriptions.push(workspace.registerTextDocumentContentProvider(getCustomScheme(), textContentProvider));
     context.subscriptions.push(authProvider);
-    
+
     // Phase 2: Register SuperOffice document content providers
     context.subscriptions.push(workspace.registerTextDocumentContentProvider('superoffice-script', superofficeDocumentProvider));
     context.subscriptions.push(workspace.registerTextDocumentContentProvider('superoffice-original', superofficeDocumentProvider));
