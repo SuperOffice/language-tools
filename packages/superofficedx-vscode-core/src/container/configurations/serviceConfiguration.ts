@@ -4,6 +4,8 @@ import { FileSystemService } from '../../services/fileSystemService';
 import { AuthenticationService } from '../../services/authenticationService';
 import { HttpService } from '../../services/httpService';
 import { NodeService } from '../../services/nodeService';
+import { MockSuperofficeDataService } from '../../services/mockSuperofficeDataService';
+import { SourceControlService } from '../../services/sourceControlService';
 
 /**
  * Configures all service registrations for the DI container
@@ -30,6 +32,18 @@ export function configureServices(container: DIContainer): void {
         new NodeService(
             container.resolve(ConfigurationKeys.ExtensionContext),
             container.resolve(ConfigurationKeys.HttpHandler)
+        )
+    );
+
+    // Source Control Services - Phase 2
+    container.registerSingleton(ConfigurationKeys.MockSuperofficeDataService, () =>
+        new MockSuperofficeDataService()
+    );
+
+    container.registerSingleton(ConfigurationKeys.SourceControlService, () =>
+        new SourceControlService(
+            container.resolve(ConfigurationKeys.MockSuperofficeDataService),
+            container.resolve(ConfigurationKeys.ExtensionContext)
         )
     );
 }

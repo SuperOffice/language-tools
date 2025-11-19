@@ -10,6 +10,10 @@ export const CommandKeys = {
     ExecuteTypeScript: 'superOfficeDX.executeTypeScript',
     ExecuteTypeScriptLocally: 'superOfficeDX.executeTypeScriptLocally',
     UploadScript: 'superOfficeDX.uploadScript',
+
+    // Source Control commands
+    SourceControlRefresh: 'superOfficeDX.sourceControl.refresh',
+    SourceControlTestModify: 'superOfficeDX.sourceControl.testModify',
 } as const;
 
 /**

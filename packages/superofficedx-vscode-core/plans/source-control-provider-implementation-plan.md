@@ -8,55 +8,60 @@ This document outlines a comprehensive plan for implementing a VS Code Source Co
 
 ### 1. Core Components
 
-#### A. Main Source Control Provider (`SuperofficeSourceControl`)
+#### A. Extended Source Control Service (Phase 2)
 
-- **Purpose**: Central orchestrator for all source control operations
-- **Location**: `src/providers/superofficeSourceControl.ts`
-- **Responsibilities**:
-  - Creates and manages VS Code SourceControl instance
-  - Coordinates between repository service and UI components
-  - Handles workspace folder lifecycle
-  - Manages file watching and change detection
+```typescript
+export class SourceControlService {
+    // Phase 1 properties
+    private _isInitialized = false;
+    private readonly dataService: MockSuperofficeDataService;
 
-#### B. Repository Service (`SuperofficeRepository`)
+    // Phase 2 additions
+    private sourceControl?: vscode.SourceControl;
+    private changedResources?: vscode.SourceControlResourceGroup;
+    private untrackedResources?: vscode.SourceControlResourceGroup;
+    private scriptsInMemory: Map<string, SuperofficeScript> = new Map();
 
-- **Purpose**: Interface to underlying SuperOffice data source
-- **Location**: `src/services/superofficeRepositoryService.ts`
-- **Responsibilities**:
-  - Implements QuickDiffProvider for diff functionality
-  - Manages script/document synchronization
-  - Provides version history and comparison capabilities
-  - Handles upload/download operations
+    constructor(
+        // Phase 1 - simplified
+        dataService: MockSuperofficeDataService,
+        // Phase 2 - add these back
+        private readonly context?: vscode.ExtensionContext,
+        private readonly authProvider?: SuperofficeAuthenticationProvider,
+        private readonly httpService?: HttpService
+    );
 
-#### C. Resource State Manager
+    // Phase 1 methods (existing)
+    public async initialize(): Promise<void>;
+    public async refresh(): Promise<void>;
+    public getScriptsCount(): number;
 
-- **Purpose**: Tracks and manages individual file states
-- **Location**: `src/providers/sourceControlResourceStateProvider.ts`
-- **Responsibilities**:
-  - Creates SourceControlResourceState objects
-  - Handles decorations (modified, deleted, added)
-  - Provides diff commands for individual files
-
-#### D. Document Content Provider
-
-- **Purpose**: Provides original content for diff operations
-- **Location**: `src/providers/superofficeDocumentContentProvider.ts`
-- **Responsibilities**:
-  - Implements TextDocumentContentProvider
-  - Fetches remote content for comparisons
-  - Handles custom URI schemes for SuperOffice resources
+    // Phase 2 additions
+    public async initializeSourceControl(): Promise<void>;
+    public async updateSourceControlView(): Promise<void>;
+    public async commitChanges(message: string): Promise<void>;
+    public async discardChanges(scriptIds?: string[]): Promise<void>;
+    private createScriptUri(script: SuperofficeScript): vscode.Uri;
+    private createResourceState(script: SuperofficeScript): vscode.SourceControlResourceState;
+}
 
 ### 2. Integration Points
 
-#### A. DI Container Integration
+#### B. DI Container Integration
 
-- Register new services in `providerConfiguration.ts`
-- Add configuration keys to `configurationKeys.ts`
+- Add new configuration keys to `configurationKeys.ts`:
+  - `SourceControlService`
+  - `SuperofficeQuickDiffProvider`
+  - `SuperofficeDocumentContentProvider`
+  - `MockSuperofficeDataService`
+- Register new services in `serviceConfiguration.ts`
+- Register new providers in `providerConfiguration.ts`
 - Ensure proper dependency injection for all components
 
-#### B. Command Integration
+#### C. Command Integration
 
-- Extend `commandRegistration.ts` with source control commands
+- Create `src/commands/handlers/sourceControlCommands.ts` following existing pattern
+- Register in `commandRegistration.ts` alongside `authCommands` and `scriptCommands`
 - Integrate with existing authentication flow
 - Leverage existing HTTP service for API calls
 
@@ -97,62 +102,89 @@ export interface SuperofficeResourceChange {
 }
 ```
 
-### 2. Core Provider Implementation
+### 2. Configuration Keys
 
-#### A. SuperofficeSourceControl Class Structure
+Add these keys to `src/container/configurations/configurationKeys.ts`:
 
 ```typescript
-export class SuperofficeSourceControl implements vscode.Disposable {
-    private sourceControl: vscode.SourceControl;
-    private changedResources: vscode.SourceControlResourceGroup;
-    private untrackedResources: vscode.SourceControlResourceGroup;
-    private repository: SuperofficeRepositoryService;
-    private fileWatcher: vscode.FileSystemWatcher;
+export const ConfigurationKeys = {
+    // ... existing keys ...
 
+    // Source Control
+    SourceControlService: Symbol('SourceControlService'),
+    SuperofficeQuickDiffProvider: Symbol('SuperofficeQuickDiffProvider'),
+    SuperofficeDocumentContentProvider: Symbol('SuperofficeDocumentContentProvider'),
+    MockSuperofficeDataService: Symbol('MockSuperofficeDataService'),
+
+    // ... rest of existing keys ...
+} as const;
+```
+
+### 3. Core Provider Implementation
+
+#### B. QuickDiff Provider (Simplified)
+
+```typescript
+export class SuperofficeQuickDiffProvider implements vscode.QuickDiffProvider {
     constructor(
-        context: vscode.ExtensionContext,
-        workspaceFolder: vscode.WorkspaceFolder,
-        authProvider: SuperofficeAuthenticationProvider,
-        httpService: HttpService
-    );
+        private readonly dataService: MockSuperofficeDataService
+    ) {}
 
-    // Public methods
-    public async refresh(): Promise<void>;
-    public async commitAll(message: string): Promise<void>;
-    public async discardChanges(resources?: vscode.Uri[]): Promise<void>;
-    public async pull(): Promise<void>;
-    public async push(): Promise<void>;
-
-    // Private methods
-    private async updateChangedGroup(): Promise<void>;
-    private onResourceChange(uri: vscode.Uri): void;
-    private createResourceState(change: SuperofficeResourceChange): vscode.SourceControlResourceState;
+    // QuickDiffProvider implementation
+    provideOriginalResource(
+        uri: vscode.Uri,
+        token: vscode.CancellationToken
+    ): vscode.ProviderResult<vscode.Uri> {
+        // Return URI for original content
+        if (uri.scheme === 'superoffice-script') {
+            return uri.with({ scheme: 'superoffice-original' });
+        }
+        return null;
+    }
 }
 ```
 
-#### B. Repository Service Structure
+#### C. Document Content Provider
 
 ```typescript
-export class SuperofficeRepositoryService implements vscode.QuickDiffProvider {
+export class SuperofficeDocumentContentProvider implements vscode.TextDocumentContentProvider {
     constructor(
-        private workspaceFolder: vscode.WorkspaceFolder,
-        private httpService: HttpService,
-        private authProvider: SuperofficeAuthenticationProvider
-    );
+        private readonly dataService: MockSuperofficeDataService
+    ) {}
 
-    // QuickDiffProvider implementation
-    provideOriginalResource(uri: vscode.Uri, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Uri>;
+    async provideTextDocumentContent(
+        uri: vscode.Uri,
+        token: vscode.CancellationToken
+    ): Promise<string> {
+        // Extract script ID from URI and return content
+        const scriptId = this.extractScriptId(uri);
+        const script = await this.dataService.getScript(scriptId);
+        return script?.content || '';
+    }
 
-    // Repository operations
-    public async getRemoteScripts(): Promise<SuperofficeScript[]>;
-    public async downloadScript(scriptId: string): Promise<SuperofficeScript>;
-    public async uploadScript(script: SuperofficeScript): Promise<SuperofficeScript>;
-    public async getScriptHistory(scriptId: string): Promise<SuperofficeScript[]>;
-
-    // Change detection
-    public async detectChanges(): Promise<SuperofficeResourceChange[]>;
-    public async getOriginalContent(uri: vscode.Uri): Promise<string>;
+    private extractScriptId(uri: vscode.Uri): string {
+        // Parse custom URI to get script ID
+        return uri.path.split('/')[0];
+    }
 }
+```
+
+### 2. DI Container Configuration Keys
+
+Add these keys to `src/container/configurations/configurationKeys.ts`:
+
+```typescript
+export const ConfigurationKeys = {
+    // ... existing keys ...
+
+    // Source Control
+    SourceControlService: Symbol('SourceControlService'),
+    SuperofficeQuickDiffProvider: Symbol('SuperofficeQuickDiffProvider'),
+    SuperofficeDocumentContentProvider: Symbol('SuperofficeDocumentContentProvider'),
+    MockSuperofficeDataService: Symbol('MockSuperofficeDataService'),
+
+    // ... rest of existing keys ...
+} as const;
 ```
 
 ### 3. Dummy Data Implementation Strategy
@@ -341,26 +373,30 @@ Add to `package.json` contributions:
 
 ## File Structure
 
-```
+```text
 packages/superofficedx-vscode-core/
 ├── src/
 │   ├── providers/
-│   │   ├── superofficeSourceControl.ts              # Main source control provider
+│   │   ├── superofficeQuickDiffProvider.ts         # Repository operations (QuickDiffProvider)
 │   │   ├── sourceControlResourceStateProvider.ts   # Resource state management
 │   │   └── superofficeDocumentContentProvider.ts   # Document content for diffs
 │   ├── services/
-│   │   ├── superofficeRepositoryService.ts         # Repository operations
+│   │   ├── sourceControlService.ts                # Main source control orchestration
 │   │   └── mockSuperofficeDataService.ts          # Dummy data service
 │   ├── commands/
-│   │   └── sourceControlCommands.ts               # Source control specific commands
+│   │   └── handlers/
+│   │       └── sourceControlCommands.ts           # Source control command handlers
 │   ├── models/
 │   │   ├── superofficeScript.ts                   # Script entity model
 │   │   └── superofficeResourceChange.ts           # Change detection model
-│   ├── utils/
-│   │   ├── sourceControlUtils.ts                  # Source control utilities
-│   │   └── diffUtils.ts                           # Diff operation utilities
-│   └── container/configurations/
-│       └── sourceControlConfiguration.ts          # DI configuration for SC
+│   ├── container/
+│   │   └── configurations/
+│   │       ├── configurationKeys.ts               # Updated with source control keys
+│   │       ├── serviceConfiguration.ts            # Register source control services
+│   │       └── providerConfiguration.ts           # Register source control providers
+│   └── utils/
+│       ├── sourceControlUtils.ts                  # Source control utilities
+│       └── diffUtils.ts                           # Diff operation utilities
 ├── plans/
 │   └── source-control-provider-implementation-plan.md  # This document
 └── resources/
@@ -371,19 +407,70 @@ packages/superofficedx-vscode-core/
 
 ### Phase 1: Basic Infrastructure (Week 1)
 
-1. Create mock data service with dummy scripts
-2. Implement basic source control provider registration
-3. Set up DI container configurations
-4. Create basic repository service interface
-5. Add command contributions to package.json
+1. **DI Container Setup**:
+   - Add configuration keys to `configurationKeys.ts`
+   - Create basic service and provider registrations
+   - Follow existing DI patterns
 
-### Phase 2: Core Functionality (Week 2)
+2. **Mock Data Service**:
+   - Create `MockSuperofficeDataService` with dummy scripts
+   - Register in `serviceConfiguration.ts`
 
-1. Implement file watching and change detection
-2. Create resource state management
-3. Add basic commit/discard operations
-4. Implement refresh functionality
-5. Basic UI integration with source control view
+3. **Basic Source Control Service**:
+   - Create minimal `SourceControlService` with refresh functionality
+   - Register in `serviceConfiguration.ts`
+   - No VS Code SourceControl API integration yet (defer to Phase 2)
+   - Simplified constructor with only MockSuperofficeDataService dependency for Phase 1
+   - Additional dependencies (ExtensionContext, AuthProvider, HttpService) will be added in Phase 2
+
+4. **Command Infrastructure**:
+   - Create `sourceControlCommands.ts` handler following existing pattern
+   - Register in `commandRegistration.ts`
+   - Add minimal command to `package.json` (just refresh)
+
+5. **Testing & Validation**:
+   - Ensure DI container resolves all dependencies
+   - Test basic command execution
+   - Verify integration with existing extension activation
+
+### Phase 2: VS Code Source Control Integration (Week 2)
+
+**Key Architectural Decisions for Phase 2:**
+
+- Extend existing `SourceControlService` (don't create new class)
+- Use virtual file system approach for script representation
+- Scripts will be represented as virtual files with custom URI scheme
+- No local workspace folder dependency - purely virtual
+
+1. **VS Code SourceControl API Integration**:
+   - Extend existing `SourceControlService` with VS Code APIs
+   - Add constructor parameters: ExtensionContext, AuthProvider, HttpService
+   - Create VS Code SourceControl instance and resource groups
+   - Register source control provider in extension activation
+
+2. **Virtual File System Strategy**:
+   - Use custom URI scheme: `superoffice-script://script-id/script-name.ext`
+   - Represent scripts as virtual files in source control view
+   - No local file watching needed - use polling or manual refresh
+   - Scripts exist only in memory/remote - no local workspace files
+
+3. **Provider Implementations**:
+   - **Separate responsibilities**: Create distinct providers for different functions
+   - `SuperofficeQuickDiffProvider` - implements QuickDiffProvider for VS Code
+   - `SuperofficeDocumentContentProvider` - provides script content for diffs
+   - Keep existing pattern: register in `providerConfiguration.ts`
+
+4. **Change Detection Strategy**:
+   - Compare in-memory script content with remote versions
+   - Manual refresh-based (no file watchers for Phase 2)
+   - Use script `lastModified` timestamps for change detection
+   - Create SourceControlResourceState objects for changed scripts
+
+5. **Basic Operations**:
+   - Refresh: Update source control view with script changes
+   - Commit: Upload modified scripts to SuperOffice
+   - Discard: Reset scripts to remote versions
+   - Authentication: Show appropriate messages when not authenticated
 
 ### Phase 3: Advanced Features (Week 3)
 
@@ -400,6 +487,75 @@ packages/superofficedx-vscode-core/
 3. Performance optimization
 4. Documentation and code cleanup
 5. Prepare for real API integration
+
+## DI Container Configuration
+
+### Service Registration
+
+Update `src/container/configurations/serviceConfiguration.ts`:
+
+```typescript
+export function configureServices(container: DIContainer): void {
+    // ... existing service registrations ...
+
+    // Source Control Services
+    container.registerSingleton(ConfigurationKeys.MockSuperofficeDataService, () =>
+        new MockSuperofficeDataService()
+    );
+
+    container.registerSingleton(ConfigurationKeys.SourceControlService, () =>
+        new SourceControlService(
+            container.resolve(ConfigurationKeys.ExtensionContext),
+            container.resolve(ConfigurationKeys.AuthenticationProvider),
+            container.resolve(ConfigurationKeys.HttpService),
+            container.resolve(ConfigurationKeys.MockSuperofficeDataService)
+        )
+    );
+}
+```
+
+### Provider Registration
+
+Update `src/container/configurations/providerConfiguration.ts`:
+
+```typescript
+export function configureProviders(container: DIContainer): void {
+    // ... existing provider registrations ...
+
+    // Source Control Providers (Phase 2)
+    container.registerSingleton(ConfigurationKeys.SuperofficeQuickDiffProvider, () =>
+        new SuperofficeQuickDiffProvider(
+            container.resolve(ConfigurationKeys.HttpService),
+            container.resolve(ConfigurationKeys.AuthenticationProvider),
+            container.resolve(ConfigurationKeys.MockSuperofficeDataService)
+        )
+    );
+
+    container.registerSingleton(ConfigurationKeys.SuperofficeDocumentContentProvider, () =>
+        new SuperofficeDocumentContentProvider(
+            container.resolve(ConfigurationKeys.MockSuperofficeDataService)
+        )
+    );
+}
+```
+
+### Extension Activation Update
+
+Update `src/extension.ts` for Phase 2:
+
+```typescript
+export async function activate(context: ExtensionContext): Promise<void> {
+    // ... existing code ...
+
+    // Resolve source control service (Phase 2)
+    const sourceControlService = container.resolve<SourceControlService>(ConfigurationKeys.SourceControlService);
+
+    // Initialize source control (Phase 2)
+    await sourceControlService.initialize();
+
+    // ... rest of existing code ...
+}
+```
 
 ## Integration Considerations
 

@@ -3,6 +3,8 @@ import { CustomTextDocumentContentProvider } from "../../providers/textDocumentC
 import { SuperofficeAuthenticationProvider } from "../../providers/superofficeAuthenticationProvider";
 import { TreeViewDataProvider } from "../../providers/treeViewDataProvider";
 import { ExtraTablesTreeViewDataProvider } from "../../providers/extraTablesTreeViewDataProvider";
+import { SuperofficeQuickDiffProvider } from "../../providers/superofficeQuickDiffProvider";
+import { SuperofficeDocumentContentProvider } from "../../providers/superofficeDocumentContentProvider";
 import { DIContainer } from "../core/diContainer";
 import { ConfigurationKeys } from "./configurationKeys";
 
@@ -37,5 +39,18 @@ export function configureProviders(container: DIContainer): void {
 
     container.registerSingleton(ConfigurationKeys.TextDocumentContentProvider, () =>
         new CustomTextDocumentContentProvider()
+    );
+
+    // Phase 2: Source Control Providers
+    container.registerSingleton(ConfigurationKeys.SuperofficeQuickDiffProvider, () =>
+        new SuperofficeQuickDiffProvider(
+            container.resolve(ConfigurationKeys.MockSuperofficeDataService)
+        )
+    );
+
+    container.registerSingleton(ConfigurationKeys.SuperofficeDocumentContentProvider, () =>
+        new SuperofficeDocumentContentProvider(
+            container.resolve(ConfigurationKeys.MockSuperofficeDataService)
+        )
     );
 };

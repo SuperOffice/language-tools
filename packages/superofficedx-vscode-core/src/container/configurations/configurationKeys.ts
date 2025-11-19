@@ -18,6 +18,12 @@ export const ConfigurationKeys = {
     ExtraTablesTreeViewDataProvider: Symbol('ExtraTablesTreeViewDataProvider'),
     TextDocumentContentProvider: Symbol('TextDocumentContentProvider'),
 
+    // Source Control
+    SourceControlService: Symbol('SourceControlService'),
+    SuperofficeQuickDiffProvider: Symbol('SuperofficeQuickDiffProvider'),
+    SuperofficeDocumentContentProvider: Symbol('SuperofficeDocumentContentProvider'),
+    MockSuperofficeDataService: Symbol('MockSuperofficeDataService'),
+
     // VS Code Context
     ExtensionContext: Symbol('ExtensionContext'),
 } as const;

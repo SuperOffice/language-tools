@@ -29,6 +29,16 @@
                 "category": "SuperOffice"
             },
             {
+                "command": "superOfficeDX.sourceControl.refresh",
+                "title": "Refresh",
+                "category": "SuperOffice Source Control"
+            },
+            {
+                "command": "superOfficeDX.sourceControl.testModify",
+                "title": "Test Modify Script (Dev)",
+                "category": "SuperOffice Source Control"
+            },
+            {
                 "command": "superOfficeDX.viewScriptDetails",
                 "title": "ViewScriptDetails"
             },
