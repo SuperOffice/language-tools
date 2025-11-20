@@ -1,12 +1,8 @@
 # SuperOffice Language Tools
 
-This repository contains all the editor tooling required for working with Typescript and CRMScripts in SuperOffice.
+This repository contains all the editor tooling required for working with scripts(Typescript and CRMScripts) in SuperOffice.
 
 It contains an implementation of the [Language Server Protocol (LSP)](https://microsoft.github.io/language-server-protocol/), powered by [Volar](https://volarjs.dev/) (for TypeScript) and `vcode-languageserver` (for CRMScript), and is currently under development.
-
-## Motivation
-
-With the [Typescript for SuperOffice](https://github.com/SuperOffice/typescript-for-superoffice)-project ongoing it felt like a suitable time to add support for creating scripts outside of SuperOffice. This will enhance the developer experience, and open new possibilities for how you work with and debug your scripts.
 
 ## Packages
 
@@ -114,15 +110,9 @@ Running this extension will spawn a childprocess with the LSP server. Launch.jso
 
 1. `Run&debug` -> `Core Extension`
 2. Click on the SuperOffice Icon on the right navigation bar
-3. Click 'Login' to start the authenticationflow  
-    Note: This will start the Native App Flow, and you will have to follow the steps described [here](#authentication-flow-for-native-app-with-pkce)
+3. Click 'Login' to start the authenticationflow
+    Note: This will start the Native App Flow, and you will have to follow the steps described under [authentication](#authentication-flow-for-native-app-with-pkce)
 4. After authentication the tab will be populated with the scripts belonging to your tenant.   Note: Depending if your tenant is 'cold' it could take a little while for it to be read to execute the API request that fetches all scripts.
 5. When right-clicking on a script, in the treeView, it will give you options to preview or download.
-6. When you have downloaded a script you can go back to your workspace and see the script has been created. If you right-click this script you will se a new menu-item, 'SuperOffice', which contains 2 execution-options: Execute and ExecuteLocally.  
+6. When you have downloaded a script you can go back to your workspace and see the script has been created. If you right-click this script you will se a new menu-item, 'SuperOffice', which contains 2 execution-options: Execute and ExecuteLocally.
 Note: ExecuteLocally will launch Node and automatically attach to the process, and will start debugging the execution.
-
-## Other thoughts/ideas
-
-### Replace Treeview with webview
-
-Replacing the treeview with a webview will make it much more flexible to add logic/functionality. A webview is not restricted to the bounds of vscode, and we can create a modern design either with vanilla HTML or for instance react. It will also make it possible to make it more SuperOffice-like.
