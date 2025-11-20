@@ -5,11 +5,7 @@ export default defineConfig({
     test: {
         projects: [
             'packages/language-server/vitest.config.ts',
-            'packages/superofficedx-vscode-core/vitest.config.ts'
+            'packages/superofficedx-vscode-core/vitest.config.mts'
         ],
-    },
-    // Add esbuild for TypeScript compilation
-    esbuild: {
-        target: 'node20'
     }
 });
